@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sign In</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Floating particles background -->
+  <div class="floating-particles">
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 7s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 8s;"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="logo">
+          <img src="assets/icon/Screenshot 2024-12-15 003614.png" alt="Vehicle Rental Logo" />
+        </div>
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Sign in to your account</p>
+      </div>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="form-group">
+          <input 
+            type="email" 
+            class="form-control"
+            formControlName="email"
+            placeholder=" "
+            [disabled]="isLockedOut">
+          <label class="form-label">Email</label>
+        </div>
+
+        <div class="form-group">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control"
+            formControlName="password"
+            placeholder=" "
+            [disabled]="isLockedOut">
+          <label class="form-label">Password</label>
+          <ion-icon 
+            class="input-icon"
+            [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+            (click)="togglePasswordVisibility()"
+          ></ion-icon>
+        </div>
+
+        <button 
+          type="submit"
+          class="btn-login"
+          [disabled]="isLockedOut || !loginForm.valid"
+          [class.loading]="isLoading">
+          <span class="spinner" *ngIf="isLoading"></span>
+          {{ isLockedOut ? 'Account Locked' : (isLoading ? 'Signing In...' : 'Sign In') }}
+        </button>
+
+        <div *ngIf="isLockedOut" class="error-message">
+          <p>Too many failed attempts. Please try again in {{ remainingTime }} seconds.</p>
+        </div>
+
+        <div class="form-footer">
+          <p>Don't have an account? <a routerLink="/register">Create an account</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

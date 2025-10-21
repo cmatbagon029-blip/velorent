@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Rentals</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading your bookings...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadBookings()">Try Again</ion-button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && bookings.length === 0" class="empty-container">
+    <ion-icon name="car-outline"></ion-icon>
+    <h2>No Bookings Yet</h2>
+    <p>You haven't booked any vehicles yet.</p>
+    <ion-button routerLink="/vehicles">Browse Vehicles</ion-button>
+  </div>
+
+  <!-- Bookings List -->
+  <ion-list *ngIf="!loading && !error && bookings.length > 0">
+    <ion-item *ngFor="let booking of bookings" class="booking-item">
+      <ion-label>
+        <h2>{{ booking.vehicle_name }}</h2>
+        <p><strong>Date:</strong> {{ formatDate(booking.rent_date) }} {{ formatTime(booking.rent_time) }}</p>
+        <p><strong>Destination:</strong> {{ booking.destination }}</p>
+        <p><strong>Status:</strong> <ion-badge class="status-badge">{{ booking.status }}</ion-badge></p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <div class="nav-container">
+    <button class="nav-button" (click)="navigateToHome()">
+      <ion-icon name="home" class="nav-icon"></ion-icon>
+      <span class="nav-label">Home</span>
+    </button>
+    
+    <button class="nav-button active" (click)="navigateToMyRentals()">
+      <ion-icon name="car-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">My Rentals</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToNotifications()">
+      <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">Notifications</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToProfile()">
+      <ion-icon name="person-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">Profile</span>
+    </button>
+  </div>
+</div>

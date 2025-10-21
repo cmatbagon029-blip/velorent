@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Vehicle Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshVehicle($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading vehicle details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadVehicleDetails(vehicle?.id || 0)">Try Again</ion-button>
+  </div>
+
+  <!-- Vehicle Details -->
+  <div *ngIf="vehicle && !loading" class="vehicle-details">
+    <!-- Hero Section with Image and Basic Info -->
+    <div class="hero-section">
+      <div class="vehicle-image-container">
+        <div class="vehicle-image">
+          <img [src]="vehicle.imageUrl || 'assets/images/vehicle-placeholder.svg'" 
+               [alt]="vehicle.name"
+               (error)="vehicle.imageUrl = 'assets/images/vehicle-placeholder.svg'">
+          <div class="image-overlay">
+            <div class="vehicle-type-badge">{{ vehicle.type }}</div>
+            <div class="rating-badge" *ngIf="vehicle.rating">
+              <ion-icon name="star"></ion-icon>
+              <span>{{ vehicle.rating }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="vehicle-info-section">
+        <h1 class="vehicle-name">{{ vehicle.name }}</h1>
+        <div class="owner-info">
+          <ion-icon name="business-outline"></ion-icon>
+          <span>{{ vehicle.owner }}</span>
+        </div>
+        
+        <div class="pricing-section">
+          <div class="price-card">
+            <div class="price-header">
+              <ion-icon name="person-outline"></ion-icon>
+              <span>Without Driver</span>
+            </div>
+            <div class="price-amount">₱{{ vehicle.price_without_driver | number:'1.2-2' }}</div>
+            <div class="price-period">per day</div>
+          </div>
+          
+          <div class="price-card">
+            <div class="price-header">
+              <ion-icon name="car-outline"></ion-icon>
+              <span>With Driver</span>
+            </div>
+            <div class="price-amount">₱{{ vehicle.price_with_driver | number:'1.2-2' }}</div>
+            <div class="price-period">per day</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle Features Section -->
+    <div class="features-section" *ngIf="vehicle.description || vehicle.features">
+      <h2>Vehicle Information</h2>
+      <div class="features-content">
+        <div class="feature-item" *ngIf="vehicle.description">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <div>
+            <h3>Description</h3>
+            <p>{{ vehicle.description }}</p>
+          </div>
+        </div>
+        <div class="feature-item" *ngIf="vehicle.features">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <div>
+            <h3>Features</h3>
+            <p>{{ vehicle.features }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Section -->
+    <div class="action-section">
+      <ion-button expand="block" color="primary" size="large" (click)="goToRentVehicle()">
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        Book This Vehicle
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,7 @@
+{
+  "name": "velorent-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

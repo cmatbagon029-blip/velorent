@@ -1,0 +1,151 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ company?.name || 'Company Details' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshCompany($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading company details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadCompanyDetails(company?.id || 0)">Try Again</ion-button>
+  </div>
+
+  <!-- Company Details -->
+  <div *ngIf="!loading && !error && company" class="company-details">
+    <!-- Company Header -->
+    <div class="company-header">
+      <div class="company-logo">
+        <img [src]="company.logoUrl || 'assets/images/company-placeholder.svg'" 
+             [alt]="company.name"
+             (error)="company.logoUrl = 'assets/images/company-placeholder.svg'"/>
+      </div>
+      <div class="company-info">
+        <h1>{{ company.name }}</h1>
+        <div class="company-meta">
+          <div class="rating" *ngIf="company.rating">
+            <ion-icon name="star"></ion-icon>
+            <span>{{ company.rating }}</span>
+          </div>
+          <div class="location" *ngIf="company.location">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ company.location }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Description -->
+    <div class="company-description" *ngIf="company.description">
+      <h2>About</h2>
+      <p>{{ company.description }}</p>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="contact-info" *ngIf="company.contactNumber || company.email || company.website || company.address || company.contactPerson">
+      <h2>Contact Information</h2>
+      <div class="contact-details">
+        <div class="contact-item" *ngIf="company.contactPerson">
+          <ion-icon name="person-outline"></ion-icon>
+          <span><strong>Contact Person:</strong> {{ company.contactPerson }}</span>
+        </div>
+        <div class="contact-item">
+          <ion-icon name="call-outline"></ion-icon>
+          <span><strong>Contact Number:</strong> {{ company.contactNumber || 'No contact number available' }}</span>
+        </div>
+        <div class="contact-item">
+          <ion-icon name="mail-outline"></ion-icon>
+          <span><strong>Email:</strong> {{ company.email || 'No company email available' }}</span>
+        </div>
+        <div class="contact-item" *ngIf="company.address">
+          <ion-icon name="location-outline"></ion-icon>
+          <span><strong>Address:</strong> {{ company.address }}</span>
+        </div>
+        <div *ngIf="company.website" class="contact-item">
+          <ion-icon name="globe-outline"></ion-icon>
+          <a [href]="company.website" target="_blank">{{ company.website }}</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicles Section -->
+    <div class="vehicles-section">
+      <div class="vehicles-header">
+        <h2>Available Vehicles</h2>
+        <div class="vehicles-controls">
+          <ion-searchbar
+            placeholder="Search vehicles..."
+            (ionInput)="searchVehicles($event)"
+            animated
+            class="search-bar">
+          </ion-searchbar>
+          <ion-select
+            [(ngModel)]="selectedCategory"
+            (ionChange)="filterByCategory($event)"
+            interface="popover"
+            class="category-select">
+            <ion-select-option value="all">All Types</ion-select-option>
+            <ion-select-option value="bicycle">Bicycles</ion-select-option>
+            <ion-select-option value="motorcycle">Motorcycles</ion-select-option>
+            <ion-select-option value="car">Cars</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+      <!-- Vehicles Grid -->
+      <div class="vehicles-grid">
+        <div *ngFor="let vehicle of filteredVehicles" 
+             class="vehicle-card"
+             (click)="viewVehicleDetails(vehicle.id)">
+          <div class="vehicle-image">
+            <img [src]="vehicle.imageUrl || 'assets/images/vehicle-placeholder.svg'"
+                 [alt]="vehicle.name"
+                 (error)="vehicle.imageUrl = 'assets/images/vehicle-placeholder.svg'"/>
+          </div>
+          <div class="vehicle-info">
+            <h3>{{ vehicle.name }}</h3>
+            <div class="vehicle-meta">
+              <span class="type">{{ vehicle.type }}</span>
+              <div class="rating" *ngIf="vehicle.rating">
+                <ion-icon name="star"></ion-icon>
+                <span>{{ vehicle.rating }}</span>
+              </div>
+            </div>
+            <div class="price">
+              <div class="price-row">
+                <span class="label"><ion-icon name="person-outline"></ion-icon>Without Driver:</span>
+                <span class="amount">₱{{ vehicle.price_without_driver | number:'1.2-2' }}</span>
+                <span class="per-day">/day</span>
+              </div>
+              <div class="price-row" *ngIf="vehicle.price_with_driver">
+                <span class="label"><ion-icon name="car-outline"></ion-icon>With Driver:</span>
+                <span class="amount">₱{{ vehicle.price_with_driver | number:'1.2-2' }}</span>
+                <span class="per-day">/day</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Vehicles Message -->
+      <div *ngIf="filteredVehicles.length === 0" class="no-vehicles">
+        <ion-icon name="car-outline"></ion-icon>
+        <p>No vehicles found</p>
+      </div>
+    </div>
+  </div>
+</ion-content> 

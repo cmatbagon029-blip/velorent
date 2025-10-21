@@ -1,0 +1,147 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>VeloRent</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="main-content">
+  <!-- Search Bar -->
+  <ion-searchbar
+    placeholder="Search vehicles..."
+    animated
+    class="search-bar"
+    (ionInput)="searchVehicles($event)">
+  </ion-searchbar>
+
+  <!-- Categories Section -->
+  <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterByCategory($event)" class="categories">
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="sedan">
+      <ion-label>Sedan</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="suv">
+      <ion-label>SUV</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="van">
+      <ion-label>Van</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Vehicles Grid -->
+  <ion-grid class="vehicles-grid">
+    <ion-row>
+      <ion-col size="6" size-md="4" size-lg="3" *ngFor="let vehicle of displayedVehicles">
+        <ion-card class="vehicle-card" (click)="viewVehicleDetails(vehicle.id)">
+          <div class="image-container">
+            <img [src]="vehicle.imageUrl || 'assets/images/vehicle-placeholder.svg'" 
+                 [alt]="vehicle.name"
+                 (error)="vehicle.imageUrl = 'assets/images/vehicle-placeholder.svg'"/>
+          </div>
+          <ion-card-header>
+            <ion-card-subtitle>{{ vehicle.type }}</ion-card-subtitle>
+            <ion-card-title>{{ vehicle.name }}</ion-card-title>
+            <div class="vehicle-company" *ngIf="vehicle.company_id">
+              <small style="color: #ffd700; font-weight: 500;">
+                {{ getCompanyName(vehicle.company_id) }}
+              </small>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="price-container">
+              <span class="price">₱{{ vehicle.price_without_driver | number:'1.2-2' }}</span>
+              <span class="per-day">/day without driver</span>
+            </div>
+            <ion-button expand="block" color="primary" class="rent-button">
+              Rent Now
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="browse-all-container" *ngIf="!showAllVehicles && filteredVehicles.length > INITIAL_VEHICLE_COUNT">
+    <ion-button expand="block" color="secondary" class="browse-all-btn" (click)="onBrowseAllVehicles()">
+      <ion-icon name="grid-outline" slot="start"></ion-icon>
+      Browse All Vehicles
+    </ion-button>
+  </div>
+  <div class="browse-all-container" *ngIf="showAllVehicles && filteredVehicles.length > INITIAL_VEHICLE_COUNT">
+    <ion-button expand="block" color="medium" class="minimize-btn" (click)="onMinimizeVehicles()">
+      <ion-icon name="chevron-up-outline" slot="start"></ion-icon>
+      Show Less
+    </ion-button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading vehicles...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadVehicles()">Try Again</ion-button>
+  </div>
+
+  <!-- Featured Rental Companies -->
+  <section class="featured-companies">
+    <h2>Featured Rental Companies</h2>
+    <div class="companies-carousel">
+      <ion-slides [options]="companiesSwiperConfig" class="companies-swiper">
+        <ion-slide *ngFor="let company of companies">
+          <div class="company-card" (click)="viewCompanyDetails(company.id)">
+            <div class="company-logo">
+              <img [src]="company.logoUrl" [alt]="company.name" (error)="company.logoUrl = 'assets/images/company-placeholder.svg'">
+            </div>
+            <div class="company-info">
+              <h3>{{ company.name }}</h3>
+              <p *ngIf="company.location">{{ company.location }}</p>
+            </div>
+          </div>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </section>
+
+  <ion-card class="featured-companies" *ngIf="companies.length === 0">
+    <ion-card-header>
+      <ion-card-title>Featured Rental Companies</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="no-companies">
+        <ion-icon name="business-outline"></ion-icon>
+        <p>No rental companies available yet</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<!-- Modern Bottom Navigation -->
+<div class="bottom-nav">
+  <div class="nav-container">
+    <button class="nav-button active" (click)="navigateToHome()">
+      <ion-icon name="home" class="nav-icon"></ion-icon>
+      <span class="nav-label">Home</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToMyRentals()">
+      <ion-icon name="car-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">My Rentals</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToNotifications()">
+      <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">Notifications</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToProfile()">
+      <ion-icon name="person-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">Profile</span>
+    </button>
+  </div>
+</div>

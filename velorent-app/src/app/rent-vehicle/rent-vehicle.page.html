@@ -1,0 +1,321 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/vehicle/' + vehicleId"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Rent Vehicle</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h2>Vehicle Booking Form</h2>
+  <form (ngSubmit)="submitBooking()" #bookingForm="ngForm">
+    <!-- Step 1: User Info and Service Type -->
+    <div *ngIf="step === 1">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title class="personal-info-title">Personal Information</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="stacked">Full Name <span class="required">*</span></ion-label>
+            <ion-input type="text" [(ngModel)]="fullName" name="fullName" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Mobile Number <span class="required">*</span></ion-label>
+            <ion-input type="tel" [(ngModel)]="mobileNumber" name="mobileNumber" required maxlength="15"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Service Type <span class="required">*</span></ion-label>
+            <ion-input 
+              type="text" 
+              [(ngModel)]="serviceType" 
+              name="serviceType" 
+              readonly 
+              placeholder="Choose one to proceed booking."
+              (click)="openServiceTypeModal()">
+            </ion-input>
+            <!-- Debug: Show current selection -->
+            <div *ngIf="serviceType" style="color: #ffd700; font-size: 0.8rem; margin-top: 4px;">
+              Selected: {{ serviceType }}
+            </div>
+            <ion-icon name="chevron-down-outline" slot="end" (click)="openServiceTypeModal()"></ion-icon>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+      <ion-button expand="block" color="primary" (click)="nextStep()">Next</ion-button>
+    </div>
+
+    <!-- Step 2: Booking Details -->
+    <div *ngIf="step === 2">
+      <ion-card *ngIf="vehicle">
+        <ion-card-header>
+          <ion-card-title>{{ vehicle.name }}</ion-card-title>
+          <ion-card-subtitle>{{ vehicle.type }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="price">
+            <ng-container *ngIf="serviceType === 'Self Drive'">
+              <span>Self Drive: ₱{{ vehicle.price_without_driver | number:'1.2-2' }}/day</span>
+            </ng-container>
+            <ng-container *ngIf="serviceType === 'Pick-up/Drop-off'">
+              <span>Pick-up/Drop-off: ₱{{ vehicle.price_with_driver | number:'1.2-2' }}/day</span>
+            </ng-container>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-item>
+        <ion-label position="stacked">Date of Rent (From - To) <span class="required">*</span></ion-label>
+        <div style="display: flex; gap: 8px;">
+          <ion-input type="date" [(ngModel)]="rentFromDate" name="rentFromDate" required placeholder="From"></ion-input>
+          <ion-input type="date" [(ngModel)]="rentToDate" name="rentToDate" required placeholder="To"></ion-input>
+        </div>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Time of Rent <span class="required">*</span></ion-label>
+        <ion-input type="time" [(ngModel)]="rentTime" name="rentTime" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Location <span class="required">*</span></ion-label>
+        <ion-input type="text" [(ngModel)]="destination" name="destination" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Occasion</ion-label>
+        <ion-input type="text" [(ngModel)]="occasion" name="occasion"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Message</ion-label>
+        <ion-textarea [(ngModel)]="message" name="message"></ion-textarea>
+      </ion-item>
+
+      <!-- Conditional ID Uploads -->
+      <ion-item lines="none" *ngIf="serviceType === 'Self Drive'">
+        <ion-label position="stacked">Valid ID (Driver's License) <span class="required">*</span></ion-label>
+        <input type="file" accept="image/*" (change)="onFileChange($event, 'valid')" required />
+      </ion-item>
+
+      <div *ngIf="validIdPreview && serviceType === 'Self Drive'" class="image-preview">
+        <img [src]="validIdPreview" alt="Valid ID Preview" />
+      </div>
+
+      <ion-item lines="none" *ngIf="serviceType === 'Pick-up/Drop-off'">
+        <ion-label position="stacked">Valid ID (Driver's License or Other)</ion-label>
+        <input type="file" accept="image/*" (change)="onFileChange($event, 'valid')" />
+      </ion-item>
+      <div *ngIf="validIdPreview && serviceType === 'Pick-up/Drop-off'" class="image-preview">
+        <img [src]="validIdPreview" alt="Valid ID Preview" />
+      </div>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Additional Valid ID (Government-issued) <span class="required">*</span></ion-label>
+        <input type="file" accept="image/*" (change)="onFileChange($event, 'additional')" required />
+      </ion-item>
+      <div *ngIf="additionalIdPreview" class="image-preview">
+        <img [src]="additionalIdPreview" alt="Additional ID Preview" />
+      </div>
+
+      <ion-button expand="block" color="medium" (click)="prevStep()">Back</ion-button>
+      <ion-button expand="block" type="submit" color="primary"
+        [disabled]="!rentFromDate || !rentToDate || !rentTime || !destination || (serviceType === 'Self Drive' && !validIdFile) || !additionalIdFile">
+        Submit Booking
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
+
+<!-- Service Type Selection Modal -->
+<ion-modal [isOpen]="showServiceTypeModal" [backdropDismiss]="false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Select Service Type</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeServiceTypeModal()">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="service-modal-content">
+      <!-- Debug: Show current selection -->
+      <div *ngIf="serviceType" style="color: #ffd700; font-size: 0.8rem; margin-bottom: 10px; text-align: center;">
+        Current Selection: {{ serviceType }}
+      </div>
+      <!-- Debug: Show service options count -->
+      <div style="color: #ffd700; font-size: 0.8rem; margin-bottom: 10px; text-align: center;">
+        Options available: {{ serviceOptions.length }}
+      </div>
+      <div class="service-options">
+        <!-- Debug: Test if ngFor is working -->
+        <div style="color: #ffd700; font-size: 0.8rem; margin-bottom: 10px; text-align: center;">
+          Testing: {{ serviceOptions[0] }} | {{ serviceOptions[1] }}
+        </div>
+        <div 
+          class="service-option" 
+          *ngFor="let option of serviceOptions" 
+          [class.selected]="serviceType === option"
+          (click)="selectServiceType(option)">
+          <div class="service-icon">
+            <ion-icon [name]="option === 'Self Drive' ? 'car-outline' : 'location-outline'"></ion-icon>
+          </div>
+          <div class="service-info">
+            <h3>{{ option }}</h3>
+            <p *ngIf="option === 'Self Drive'">Drive the vehicle yourself</p>
+            <p *ngIf="option === 'Pick-up/Drop-off'">We'll pick you up and drop you off</p>
+          </div>
+          <div class="service-check" *ngIf="serviceType === option">
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button expand="block" color="primary" (click)="confirmServiceType()" [disabled]="!serviceType">
+          Confirm Selection
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
+
+<!-- Company Rules Modal -->
+<ion-modal [isOpen]="showCompanyRulesModal" [backdropDismiss]="false" data-modal="company-rules">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Company Rules & Policies</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeCompanyRulesModal()">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="company-rules-content">
+      <div *ngIf="loadingRules" class="loading-container">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Loading company rules...</p>
+      </div>
+      
+      <div *ngIf="!loadingRules && companyRules.length === 0" class="no-rules">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <h3>No Rules Available</h3>
+        <p>This company has not set any specific rules or policies.</p>
+      </div>
+
+      <div *ngIf="!loadingRules && companyRules.length > 0" class="rules-container">
+        <div class="rules-header">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <h2>Important Rules & Policies</h2>
+          <p>Please read and understand these rules before proceeding with your booking.</p>
+        </div>
+        
+        <div class="rules-list">
+          <div *ngFor="let rule of companyRules" class="rule-item">
+            <div class="rule-header">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              <h3>{{ rule.title }}</h3>
+            </div>
+            <div class="rule-content">
+              <p>{{ rule.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+    <ion-footer *ngIf="!loadingRules">
+      <ion-toolbar>
+        <ion-button expand="block" color="primary" (click)="acceptCompanyRules()">
+          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+          I Understand & Accept
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
+
+<!-- Terms and Conditions Modal -->
+<ion-modal [isOpen]="showTermsModal" [backdropDismiss]="false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Rental Terms & Conditions</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding" #termsContent>
+      <div class="terms-content">
+        <h2>Important Rental Information</h2>
+        
+        <h3>📋 Rental Requirements</h3>
+        <ul>
+          <li>Valid government-issued ID (Driver's License for Self Drive)</li>
+          <li>Additional government-issued ID required</li>
+          <li>Minimum age: 21 years old for Self Drive</li>
+          <li>Valid credit card for security deposit</li>
+        </ul>
+
+        <h3>⛽ Gasoline Policy</h3>
+        <ul>
+          <li><strong>Gasoline Penalty:</strong> ₱500 per 1/4 tank below return level</li>
+          <li>Vehicle must be returned with the same fuel level as received</li>
+          <li>Fuel gauge will be documented at pickup and return</li>
+          <li>Additional charges apply for fuel below specified level</li>
+        </ul>
+
+        <h3>🚗 Damage & Insurance</h3>
+        <ul>
+          <li><strong>Damage Fee:</strong> ₱2,000 - ₱10,000 depending on damage severity</li>
+          <li>Comprehensive insurance coverage included</li>
+          <li>Deductible applies for damage claims</li>
+          <li>Pre-rental inspection required</li>
+          <li>Photos will be taken before and after rental</li>
+        </ul>
+
+        <h3>💰 Additional Charges</h3>
+        <ul>
+          <li><strong>Late Return:</strong> ₱500 per hour after scheduled return time</li>
+          <li><strong>Cleaning Fee:</strong> ₱300 for excessive dirt/stains</li>
+          <li><strong>Smoking Fee:</strong> ₱500 if smoking detected</li>
+          <li><strong>Pet Fee:</strong> ₱200 if pets transported</li>
+          <li><strong>Traffic Violations:</strong> Customer responsible for all fines</li>
+        </ul>
+
+        <h3>📱 Cancellation Policy</h3>
+        <ul>
+          <li>Free cancellation up to 24 hours before rental</li>
+          <li>50% charge for cancellation within 24 hours</li>
+          <li>No refund for same-day cancellations</li>
+        </ul>
+
+        <h3>⚠️ Important Reminders</h3>
+        <ul>
+          <li>Inspect vehicle thoroughly before departure</li>
+          <li>Report any damage immediately</li>
+          <li>Keep emergency contact numbers handy</li>
+          <li>Follow traffic rules and speed limits</li>
+          <li>Return vehicle on time to avoid late fees</li>
+        </ul>
+
+        <h3>📞 Contact Information</h3>
+        <p>For emergencies or questions:</p>
+        <ul>
+          <li>Emergency: +63 931 728 7592</li>
+          <li>Support: support&#64;velorent.com</li>
+          <li>Office Hours: 8:00 AM - 8:00 PM</li>
+        </ul>
+
+        <!-- Remove scroll-indicator -->
+      </div>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button expand="block" color="primary" (click)="closeTermsModal()" [disabled]="!hasScrolledToBottom">
+          <ion-icon *ngIf="hasScrolledToBottom" name="checkmark-outline" slot="start"></ion-icon>
+          {{ hasScrolledToBottom ? 'I Agree to Terms & Conditions' : 'Please scroll down to the bottom to continue' }}
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal> 

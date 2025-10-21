@@ -1,0 +1,127 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Floating particles background -->
+  <div class="floating-particles">
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 7s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 8s;"></div>
+  </div>
+
+  <div class="register-container">
+    <div class="register-card">
+      <div class="register-header">
+        <div class="logo">
+          <img src="assets/icon/Screenshot 2024-12-15 003614.png" alt="Vehicle Rental Logo" />
+        </div>
+        <h1 class="register-title">Create Account</h1>
+        <p class="register-subtitle">Join VELORENT today</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="register()">
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-control"
+            formControlName="firstName"
+            placeholder=" ">
+          <label class="form-label">First Name</label>
+        </div>
+
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-control"
+            formControlName="lastName"
+            placeholder=" ">
+          <label class="form-label">Last Name</label>
+        </div>
+
+        <div class="form-group">
+          <input 
+            type="email" 
+            class="form-control"
+            formControlName="email"
+            placeholder=" "
+            (input)="onEmailInput($event)">
+          <label class="form-label">Email</label>
+        </div>
+        <p class="requirement" [class.valid]="isEmailValid()" *ngIf="showEmailRequirements">
+          <ion-icon name="checkmark-circle-outline" *ngIf="isEmailValid()"></ion-icon>
+          <ion-icon name="close-circle-outline" *ngIf="!isEmailValid()"></ion-icon>
+          Email must be in a valid format (e.g., example&#64;domain.com)
+        </p>
+
+        <div class="form-group">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control"
+            formControlName="password"
+            placeholder=" "
+            (input)="onPasswordInput($event)">
+          <label class="form-label">Password</label>
+          <ion-icon 
+            class="input-icon"
+            [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+            (click)="togglePasswordVisibility()"
+          ></ion-icon>
+        </div>
+        <p class="requirement" [class.valid]="isPasswordLengthValid()" *ngIf="showPasswordRequirements">
+          <ion-icon name="checkmark-circle-outline" *ngIf="isPasswordLengthValid()"></ion-icon>
+          <ion-icon name="close-circle-outline" *ngIf="!isPasswordLengthValid()"></ion-icon>
+          Password must be at least 6 characters long
+        </p>
+
+        <div class="form-group">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            class="form-control"
+            formControlName="confirmPassword"
+            placeholder=" "
+            (input)="onConfirmPasswordInput($event)">
+          <label class="form-label">Confirm Password</label>
+          <ion-icon 
+            class="input-icon"
+            [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
+            (click)="toggleConfirmPasswordVisibility()"
+          ></ion-icon>
+        </div>
+        <p class="requirement" [class.valid]="isPasswordMatch()" *ngIf="showConfirmPasswordRequirements">
+          <ion-icon name="checkmark-circle-outline" *ngIf="isPasswordMatch()"></ion-icon>
+          <ion-icon name="close-circle-outline" *ngIf="!isPasswordMatch()"></ion-icon>
+          Passwords must match
+        </p>
+
+        <div class="terms-checkbox">
+          <ion-checkbox formControlName="termsAccepted"></ion-checkbox>
+          <label>
+            I agree to the <a (click)="showTermsAndConditions()">Terms and Conditions</a>
+          </label>
+        </div>
+
+        <button 
+          type="submit"
+          class="btn-register"
+          [disabled]="!registerForm.valid"
+          [class.loading]="isLoading">
+          <span class="spinner" *ngIf="isLoading"></span>
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        </button>
+
+        <div class="form-footer">
+          <p>Already have an account? <a [routerLink]="['/login']">Login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content> 

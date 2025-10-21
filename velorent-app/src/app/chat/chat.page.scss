@@ -1,0 +1,359 @@
+ion-header, ion-toolbar {
+  --background: #000 !important;
+  background: #000 !important;
+}
+
+ion-title {
+  color: #ffd700 !important;
+  font-weight: 600;
+}
+
+.back-button {
+  --color: #ffd700 !important;
+  --background: rgba(255, 215, 0, 0.1) !important;
+  --border-radius: 8px !important;
+  --padding-start: 12px !important;
+  --padding-end: 12px !important;
+  margin-left: 8px !important;
+  
+  ion-icon {
+    font-size: 1.2rem !important;
+    color: #ffd700 !important;
+  }
+  
+  &:hover {
+    --background: rgba(255, 215, 0, 0.2) !important;
+  }
+}
+
+ion-content {
+  --background: #121212;
+  background: #121212 !important;
+  padding-bottom: 20px;
+}
+
+.chat-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+// Search Bar
+.search-container {
+  padding: 16px;
+  background: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+.chat-search-bar {
+  --background: #2a2a2a;
+  --color: #fff;
+  --placeholder-color: #999;
+  --border-radius: 12px;
+  --box-shadow: none;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  
+  ion-icon {
+    color: #ffd700 !important;
+  }
+}
+
+// Chat List Container
+.chat-list-container {
+  flex: 1;
+  overflow-y: auto;
+  background: #121212;
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  ion-spinner {
+    color: #ffd700;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #999;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Chat List
+.chat-list {
+  padding: 0;
+}
+
+// Chat Item
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #2a2a2a;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #121212;
+  transform: translateX(0);
+  animation: slideInFromLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+
+  &:hover {
+    background: #1a1a1a;
+    transform: translateX(8px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+  }
+
+  &:active {
+    background: #2a2a2a;
+    transform: translateX(4px) scale(0.98);
+  }
+}
+
+// Left Section: Avatar & Badges
+.chat-avatar-section {
+  position: relative;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.chat-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  ion-icon {
+    font-size: 1.8rem;
+    color: #000;
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 4px 16px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.live-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #ff6b6b;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 8px;
+  border: 2px solid #121212;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// Middle Section: Chat Details
+.chat-details {
+  flex: 1;
+  min-width: 0;
+  margin-right: 16px;
+}
+
+.chat-name {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.last-message {
+  color: #999;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+// Right Section: Timestamp & Unread Count
+.chat-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.timestamp {
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.unread-badge {
+  background: #ffd700;
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+// Empty State
+.empty-chats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+
+  ion-icon {
+    font-size: 4rem;
+    color: #666;
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    color: #fff;
+    margin: 0 0 12px 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  p {
+    color: #999;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .chat-item {
+    padding: 14px 16px;
+  }
+
+  .chat-avatar {
+    width: 50px;
+    height: 50px;
+
+    ion-icon {
+      font-size: 1.6rem;
+    }
+  }
+
+  .chat-name {
+    font-size: 0.95rem;
+  }
+
+  .last-message {
+    font-size: 0.8rem;
+    max-width: 150px;
+  }
+
+  .timestamp {
+    font-size: 0.7rem;
+  }
+
+  .unread-badge {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+  }
+
+  .live-badge {
+    font-size: 0.65rem;
+    padding: 1px 4px;
+  }
+}
+
+// Animation keyframes
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Staggered animations for chat items
+.chat-item:nth-child(1) { animation-delay: 0.1s; }
+.chat-item:nth-child(2) { animation-delay: 0.2s; }
+.chat-item:nth-child(3) { animation-delay: 0.3s; }
+.chat-item:nth-child(4) { animation-delay: 0.4s; }
+.chat-item:nth-child(5) { animation-delay: 0.5s; }
+
+// Staggered animations for avatars
+.chat-avatar:nth-child(1) { animation-delay: 0.2s; }
+.chat-avatar:nth-child(2) { animation-delay: 0.3s; }
+.chat-avatar:nth-child(3) { animation-delay: 0.4s; }
+.chat-avatar:nth-child(4) { animation-delay: 0.5s; }
+.chat-avatar:nth-child(5) { animation-delay: 0.6s; }
+
+@media (max-width: 480px) {
+  .search-container {
+    padding: 12px;
+  }
+
+  .chat-item {
+    padding: 12px 16px;
+  }
+
+  .chat-avatar {
+    width: 48px;
+    height: 48px;
+
+    ion-icon {
+      font-size: 1.4rem;
+    }
+  }
+
+  .last-message {
+    max-width: 120px;
+  }
+}

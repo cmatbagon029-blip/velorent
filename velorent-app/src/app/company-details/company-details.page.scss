@@ -1,0 +1,607 @@
+ion-content {
+  --background: #121212 !important;
+  background: #121212 !important;
+}
+
+.company-header, .company-description, .contact-info, .vehicles-section, .vehicle-card, .loading-container, .error-container, .no-vehicles {
+  background: #181818 !important;
+  color: #ffd700 !important;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08) !important;
+  border-radius: 16px;
+}
+
+.company-header .company-info h1,
+.company-description h2,
+.contact-info h2,
+.vehicles-section h2,
+.vehicles-header h2 {
+  color: #ffd700 !important;
+}
+
+.company-header .company-logo {
+  border: 2px solid #ffd700;
+  background: #232323;
+}
+
+.company-header .company-details .location,
+.company-header .company-details .rating span,
+.company-header .company-details .rating {
+  color: #ffd700 !important;
+}
+
+.company-description p,
+.contact-info .contact-item span,
+.contact-info .contact-item a,
+.vehicles-section .vehicle-info h3,
+.vehicles-section .vehicle-info .vehicle-meta .type,
+.vehicles-section .vehicle-info .vehicle-meta .rating span,
+.vehicles-section .vehicle-info .price .price-row,
+.vehicles-section .vehicle-info .price .label,
+.vehicles-section .vehicle-info .price .per-day {
+  color: #fff !important;
+}
+
+.contact-info .contact-item {
+  background: #232323 !important;
+  border: 1px solid #ffd700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+
+  &:hover {
+    background: #2a2a2a !important;
+  }
+
+  ion-icon {
+    color: #ffd700 !important;
+    font-size: 20px !important;
+    min-width: 20px;
+    display: block;
+  }
+
+  span, a {
+    color: #fff !important;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #ffd700 !important;
+  }
+}
+
+.vehicles-section .vehicles-header .vehicles-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.vehicles-section .vehicles-header .search-bar,
+.vehicles-section .vehicles-header .category-select {
+  --background: #232323 !important;
+  --color: #ffd700 !important;
+  --placeholder-color: #ffd700 !important;
+  color: #ffd700 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.06);
+  transition: box-shadow 0.2s;
+}
+
+.vehicles-section .vehicles-header .search-bar:focus-within,
+.vehicles-section .vehicles-header .category-select:focus-within {
+  box-shadow: 0 0 0 2px #ffd70044;
+}
+
+.vehicles-section .vehicles-header h2 {
+  margin-right: 24px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffd700;
+  letter-spacing: 0.5px;
+}
+
+.vehicles-grid .vehicle-card {
+  background: #232323 !important;
+  border: 1px solid #ffd700 !important;
+}
+
+.vehicles-grid .vehicle-card .vehicle-info h3 {
+  color: #ffd700 !important;
+}
+
+.vehicles-grid .vehicle-card .vehicle-info .vehicle-meta .type {
+  background: #181818 !important;
+  color: #ffd700 !important;
+  border: 1px solid #ffd700 !important;
+}
+
+.vehicles-grid .vehicle-card .vehicle-info .vehicle-meta .rating {
+  color: #ffd700 !important;
+}
+
+.vehicles-grid .vehicle-card .vehicle-info .price {
+  background: #181818 !important;
+  color: #ffd700 !important;
+  border: 1px solid #ffd700 !important;
+}
+
+.vehicles-grid .vehicle-card .vehicle-info .price .amount {
+  color: #ffd700 !important;
+}
+
+.loading-container, .error-container, .no-vehicles {
+  background: #181818 !important;
+  color: #ffd700 !important;
+}
+
+.loading-container ion-icon, .error-container ion-icon, .no-vehicles ion-icon {
+  color: #ffd700 !important;
+}
+
+.company-header {
+    display: flex;
+    align-items: center;
+  gap: 40px;
+  padding: 40px 32px 32px 32px;
+  margin-bottom: 32px;
+  background: #181818 !important;
+  border-radius: 20px;
+  box-shadow: 0 6px 32px rgba(255, 215, 0, 0.10) !important;
+  min-height: 180px;
+
+  .company-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.10);
+    border: 2px solid #ffd700;
+    background: #232323;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .company-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+    min-width: 200px;
+  }
+
+  .company-info h1 {
+    color: #ffd700 !important;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(255, 215, 0, 0.10);
+    }
+
+    .company-meta {
+      display: flex;
+      gap: 24px;
+    margin-top: 0;
+    align-items: center;
+    }
+
+  .rating, .location {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    color: #ffd700 !important;
+    font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+  .rating ion-icon, .location ion-icon {
+    color: #ffd700 !important;
+    font-size: 1.3rem;
+  }
+}
+
+.company-description {
+  background: #ffffff;
+  padding: 24px;
+  margin: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  h2 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #7f8c8d;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+}
+
+.contact-info {
+  background: #181818 !important;
+  padding: 24px;
+  margin: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+
+  h2 {
+    color: #ffd700 !important;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.vehicles-section {
+  background: #ffffff;
+  padding: 24px;
+  margin: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  .vehicles-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    h2 {
+      color: #2c3e50;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .vehicles-controls {
+      display: flex;
+      gap: 16px;
+      flex: 1;
+      min-width: 300px;
+    }
+  }
+
+  .search-bar {
+    flex: 1;
+    --background: #f8f9fa;
+    --border-radius: 12px;
+    --box-shadow: none;
+    --placeholder-color: #7f8c8d;
+    --color: #2c3e50;
+  }
+
+  .category-select {
+    --background: #f8f9fa;
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --placeholder-color: #7f8c8d;
+    --color: #2c3e50;
+    min-width: 160px;
+  }
+}
+
+.vehicles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 8px;
+
+  .vehicle-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #f0f0f0;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      border-color: rgba(52, 152, 219, 0.2);
+    }
+
+    .vehicle-image {
+      position: relative;
+      width: 100%;
+      padding-top: 60%;
+      overflow: hidden;
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+    }
+
+    .vehicle-info {
+      padding: 16px;
+
+      h3 {
+        color: #2c3e50;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+      }
+
+      .vehicle-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .type {
+          background: #f8f9fa;
+          color: #7f8c8d;
+          padding: 4px 8px;
+          border-radius: 6px;
+          font-size: 0.8rem;
+        }
+
+        .rating {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          color: #f1c40f;
+
+          ion-icon {
+            font-size: 18px;
+          }
+
+          span {
+            color: #2c3e50;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .price {
+        background: #f6fafd;
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-top: 6px;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 140px;
+
+        .price-row {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: #2c3e50;
+
+          .label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            font-weight: 400;
+            min-width: 80px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+          }
+
+          .amount {
+            color: #3498db;
+            font-size: 1rem;
+            font-weight: 600;
+          }
+
+          .per-day {
+            color: #7f8c8d;
+            font-size: 0.75rem;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+}
+
+.loading-container,
+.error-container,
+.no-vehicles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin: 24px 16px;
+
+  ion-icon {
+    font-size: 64px;
+    color: #3498db;
+    margin-bottom: 24px;
+  }
+
+  p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .company-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 24px 16px;
+
+    .company-logo {
+      width: 80px;
+      height: 80px;
+    }
+
+    .company-info h1 {
+      font-size: 1.8rem;
+    }
+
+    .company-meta {
+      justify-content: center;
+      gap: 16px;
+    }
+  }
+
+  .vehicles-section {
+    margin: 8px;
+    padding: 16px;
+
+    .vehicles-header {
+      flex-direction: column;
+      align-items: stretch;
+      margin-bottom: 16px;
+
+      h2 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+      }
+
+      .vehicles-controls {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  }
+
+  .vehicles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 4px;
+
+    .vehicle-card {
+      .vehicle-info {
+        padding: 12px;
+
+        h3 {
+          font-size: 1rem;
+          margin-bottom: 6px;
+        }
+
+        .vehicle-meta {
+          margin-bottom: 8px;
+
+          .type {
+            padding: 3px 6px;
+            font-size: 0.75rem;
+          }
+        }
+
+        .price {
+          padding: 6px 10px;
+          gap: 3px;
+
+          .price-row {
+            font-size: 0.85rem;
+            gap: 4px;
+
+            .label {
+              font-size: 0.75rem;
+              min-width: 70px;
+            }
+
+            .amount {
+              font-size: 0.9rem;
+            }
+
+            .per-day {
+              font-size: 0.7rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .vehicles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+
+    .vehicle-card {
+      .vehicle-image {
+        padding-top: 55%;
+      }
+
+      .vehicle-info {
+        padding: 10px;
+
+        h3 {
+          font-size: 0.95rem;
+        }
+
+        .price {
+          padding: 5px 8px;
+
+          .price-row {
+            font-size: 0.8rem;
+
+            .label {
+              font-size: 0.7rem;
+              min-width: 60px;
+            }
+
+            .amount {
+              font-size: 0.85rem;
+            }
+
+            .per-day {
+              font-size: 0.65rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+ion-header, ion-toolbar {
+  --background: #000000 !important;
+  background: #000000 !important;
+  --color: #ffd700 !important;
+  color: #ffd700 !important;
+}
+
+ion-title, ion-toolbar ion-title {
+  color: #ffd700 !important;
+}
+
+ion-back-button, ion-buttons, ion-toolbar ion-buttons, ion-toolbar ion-back-button {
+  color: #ffd700 !important;
+  --color: #ffd700 !important;
+} 

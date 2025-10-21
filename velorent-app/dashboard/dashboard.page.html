@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-title>VELORENT</ion-title>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/settings']">
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Top Navigation -->
+  <div class="top-nav">
+    <ion-segment value="all">
+      <ion-segment-button value="all">
+        <ion-label>All Vehicles</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="cars">
+        <ion-label>Cars</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="bikes">
+        <ion-label>Bikes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="boats">
+        <ion-label>Boats</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-bar">
+      <ion-searchbar placeholder="Search vehicles..."></ion-searchbar>
+      <ion-button fill="clear">
+        <ion-icon name="options-outline"></ion-icon>
+        Filters
+      </ion-button>
+    </div>
+
+    <!-- Vehicle Display Section -->
+    <div class="vehicle-display">
+      <div class="section-header">
+        <h2>Available Vehicles</h2>
+        <ion-segment value="grid">
+          <ion-segment-button value="grid">
+            <ion-icon name="grid-outline"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="list">
+            <ion-icon name="list-outline"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div class="vehicles-grid">
+        <ion-card *ngFor="let vehicle of vehicles" class="vehicle-card" (click)="viewVehicleDetails(vehicle.id)">
+          <img [src]="vehicle.imageUrl || 'assets/icon/vehicle-placeholder.png'" [alt]="vehicle.name">
+          <ion-card-content>
+            <h3>{{ vehicle.name }}</h3>
+            <div class="price">₱{{ vehicle.price | number:'1.2-2' }}/day</div>
+            <div class="vehicle-details">
+              <div class="rating" *ngIf="vehicle.rating">
+                <ion-icon name="star"></ion-icon>
+                {{ vehicle.rating }}
+              </div>
+              <div class="type">{{ vehicle.type }}</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <!-- Popular Categories -->
+    <div class="categories-section">
+      <div class="section-header">
+        <h2>Popular Categories</h2>
+      </div>
+      <div class="categories-grid">
+        <div class="category-card">
+          <ion-icon name="car-sport-outline"></ion-icon>
+          <span>Sports Cars</span>
+        </div>
+        <div class="category-card">
+          <ion-icon name="bicycle-outline"></ion-icon>
+          <span>Mountain Bikes</span>
+        </div>
+        <div class="category-card">
+          <ion-icon name="boat-outline"></ion-icon>
+          <span>Yachts</span>
+        </div>
+        <div class="category-card">
+          <ion-icon name="airplane-outline"></ion-icon>
+          <span>Private Jets</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content> 

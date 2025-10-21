@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Available Vehicles</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadVehicles()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshVehicles($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading vehicles...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadVehicles()">Try Again</ion-button>
+  </div>
+
+  <!-- Vehicles Grid -->
+  <ion-grid *ngIf="!loading && !error">
+    <ion-row>
+      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let vehicle of vehicles">
+        <ion-card (click)="viewVehicleDetails(vehicle.id)">
+          <img [src]="vehicle.imageUrl || 'assets/icon/vehicle-placeholder.png'" [alt]="vehicle.name"/>
+          <ion-card-header>
+            <ion-card-title>{{ vehicle.name }}</ion-card-title>
+            <ion-card-subtitle>{{ vehicle.type }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Price:</strong> ₱{{ vehicle.price | number:'1.2-2' }}/day</p>
+            <ion-button expand="block" color="primary">
+              View Details
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && vehicles.length === 0" class="empty-container">
+    <ion-icon name="car-outline"></ion-icon>
+    <p>No vehicles available at the moment.</p>
+  </div>
+</ion-content>

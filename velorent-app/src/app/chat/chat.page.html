@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Chat Support</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="chat-content">
+  <!-- Search Bar -->
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Search" 
+      class="chat-search-bar">
+    </ion-searchbar>
+  </div>
+
+  <!-- Chat List -->
+  <div class="chat-list-container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading chats...</p>
+    </div>
+
+    <!-- Chat List -->
+    <div class="chat-list" *ngIf="!loading">
+      <div 
+        *ngFor="let contact of contacts" 
+        class="chat-item"
+        (click)="selectContact(contact)">
+        
+        <!-- Left Section: Avatar & Badges -->
+        <div class="chat-avatar-section">
+          <div class="chat-avatar">
+            <ion-icon 
+              [name]="contact.type === 'admin' ? 'person-outline' : 'business-outline'">
+            </ion-icon>
+          </div>
+          <div class="live-badge" *ngIf="contact.isOnline">LIVE</div>
+        </div>
+
+        <!-- Middle Section: Chat Details -->
+        <div class="chat-details">
+          <div class="chat-name">{{ contact.name }}</div>
+          <div class="last-message">{{ contact.lastMessage || 'No messages yet' }}</div>
+        </div>
+
+        <!-- Right Section: Timestamp & Unread Count -->
+        <div class="chat-meta">
+          <div class="timestamp">{{ formatTimestamp(contact.lastMessageTime) }}</div>
+          <div class="unread-badge" *ngIf="contact.unreadCount > 0">
+            {{ contact.unreadCount }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && contacts.length === 0" class="empty-chats">
+      <ion-icon name="chatbubble-outline"></ion-icon>
+      <h2>No Chats</h2>
+      <p>Start a conversation to see your chats here</p>
+    </div>
+  </div>
+</ion-content>
+

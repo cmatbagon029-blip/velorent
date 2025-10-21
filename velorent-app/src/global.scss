@@ -1,0 +1,474 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* Theme variables */
+@import "./theme/variables.css";
+
+/* Custom styles */
+.alert-modal {
+  --height: auto;
+  --max-height: 90%;
+  --width: 90%;
+  --max-width: 400px;
+  --border-radius: 16px;
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  
+  &::part(content) {
+    background: var(--ion-color-light);
+  }
+  
+  ion-header {
+    ion-toolbar {
+      --border-width: 0;
+    }
+  }
+  
+  ion-content {
+    --background: var(--ion-color-light);
+  }
+  
+  ion-footer {
+    ion-toolbar {
+      --border-width: 0;
+      --padding-top: 0;
+      --padding-bottom: 0;
+      
+      ion-button {
+        margin: 0;
+        --border-radius: 0;
+        --box-shadow: none;
+      }
+    }
+  }
+}
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+/* Basic fixes for app responsiveness */
+ion-content {
+  overflow-y: auto !important;
+  padding-bottom: 120px !important; /* Ensure space for bottom navigation */
+}
+
+/* Global Animation Styles - Exclude page transitions */
+*:not(ion-router-outlet):not(ion-page):not(.ion-page) {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Disable page transitions to prevent nauseating effects */
+ion-router-outlet {
+  --transition: none !important;
+}
+
+ion-page {
+  --transition: none !important;
+}
+
+/* Remove page entrance animations */
+.ion-page {
+  animation: none !important;
+}
+
+/* Completely disable all page transitions */
+ion-router-outlet > * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Disable Ionic's built-in page transitions */
+.ion-page-ios,
+.ion-page-md {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Ensure no transform animations on page changes */
+ion-router-outlet {
+  transform: none !important;
+}
+
+ion-router-outlet > * {
+  transform: none !important;
+}
+
+/* Completely disable Ionic page transitions */
+ion-router-outlet,
+ion-router-outlet *,
+ion-page,
+ion-page *,
+.ion-page,
+.ion-page * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Disable Ionic's slide transitions specifically */
+ion-router-outlet[animated],
+ion-router-outlet[animated] * {
+  --transition: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Override any Ionic default page animations */
+.ion-page-ios,
+.ion-page-md,
+.ion-page-ios *,
+.ion-page-md * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Disable Ionic's specific transition classes */
+.ion-page-transition,
+.ion-page-transition *,
+.ion-page-transition-ios,
+.ion-page-transition-ios *,
+.ion-page-transition-md,
+.ion-page-transition-md * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Disable any slide animations */
+.slide-transition,
+.slide-transition *,
+.slide-ios-transition,
+.slide-ios-transition *,
+.slide-md-transition,
+.slide-md-transition * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Card hover animations */
+ion-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+ion-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+}
+
+/* Button animations */
+ion-button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+}
+
+ion-button:hover {
+  transform: scale(1.02);
+}
+
+ion-button:active {
+  transform: scale(0.98);
+}
+
+/* Input focus animations */
+ion-input, ion-select, ion-textarea {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+ion-input:focus-within, ion-select:focus-within, ion-textarea:focus-within {
+  transform: scale(1.02);
+}
+
+/* Search bar text alignment fix */
+ion-searchbar {
+  .searchbar-input {
+    text-align: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  .searchbar-input::placeholder {
+    text-align: center !important;
+  }
+  
+  .searchbar-input-container {
+    text-align: center !important;
+  }
+  
+  .searchbar-search-icon {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-left: -80px !important;
+    z-index: 10 !important;
+  }
+  
+  .searchbar-clear-button {
+    right: 10px !important;
+  }
+  
+  // When focused, keep icon centered
+  &.searchbar-focused {
+    .searchbar-search-icon {
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      margin-left: -80px !important;
+    }
+  }
+}
+
+/* Loading spinner animation */
+ion-spinner {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Floating animation for special elements */
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Shimmer effect for loading states */
+.shimmer {
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Bounce animation for notifications */
+.bounce-in {
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide in from right */
+.slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide in from left */
+.slide-in-left {
+  animation: slideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale in animation */
+.scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+ion-button, ion-card, ion-item {
+  pointer-events: auto !important;
+}
+
+/* Global Bottom Navigation Styles - BLACK & GOLD THEME */
+.bottom-nav {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  background: #000000 !important;
+  border-top: 2px solid #ffd700 !important;
+  box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3) !important;
+  backdrop-filter: blur(20px) !important;
+  
+  .nav-container {
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    height: 80px !important;
+    padding: 0 16px !important;
+    
+    .nav-button {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 8px 12px !important;
+      border-radius: 12px !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      color: #888888 !important;
+      min-width: 60px !important;
+      
+      .nav-icon {
+        font-size: 1.8rem !important;
+        margin-bottom: 4px !important;
+        transition: all 0.3s ease !important;
+        color: #ffffff !important;
+        display: block !important;
+      }
+      
+      .nav-label {
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        color: inherit !important;
+      }
+      
+      &.active {
+        color: #ffd700 !important;
+        background: rgba(255, 215, 0, 0.15) !important;
+        
+        .nav-icon {
+          transform: scale(1.1) !important;
+          color: #ffd700 !important;
+        }
+        
+        .nav-label {
+          font-weight: 600 !important;
+          color: #ffd700 !important;
+        }
+      }
+      
+      &:hover {
+        background: rgba(255, 215, 0, 0.1) !important;
+        color: #ffd700 !important;
+        
+        .nav-icon {
+          color: #ffd700 !important;
+        }
+        
+        .nav-label {
+          color: #ffd700 !important;
+        }
+      }
+      
+      &:active {
+        transform: scale(0.95) !important;
+      }
+    }
+  }
+}
+
+/* Ensure icons are visible */
+ion-icon {
+  display: inline-block !important;
+  font-size: inherit !important;
+  color: inherit !important;
+}
+
+/* Bottom navigation icon specific styles */
+.bottom-nav ion-icon {
+  display: block !important;
+  font-size: 1.8rem !important;
+  line-height: 1 !important;
+  margin-bottom: 4px !important;
+  color: #ffffff !important;
+}
+
+/* Ensure all ion-icon elements are visible */
+ion-icon[name] {
+  display: inline-block !important;
+}

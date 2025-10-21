@@ -1,0 +1,430 @@
+ion-header, ion-toolbar {
+  --background: #000 !important;
+  background: #000 !important;
+}
+
+ion-title {
+  color: #ffd700 !important;
+  font-weight: 600;
+}
+
+ion-content {
+  --background: #121212;
+  padding-bottom: 120px; /* Extra space for bottom navigation */
+}
+
+// Profile Card
+.profile-card {
+  max-width: 100%;
+  margin: 16px auto;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
+  background: #1e1e1e;
+  color: #fff;
+  border-radius: 16px;
+
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .profile-avatar {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #ffd700, #b8860b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .avatar-icon {
+        font-size: 2.5rem;
+        color: #000;
+      }
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+  }
+
+  ion-card-title {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+
+  ion-card-subtitle {
+    color: #b8860b;
+    font-size: 1rem;
+  }
+
+  ion-card-content {
+    padding: 16px;
+  }
+
+  .profile-field {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .profile-label {
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    
+    .profile-value {
+      color: #ffd700;
+      font-weight: 400;
+    }
+  }
+}
+
+// Quick Actions Card
+.quick-actions-card {
+  max-width: 100%;
+  margin: 16px auto;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
+  background: #1e1e1e;
+  color: #fff;
+  border-radius: 16px;
+
+  ion-card-title {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  .action-button {
+    --background: transparent;
+    --color: #ffd700;
+    --border-color: #ffd700;
+    --border-width: 2px;
+    --border-radius: 12px;
+    font-weight: 600;
+    height: 50px;
+    margin: 8px 0;
+
+    &:hover {
+      --background: rgba(255, 215, 0, 0.1);
+    }
+  }
+}
+
+// Settings Card
+.settings-card {
+  max-width: 100%;
+  margin: 16px auto;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
+  background: #1e1e1e;
+  color: #fff;
+  border-radius: 16px;
+
+  ion-card-title {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  ion-list {
+    background: transparent;
+    
+    ion-item {
+      --background: transparent;
+      --color: #e0e0e0;
+      --border-color: rgba(255, 215, 0, 0.2);
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --min-height: 50px;
+      
+      &:hover {
+        --background: rgba(255, 215, 0, 0.05);
+      }
+      
+      ion-icon {
+        color: #ffd700;
+        margin-right: 12px;
+      }
+      
+      ion-label {
+        font-weight: 500;
+      }
+
+      ion-note {
+        color: #b8860b;
+      }
+
+      ion-toggle {
+        --background: #333;
+        --background-checked: #ffd700;
+        --handle-background: #fff;
+        --handle-background-checked: #000;
+      }
+    }
+  }
+}
+
+// Legal Card
+.legal-card {
+  max-width: 100%;
+  margin: 16px auto;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
+  background: #1e1e1e;
+  color: #fff;
+  border-radius: 16px;
+
+  ion-card-title {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  ion-list {
+    background: transparent;
+    
+    ion-item {
+      --background: transparent;
+      --color: #e0e0e0;
+      --border-color: rgba(255, 215, 0, 0.2);
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --min-height: 50px;
+      
+      &:hover {
+        --background: rgba(255, 215, 0, 0.05);
+      }
+      
+      ion-icon {
+        color: #ffd700;
+        margin-right: 12px;
+      }
+      
+      ion-label {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Account Card
+.account-card {
+  max-width: 100%;
+  margin: 16px auto;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
+  background: #1e1e1e;
+  color: #fff;
+  border-radius: 16px;
+
+  ion-card-title {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  ion-list {
+    background: transparent;
+    
+    ion-item {
+      --background: transparent;
+      --color: #e0e0e0;
+      --border-color: rgba(255, 215, 0, 0.2);
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --min-height: 50px;
+      
+      &:hover {
+        --background: rgba(255, 215, 0, 0.05);
+      }
+      
+      ion-icon {
+        color: #ffd700;
+        margin-right: 12px;
+      }
+      
+      ion-label {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// App Info Card
+.app-info-card {
+  max-width: 100%;
+  margin: 16px auto 40px auto; /* Extra bottom margin for bottom nav */
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
+  background: #1e1e1e;
+  color: #fff;
+  border-radius: 16px;
+
+  .app-info {
+    text-align: center;
+    padding: 20px;
+
+    .app-icon {
+      font-size: 3rem;
+      color: #ffd700;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      color: #ffd700;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #e0e0e0;
+      margin: 4px 0;
+      font-size: 0.9rem;
+    }
+
+    .copyright {
+      color: #b8860b;
+      font-size: 0.8rem;
+      margin-top: 16px;
+    }
+  }
+}
+
+// Logout Button
+.logout-btn {
+  max-width: 100%;
+  margin: 20px auto;
+  --background: #dc3545;
+  --background-hover: #c82333;
+  --color: white;
+  --border-radius: 12px;
+  font-weight: 600;
+  height: 50px;
+}
+
+// Bottom Navigation - BLACK & GOLD THEME
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #000000;
+  border-top: 2px solid #ffd700;
+  box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3);
+  backdrop-filter: blur(20px);
+  
+  .nav-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80px;
+    padding: 0 16px;
+    
+    .nav-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #888888;
+      min-width: 60px;
+      
+      .nav-icon {
+        font-size: 1.8rem;
+        margin-bottom: 4px;
+        transition: all 0.3s ease;
+        color: #ffffff !important;
+        display: block;
+      }
+      
+      .nav-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        color: inherit;
+      }
+      
+      &.active {
+        color: #ffd700;
+        background: rgba(255, 215, 0, 0.15);
+        
+        .nav-icon {
+          transform: scale(1.1);
+          color: #ffd700;
+        }
+        
+        .nav-label {
+          font-weight: 600;
+          color: #ffd700;
+        }
+      }
+      
+      &:hover {
+        background: rgba(255, 215, 0, 0.1);
+        color: #ffd700;
+        
+        .nav-icon {
+          color: #ffd700;
+        }
+        
+        .nav-label {
+          color: #ffd700;
+        }
+      }
+      
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .bottom-nav {
+    .nav-container {
+      height: 70px;
+      padding: 0 8px;
+      
+      .nav-button {
+        min-width: 50px;
+        padding: 6px 8px;
+        
+        .nav-icon {
+          font-size: 1.6rem;
+        }
+        
+        .nav-label {
+          font-size: 0.7rem;
+        }
+      }
+    }
+  }
+  
+  ion-content {
+    padding-bottom: 110px; /* Extra space for smaller bottom nav */
+  }
+
+  .profile-card .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+
+    .profile-avatar {
+      width: 50px;
+      height: 50px;
+
+      .avatar-icon {
+        font-size: 2rem;
+      }
+    }
+  }
+}

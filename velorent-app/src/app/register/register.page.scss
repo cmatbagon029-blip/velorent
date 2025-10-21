@@ -1,0 +1,431 @@
+ion-content {
+  --background: transparent;
+  position: relative;
+  height: 100%;
+  background: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffd700;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.floating-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 50%;
+  animation: float 6s infinite linear;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.register-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.register-card {
+  background: rgba(24, 24, 24, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 25px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 215, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: slideInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.register-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffd700;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.register-title {
+  color: #ffd700;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+  to { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.3); }
+}
+
+.register-subtitle {
+  color: rgba(255, 215, 0, 0.7);
+  font-size: 0.95rem;
+  font-weight: 300;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  background: rgba(35, 35, 35, 0.8);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 15px;
+  color: #ffd700;
+  font-size: 1rem;
+  padding: 1rem 1.2rem;
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #ffd700;
+  box-shadow: 
+    0 0 0 4px rgba(255, 215, 0, 0.1),
+    0 0 20px rgba(255, 215, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 215, 0, 0.5);
+}
+
+.form-control:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-label {
+  position: absolute;
+  left: 1.2rem;
+  top: 1rem;
+  color: rgba(255, 215, 0, 0.7);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  background: rgba(24, 24, 24, 0.95);
+  padding: 0 0.5rem;
+}
+
+.form-control:focus + .form-label,
+.form-control:not(:placeholder-shown) + .form-label {
+  top: -0.5rem;
+  left: 1rem;
+  font-size: 0.8rem;
+  color: #ffd700;
+  transform: scale(0.9);
+}
+
+.input-icon {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 215, 0, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.form-control:focus ~ .input-icon {
+  color: #ffd700;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.requirement {
+  color: #4f8cff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0.5rem 0;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s, background 0.3s;
+  padding: 8px 12px;
+  background: rgba(79, 140, 255, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #4f8cff;
+  box-shadow: 0 2px 8px rgba(79, 140, 255, 0.08);
+  animation: slideInDown 0.3s ease-out;
+
+  &.valid {
+    color: #21d07a;
+    background: rgba(33, 208, 122, 0.1);
+    border-left: 4px solid #21d07a;
+  }
+
+  ion-icon {
+    font-size: 1rem;
+    min-width: 15px;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 1.5rem 0;
+  padding: 12px;
+  background: rgba(255, 215, 0, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+
+  ion-checkbox {
+    --background: rgba(35, 35, 35, 0.8);
+    --background-checked: #ffd700;
+    --border-color: rgba(255, 215, 0, 0.3);
+    --border-color-checked: #ffd700;
+    --checkmark-color: #000;
+  }
+
+  label {
+    color: rgba(255, 215, 0, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    cursor: pointer;
+
+    a {
+      color: #ffd700;
+      text-decoration: underline;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #ffed4e;
+      }
+    }
+  }
+}
+
+.btn-register {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 15px;
+  padding: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  cursor: pointer;
+}
+
+.btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-register:hover::before {
+  left: 100%;
+}
+
+.btn-register:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255, 215, 0, 0.4);
+}
+
+.btn-register:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn-register:disabled {
+  background: #333;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-register.loading {
+  pointer-events: none;
+}
+
+.btn-register.loading .spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.form-footer p {
+  color: rgba(255, 215, 0, 0.7);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.form-footer a {
+  color: #ffd700;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.form-footer a:hover {
+  color: #ffed4e;
+  text-decoration: underline;
+}
+
+ion-toolbar {
+  --background: transparent;
+  --color: #ffd700;
+}
+
+ion-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: #ffd700;
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+  }
+  
+  .register-title {
+    font-size: 1.8rem;
+  }
+  
+  .logo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .form-control {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}

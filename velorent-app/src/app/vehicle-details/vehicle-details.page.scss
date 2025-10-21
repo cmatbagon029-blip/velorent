@@ -1,0 +1,478 @@
+ion-content {
+  --background: #121212 !important;
+  background: #121212 !important;
+}
+
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  ion-icon {
+    font-size: 48px;
+    color: #ffd700;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #b8860b;
+    margin-bottom: 16px;
+  }
+}
+
+.vehicle-details {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+
+  @media (min-width: 768px) {
+    padding: 24px;
+  }
+}
+
+// Hero Section
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 32px;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+  }
+}
+
+.vehicle-image-container {
+  flex: 1;
+  min-height: 300px;
+
+  @media (min-width: 768px) {
+    min-height: 400px;
+  }
+}
+
+.vehicle-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 215, 0, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.image-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+.vehicle-type-badge {
+  background: rgba(255, 215, 0, 0.9);
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rating-badge {
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffd700;
+  padding: 8px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  font-size: 14px;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+.vehicle-info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.vehicle-name {
+  color: #ffd700;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
+  }
+}
+
+.owner-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e0e0e0;
+  font-size: 16px;
+  font-weight: 500;
+
+  ion-icon {
+    color: #ffd700;
+    font-size: 20px;
+  }
+}
+
+.pricing-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.price-card {
+  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(255, 215, 0, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.1);
+  }
+}
+
+.price-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #ffd700;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.price-amount {
+  color: #ffd700;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.price-period {
+  color: #b8860b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+// Features Section
+.features-section {
+  margin-bottom: 32px;
+
+  h2 {
+    color: #ffd700;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+}
+
+.features-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item {
+  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.1);
+  }
+
+  ion-icon {
+    color: #ffd700;
+    font-size: 24px;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  h3 {
+    color: #ffd700;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// Action Section
+.action-section {
+  margin-top: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 20px;
+  text-align: center;
+
+  ion-button {
+    --background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+    --background-activated: #b8860b;
+    --color: #000;
+    --border-radius: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(255, 215, 0, 0.4);
+    }
+
+    ion-icon {
+      font-size: 20px;
+      margin-right: 8px;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 767px) {
+  .pricing-section {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .vehicle-name {
+    font-size: 1.8rem;
+  }
+
+  .price-card {
+    padding: 16px;
+  }
+
+  .price-amount {
+    font-size: 1.5rem;
+  }
+
+  .feature-item {
+    padding: 16px;
+  }
+
+  .action-section {
+    padding: 20px;
+  }
+}
+
+.rental-form {
+  background: #232323;
+  padding: 24px;
+  border-radius: 12px;
+  margin-top: 32px;
+  color: #e0e0e0;
+
+  h2, h3, h4, h5, h6, label, span, p, .amount {
+    color: #ffd700 !important;
+  }
+
+  ion-item {
+    --background: #181818;
+    --color: #e0e0e0;
+    --placeholder-color: #b8860b;
+    border: 1px solid #ffd700;
+    border-radius: 8px;
+    margin-bottom: 16px;
+
+    ion-label {
+      color: #ffd700;
+    }
+  }
+
+  .total-price {
+    margin: 24px 0;
+    padding: 16px;
+    background: #181818;
+    border-radius: 8px;
+    text-align: center;
+
+    h3 {
+      font-size: 16px;
+      color: #ffd700;
+      margin-bottom: 8px;
+    }
+
+    .amount {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+  }
+
+  ion-button {
+    margin-top: 16px;
+    --background: #ffd700;
+    --background-activated: #b8860b;
+    color: #232323;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+}
+
+ion-card {
+  background: #232323 !important;
+  color: #e0e0e0 !important;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+  margin-bottom: 12px;
+}
+
+ion-card-header {
+  background: #121212 !important;
+  border-bottom: 1px solid #333;
+  padding: 16px;
+}
+
+ion-card-title, ion-card-subtitle {
+  color: #ffd700 !important;
+}
+
+ion-card-content, ion-card-content p, ion-card-content span, ion-card-content div, ion-card-content strong {
+  color: #e0e0e0 !important;
+  padding-bottom: 8px !important;
+}
+
+.owner-info, .price, .price-container, .rating {
+  color: #e0e0e0 !important;
+}
+
+.price {
+  color: #ffd700 !important;
+  font-weight: 600;
+}
+
+ion-button[color="primary"] {
+  --background: #ffd700;
+  --background-activated: #b8860b;
+  color: #232323;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.vehicle-info h1, .vehicle-info h2, .vehicle-info h3 {
+  color: #ffd700;
+}
+
+.vehicle-info, .vehicle-info p, .vehicle-info li {
+  color: #e0e0e0;
+}
+
+.vehicle-info .type, .vehicle-info .rating {
+  color: #ffd700;
+}
+
+.rental-form h2, .rental-form h3 {
+  color: #ffd700;
+}
+
+.rental-form ion-item {
+  --background: #181818;
+  --color: #e0e0e0;
+  --placeholder-color: #b8860b;
+  border: 1px solid #ffd700;
+}
+
+.rental-form ion-label {
+  color: #ffd700;
+}
+
+.rental-form .total-price {
+  background: #181818;
+  color: #ffd700;
+}
+
+.rental-form ion-button {
+  --background: #ffd700;
+  --background-activated: #b8860b;
+  color: #232323;
+}
+
+ion-header, ion-toolbar {
+  --background: #121212 !important;
+  background: #121212 !important;
+  --color: #ffd700 !important;
+  color: #ffd700 !important;
+}
+
+ion-title, ion-toolbar ion-title {
+  color: #ffd700 !important;
+}
+
+ion-back-button, ion-buttons, ion-toolbar ion-buttons, ion-toolbar ion-back-button {
+  color: #ffd700 !important;
+  --color: #ffd700 !important;
+}
