@@ -68,14 +68,15 @@
       <ion-item>
         <ion-label position="stacked">Date of Rent (From - To) <span class="required">*</span></ion-label>
         <div style="display: flex; gap: 8px;">
-          <ion-input type="date" [(ngModel)]="rentFromDate" name="rentFromDate" required placeholder="From"></ion-input>
-          <ion-input type="date" [(ngModel)]="rentToDate" name="rentToDate" required placeholder="To"></ion-input>
+          <ion-input type="date" [(ngModel)]="rentFromDate" name="rentFromDate" required placeholder="From" (ionChange)="onDateChange()"></ion-input>
+          <ion-input type="date" [(ngModel)]="rentToDate" name="rentToDate" required placeholder="To" (ionChange)="onDateChange()"></ion-input>
         </div>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Time of Rent <span class="required">*</span></ion-label>
         <ion-input type="time" [(ngModel)]="rentTime" name="rentTime" required></ion-input>
       </ion-item>
+
       <ion-item>
         <ion-label position="stacked">Location <span class="required">*</span></ion-label>
         <ion-input type="text" [(ngModel)]="destination" name="destination" required></ion-input>
@@ -87,6 +88,16 @@
       <ion-item>
         <ion-label position="stacked">Message</ion-label>
         <ion-textarea [(ngModel)]="message" name="message"></ion-textarea>
+      </ion-item>
+
+      <!-- Payment Method Selection -->
+      <ion-item *ngIf="totalCost > 0">
+        <ion-label position="stacked">Payment Method for Down Payment <span class="required">*</span></ion-label>
+        <ion-select [(ngModel)]="paymentMethod" name="paymentMethod" placeholder="Select payment method" required>
+          <ion-select-option *ngFor="let method of paymentMethods" [value]="method">
+            {{ method }}
+          </ion-select-option>
+        </ion-select>
       </ion-item>
 
       <!-- Conditional ID Uploads -->
@@ -114,6 +125,31 @@
       <div *ngIf="additionalIdPreview" class="image-preview">
         <img [src]="additionalIdPreview" alt="Additional ID Preview" />
       </div>
+
+      <!-- Cost Summary -->
+      <ion-card *ngIf="totalCost > 0" class="cost-breakdown">
+        <ion-card-header>
+          <ion-card-title>Cost Summary</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="cost-item">
+            <span>Total Cost:</span>
+            <span class="amount">₱{{ totalCost | number:'1.2-2' }}</span>
+          </div>
+          <div class="cost-item down-payment">
+            <span>Down Payment (50%):</span>
+            <span class="amount">₱{{ downPayment | number:'1.2-2' }}</span>
+          </div>
+          <div class="cost-item remaining">
+            <span>Remaining Amount:</span>
+            <span class="amount">₱{{ remainingAmount | number:'1.2-2' }}</span>
+          </div>
+          <div class="payment-note">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>You need to pay the down payment to confirm your booking. The remaining amount will be paid upon vehicle pickup.</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
       <ion-button expand="block" color="medium" (click)="prevStep()">Back</ion-button>
       <ion-button expand="block" type="submit" color="primary"

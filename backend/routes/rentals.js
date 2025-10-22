@@ -134,7 +134,8 @@ router.post('/', auth.verifyToken, upload.fields([
 
     // Get fields from req.body (multer parses them as strings)
     const {
-      fullName, mobileNumber, serviceType, rentFromDate, rentToDate, rentTime, destination, occasion, message, vehicleId, vehicleName
+      fullName, mobileNumber, serviceType, rentFromDate, rentToDate, rentTime, destination, occasion, message, vehicleId, vehicleName,
+      totalCost, downPayment, remainingAmount, paymentMethod
     } = req.body;
 
     // Validate required fields
@@ -173,11 +174,11 @@ router.post('/', auth.verifyToken, upload.fields([
       }
     }
 
-    // Insert into bookings table (now with user_id, start_date, end_date, company_id, company_name)
+    // Insert into bookings table (now with user_id, start_date, end_date, company_id, company_name, and payment info)
     await connection.execute(
       `INSERT INTO bookings (
-        user_id, user_name, mobile_number, vehicle_id, company_id, company_name, vehicle_name, service_type, start_date, end_date, rent_time, destination, occasion, message, valid_id_path, additional_id_path, booking_date, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` ,
+        user_id, user_name, mobile_number, vehicle_id, company_id, company_name, vehicle_name, service_type, start_date, end_date, rent_time, destination, occasion, message, valid_id_path, additional_id_path, total_cost, down_payment, remaining_payment, payment_method, booking_date, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` ,
       [
         req.user.id,
         fullName,
@@ -195,6 +196,10 @@ router.post('/', auth.verifyToken, upload.fields([
         message || null,
         validIdPath,
         additionalIdPath,
+        totalCost || 0,
+        downPayment || 0,
+        remainingAmount || 0,
+        paymentMethod || null,
         new Date(),
         'Pending'
       ]

@@ -40,6 +40,13 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   additionalIdFile: File | null = null;
   additionalIdPreview: SafeUrl | null = null;
 
+  // Payment fields
+  totalCost: number = 0;
+  downPayment: number = 0;
+  remainingAmount: number = 0;
+  paymentMethod: string = '';
+  paymentMethods = ['Cash', 'Credit Card', 'GCash', 'PayMaya', 'Bank Transfer'];
+
   driverOptions = ['With Driver', 'Without Driver'];
 
   // Modal state
@@ -236,6 +243,33 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
     reader.readAsDataURL(file);
   }
 
+  calculateTotalCost() {
+    if (!this.rentFromDate || !this.rentToDate || !this.vehicle) return;
+
+    const start = new Date(this.rentFromDate);
+    const end = new Date(this.rentToDate);
+    const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (days > 0) {
+      // Use appropriate price based on service type
+      const dailyPrice = this.serviceType === 'Self Drive' 
+        ? this.vehicle.price_without_driver 
+        : this.vehicle.price_with_driver;
+      
+      this.totalCost = days * dailyPrice;
+      this.downPayment = this.totalCost / 2; // Half of total cost
+      this.remainingAmount = this.totalCost - this.downPayment;
+    } else {
+      this.totalCost = 0;
+      this.downPayment = 0;
+      this.remainingAmount = 0;
+    }
+  }
+
+  onDateChange() {
+    this.calculateTotalCost();
+  }
+
   async showToast(message: string, color: string = 'danger') {
     const toast = await this.toastCtrl.create({
       message,
@@ -257,6 +291,14 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
       return;
     }
 
+    if (!this.paymentMethod) {
+      this.showToast('Please select a payment method for the down payment.');
+      return;
+    }
+
+    // Calculate costs before submission
+    this.calculateTotalCost();
+
     // Proceed with booking submission if all checks pass
     const formData = new FormData();
     formData.append('vehicleId', this.vehicleId.toString());
@@ -270,12 +312,16 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
     formData.append('destination', this.destination);
     formData.append('occasion', this.occasion);
     formData.append('message', this.message);
+    formData.append('totalCost', this.totalCost.toString());
+    formData.append('downPayment', this.downPayment.toString());
+    formData.append('remainingAmount', this.remainingAmount.toString());
+    formData.append('paymentMethod', this.paymentMethod);
     if (this.validIdFile) formData.append('validId', this.validIdFile);
     if (this.additionalIdFile) formData.append('additionalId', this.additionalIdFile);
 
     this.apiService.createRentalWithFiles(formData).subscribe({
       next: (response) => {
-        this.showToast('Booking submitted successfully!', 'success');
+        this.showToast('Booking submitted successfully! Please pay the down payment to confirm your reservation.', 'success');
         this.router.navigate(['/my-rentals']);
       },
       error: (error) => {

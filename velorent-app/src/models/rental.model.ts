@@ -10,6 +10,11 @@ export interface Rental {
   endDate: string;
   status: 'pending' | 'active' | 'completed' | 'cancelled';
   totalPrice: number;
+  totalCost?: number;
+  downPayment?: number;
+  remainingAmount?: number;
+  paymentMethod?: string;
+  paymentStatus?: 'Pending' | 'Down Payment Paid' | 'Fully Paid' | 'Refunded';
   createdAt: string;
   updatedAt: string;
   vehicle?: Vehicle;
