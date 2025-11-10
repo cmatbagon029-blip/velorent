@@ -31,7 +31,7 @@
     <ion-item *ngFor="let booking of bookings" class="booking-item">
       <ion-label>
         <h2>{{ booking.vehicle_name }}</h2>
-        <p><strong>Date:</strong> {{ formatDate(booking.rent_date) }} {{ formatTime(booking.rent_time) }}</p>
+        <p><strong>Date:</strong> {{ formatDate(booking.start_date) }} {{ formatTime(booking.rent_time) }}</p>
         <p><strong>Destination:</strong> {{ booking.destination }}</p>
         <p><strong>Status:</strong> <ion-badge class="status-badge">{{ booking.status }}</ion-badge></p>
       </ion-label>
@@ -53,8 +53,13 @@
     </button>
     
     <button class="nav-button" (click)="navigateToNotifications()">
+      <div class="notification-wrapper">
       <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
-      <span class="nav-label">Notifications</span>
+        <div *ngIf="unreadCount > 0" class="notification-badge">
+          {{ unreadCount }}
+        </div>
+      </div>
+      <span class="nav-label">Notifications ({{ unreadCount }})</span>
     </button>
     
     <button class="nav-button" (click)="navigateToProfile()">

@@ -82,10 +82,17 @@
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error" class="error-container">
+  <div *ngIf="error && !loading" class="error-container">
     <ion-icon name="alert-circle-outline"></ion-icon>
     <p>{{ error }}</p>
     <ion-button (click)="loadVehicles()">Try Again</ion-button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && vehicles.length === 0" class="empty-container">
+    <ion-icon name="car-outline" style="font-size: 64px; color: #999;"></ion-icon>
+    <h2>No Vehicles Available</h2>
+    <p>There are no vehicles available at the moment. Please check back later.</p>
   </div>
 
   <!-- Featured Rental Companies -->
@@ -135,8 +142,13 @@
     </button>
     
     <button class="nav-button" (click)="navigateToNotifications()">
+      <div class="notification-wrapper">
       <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
-      <span class="nav-label">Notifications</span>
+        <div *ngIf="unreadCount > 0" class="notification-badge">
+          {{ unreadCount }}
+        </div>
+      </div>
+      <span class="nav-label">Notifications ({{ unreadCount }})</span>
     </button>
     
     <button class="nav-button" (click)="navigateToProfile()">

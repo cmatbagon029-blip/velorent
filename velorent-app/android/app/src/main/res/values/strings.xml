@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Velorent</string>
+    <string name="title_activity_main">Velorent</string>
+    <string name="package_name">com.velorent.app</string>
+    <string name="custom_url_scheme">com.velorent.app</string>
+</resources>

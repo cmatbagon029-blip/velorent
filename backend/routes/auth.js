@@ -1,187 +1,221 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
+const mysql = require('mysql2/promise');
 const jwt = require('jsonwebtoken');
-const db = require('../config/database'); 
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
-  let connection;
-  try {
-    console.log('Registration request received:', req.body);
-    const { name, email, password } = req.body;
-
-    // Validate required fields
-    if (!name || !email || !password) {
-      console.log('Missing required fields:', { name: !!name, email: !!email, password: !!password });
-      return res.status(400).json({ 
-        success: false,
-        message: 'All fields are required' 
-      });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      console.log('Invalid email format:', email);
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid email format'
-      });
-    }
-
-    // Validate password length
-    if (password.length < 6) {
-      console.log('Password too short');
-      return res.status(400).json({
-        success: false,
-        message: 'Password must be at least 6 characters long'
-      });
-    }
-
-    try {
-      // Get a connection from the pool
-      connection = await db.getConnection();
-      console.log('Got database connection');
-
-      // Check if user exists
-      const [existing] = await connection.query('SELECT * FROM users WHERE email = ?', [email]);
-      if (existing.length > 0) {
-        console.log('User already exists:', email);
-        return res.status(400).json({ 
-          success: false,
-          message: 'Email already registered' 
-        });
-      }
-
-      // Hash password
-      console.log('Hashing password...');
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Insert new user
-      console.log('Inserting new user...');
-      const [result] = await connection.query(
-        'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-        [name, email, hashedPassword, 'user']
-      );
-
-      console.log('User registered successfully:', { id: result.insertId, email });
-      res.status(201).json({ 
-        success: true,
-        message: 'User registered successfully' 
-      });
-    } catch (dbError) {
-      console.error('Database error:', dbError);
-      if (dbError.code === 'ER_NO_SUCH_TABLE') {
-        return res.status(500).json({
-          success: false,
-          message: 'Database table not found. Please contact administrator.'
-        });
-      }
-      if (dbError.code === 'ER_DUP_ENTRY') {
-        return res.status(400).json({
-          success: false,
-          message: 'Email already registered'
-        });
-      }
-      if (dbError.code === 'ER_ACCESS_DENIED_ERROR') {
-        return res.status(500).json({
-          success: false,
-          message: 'Database access denied. Please contact administrator.'
-        });
-      }
-      if (dbError.code === 'ECONNREFUSED') {
-        return res.status(500).json({
-          success: false,
-          message: 'Database connection refused. Please try again later.'
-        });
-      }
-      throw dbError; // Re-throw other database errors
-    }
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ 
-      success: false,
-      message: 'Registration failed: ' + error.message 
-    });
-  } finally {
-    if (connection) {
-      connection.release();
-    }
-  }
-});
-
+// Regular login endpoint
 router.post('/login', async (req, res) => {
   let connection;
   try {
-    console.log('Login request received:', { email: req.body.email });
     const { email, password } = req.body;
 
-    // Validate required fields
     if (!email || !password) {
-      console.log('Missing required fields:', { email: !!email, password: !!password });
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: 'Email and password are required' 
+        message: 'Email and password are required'
       });
     }
 
-    // Get a connection from the pool
-    connection = await db.getConnection();
-    console.log('Got database connection');
+    connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'velorent'
+    });
 
-    const [users] = await connection.query('SELECT * FROM users WHERE email = ?', [email]);
+    // Find user by email
+    const [users] = await connection.execute(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
 
     if (users.length === 0) {
-      console.log('User not found:', email);
-      return res.status(400).json({ 
+      return res.status(401).json({
         success: false,
-        message: 'Invalid email or password' 
+        message: 'Invalid email or password'
       });
     }
 
     const user = users[0];
-    console.log('User found, verifying password...');
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      console.log('Invalid password for user:', email);
-      return res.status(400).json({ 
+    // Check if user has a password (not a social login user)
+    if (!user.password) {
+      return res.status(401).json({
         success: false,
-        message: 'Invalid email or password' 
+        message: 'This account uses social login. Please use Google or Facebook to sign in.'
       });
     }
 
-    console.log('Password verified, generating token...');
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Generate JWT token
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      'your-secret-key',
-      { expiresIn: '1h' }
+      { 
+        userId: user.id, 
+        email: user.email,
+        role: user.role 
+      },
+      'your-secret-key', // Replace with your actual secret key
+      { expiresIn: '24h' }
     );
 
-    console.log('Login successful for user:', email);
+    // Remove sensitive information
+    const userResponse = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      created_at: user.created_at
+    };
+
     res.json({
       success: true,
       message: 'Login successful',
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+      user: userResponse
     });
-  } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ 
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({
       success: false,
-      message: 'Server error during login' 
+      message: 'Internal server error during login',
+      error: error.message
     });
   } finally {
     if (connection) {
-      connection.release();
+      await connection.end();
     }
   }
 });
 
+// Social login endpoint
+router.post('/social-login', async (req, res) => {
+  let connection;
+  try {
+    const { provider, socialId, email, name, picture } = req.body;
+
+    // Validate required fields
+    if (!provider || !socialId || !email || !name) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Missing required social login information'
+      });
+    }
+
+    connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'velorent'
+    });
+
+    // Check if user exists with this social ID
+    const [existingUsers] = await connection.execute(
+      'SELECT * FROM users WHERE social_id = ? AND provider = ?',
+      [socialId, provider]
+    );
+
+    let user;
+
+    if (existingUsers.length > 0) {
+      // User exists, update their information
+      user = existingUsers[0];
+      
+      await connection.execute(
+        'UPDATE users SET name = ?, email = ?, picture = ?, updated_at = NOW() WHERE id = ?',
+        [name, email, picture, user.id]
+      );
+      
+      // Update user object with new data
+      user.name = name;
+      user.email = email;
+      user.picture = picture;
+    } else {
+      // Check if user exists with same email
+      const [emailUsers] = await connection.execute(
+        'SELECT * FROM users WHERE email = ?',
+        [email]
+      );
+
+      if (emailUsers.length > 0) {
+        // Link existing account with social account
+        await connection.execute(
+          'UPDATE users SET social_id = ?, provider = ?, picture = ?, updated_at = NOW() WHERE id = ?',
+          [socialId, provider, picture, emailUsers[0].id]
+        );
+        user = emailUsers[0];
+        user.social_id = socialId;
+        user.provider = provider;
+        user.picture = picture;
+      } else {
+        // Create new user
+        const [result] = await connection.execute(
+          'INSERT INTO users (name, email, social_id, provider, picture, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
+          [name, email, socialId, provider, picture]
+        );
+        
+        user = {
+          id: result.insertId,
+          name,
+          email,
+          social_id: socialId,
+          provider,
+          picture,
+          created_at: new Date(),
+          updated_at: new Date()
+        };
+      }
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        userId: user.id, 
+        email: user.email,
+        provider: user.provider 
+      },
+      'your-secret-key', // Replace with your actual secret key
+      { expiresIn: '24h' }
+    );
+
+    // Remove sensitive information
+    const userResponse = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      picture: user.picture,
+      provider: user.provider,
+      created_at: user.created_at
+    };
+
+    res.json({
+      success: true,
+      message: 'Social login successful',
+      token,
+      user: userResponse
+    });
+
+  } catch (error) {
+    console.error('Social login error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Internal server error during social login',
+      error: error.message
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
 
 module.exports = router;

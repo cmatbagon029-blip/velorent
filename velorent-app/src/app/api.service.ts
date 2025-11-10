@@ -5,14 +5,33 @@ import { catchError, tap } from 'rxjs/operators';
 import { Vehicle } from '../models/vehicle.model';
 import { RentalCompany } from '../models/rental-company.model';
 import { Rental } from '../models/rental.model';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:3000/api';
+  // Initialize API URL with fallback - ensure it's always defined
+  private readonly apiUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Safe initialization with multiple fallback checks
+    if (environment && environment.apiUrl) {
+      this.apiUrl = environment.apiUrl;
+    } else if ((window as any).__ENV__ && (window as any).__ENV__.apiUrl) {
+      // Fallback to window global if available
+      this.apiUrl = (window as any).__ENV__.apiUrl;
+    } else {
+      // Final fallback to production URL
+      this.apiUrl = 'http://192.168.1.21:3000/api';
+    }
+    
+    // Debug logging for environment
+    console.log('ApiService initialized');
+    console.log('Environment object:', environment);
+    console.log('Environment type:', typeof environment);
+    console.log('API URL:', this.apiUrl);
+  }
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -140,6 +159,43 @@ export class ApiService {
     );
   }
 
+  markNotificationAsRead(bookingId: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.put(`${this.apiUrl}/rentals/${bookingId}/mark-notification-read`, {}, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Company availability endpoints
+  getCompanyAvailability(companyId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/companies/${companyId}/availability`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  checkCompanyAvailability(companyId: number, date: string, time: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/companies/${companyId}/check-availability`, {
+      date,
+      time
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Driver endpoints
+  getDrivers(companyId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/companies/${companyId}/drivers`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Check vehicle availability
+  checkVehicleAvailability(vehicleId: number, startDate: string, endDate: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/vehicles/${vehicleId}/availability?startDate=${startDate}&endDate=${endDate}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('API Error:', error);
     let errorMessage = 'An error occurred';
@@ -147,9 +203,12 @@ export class ApiService {
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = error.error.message;
+    } else if (error.status === 0) {
+      // Network error - connection failed
+      errorMessage = `Network Error: Unable to connect to server. Please check:\n1. Backend server is running on ${this.apiUrl}\n2. Device and server are on the same network\n3. Firewall allows connections on port 3000`;
     } else {
       // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message || error.error?.message || 'Unknown error'}`;
     }
     
     return throwError(() => new Error(errorMessage));

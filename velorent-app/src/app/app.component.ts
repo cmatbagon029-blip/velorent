@@ -14,10 +14,14 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'velorent-app';
   constructor(private router: Router) {
+    console.log('=== APP COMPONENT STARTUP ===');
     const token = localStorage.getItem('token');
-    // Always land on browse page if no token; login is user-initiated from actions
-    if (!token) {
-      this.router.navigateByUrl('/dashboard', { replaceUrl: true });
-    }
+    const user = localStorage.getItem('user');
+    console.log('Token exists:', !!token);
+    console.log('User exists:', !!user);
+    
+    // Don't redirect - let router handle navigation
+    // This allows user to stay logged in across app restarts
   }
 }
+

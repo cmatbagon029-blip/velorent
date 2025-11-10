@@ -10,7 +10,13 @@ const verificationRoutes = require('./routes/verification');
 const app = express();
 
 // Middleware
-app.use(cors());
+// Configure CORS to allow requests from mobile app
+app.use(cors({
+  origin: '*', // Allow all origins for development (restrict in production)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -33,6 +39,8 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const HOST = process.env.HOST || '0.0.0.0'; // Listen on all network interfaces
+app.listen(PORT, HOST, () => {
+  console.log(`Server is running on http://${HOST}:${PORT}`);
+  console.log(`Server accessible at http://localhost:${PORT} and http://192.168.1.21:${PORT}`);
 }); 

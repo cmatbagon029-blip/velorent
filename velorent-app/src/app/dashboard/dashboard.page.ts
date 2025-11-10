@@ -9,6 +9,7 @@ import { AlertModalComponent } from '../components/alert-modal/alert-modal.compo
 import { ApiService } from '../api.service';
 import { Vehicle } from '../../models/vehicle.model';
 import { RentalCompany } from '../../models/rental-company.model';
+import { NotificationService } from '../services/notification.service';
 import { addIcons } from 'ionicons';
 import { 
   star, 
@@ -51,6 +52,7 @@ export class DashboardPage implements OnInit {
   filteredVehicles: Vehicle[] = [];
   showAllVehicles: boolean = false;
   readonly INITIAL_VEHICLE_COUNT = 4;
+  unreadCount: number = 0;
 
   get displayedVehicles(): Vehicle[] {
     if (this.showAllVehicles || this.filteredVehicles.length <= this.INITIAL_VEHICLE_COUNT) {
@@ -105,51 +107,83 @@ export class DashboardPage implements OnInit {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private apiService: ApiService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private notificationService: NotificationService
   ) {
     console.log('Dashboard component constructed');
   }
 
   ngOnInit() {
-    // Set dashboard as root to prevent back navigation to login
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.navCtrl.navigateRoot('/dashboard');
-    }
     console.log('Dashboard component initialized');
-    // Check if user is logged in
-    const userInfo = localStorage.getItem('userInfo');
+    
+    // Note: Dashboard is now public - no authentication required for browsing
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');  // Changed from userInfo to user
     console.log('Token exists:', !!token);
-    console.log('User info exists:', !!userInfo);
+    console.log('User exists:', !!user);
+    
     this.loadCompanies();
     this.loadVehicles();
+    
+    // Only update notification count if user is logged in
+    if (token && user) {
+      this.updateNotificationCount();
+    }
+  }
+
+  ionViewWillEnter() {
+    // Refresh notification count when returning to dashboard
+    console.log('Dashboard ionViewWillEnter - updating notification count');
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    // Only update notification count if user is logged in
+    if (token && user) {
+      this.updateNotificationCount();
+    }
   }
 
   loadCompanies() {
-    this.loading = true;
     this.apiService.getCompanies().subscribe({
       next: (companies) => {
-        this.companies = companies;
-        this.loading = false;
+        console.log('Companies loaded:', companies);
+        this.companies = Array.isArray(companies) ? companies : [];
+        // Don't set loading to false here - let loadVehicles handle it
       },
       error: (error) => {
         console.error('Error loading companies:', error);
-        this.error = 'Failed to load rental companies. Please try again.';
-        this.loading = false;
+        this.companies = []; // Set empty array on error
+        // Don't set loading to false here - let loadVehicles handle it
       }
     });
   }
 
   loadVehicles() {
     this.loading = true;
+    this.error = null; // Clear previous errors
     this.apiService.getVehicles().subscribe({
       next: (vehicles) => {
-        this.vehicles = vehicles;
-        this.filteredVehicles = [...vehicles];
+        console.log('Vehicles loaded:', vehicles);
+        console.log('Vehicles type:', typeof vehicles);
+        console.log('Is array:', Array.isArray(vehicles));
+        
+        // Ensure vehicles is an array
+        if (Array.isArray(vehicles)) {
+          this.vehicles = vehicles;
+          this.filteredVehicles = [...vehicles];
+          console.log('Vehicles count:', vehicles.length);
+        } else {
+          console.warn('Vehicles response is not an array:', vehicles);
+          this.vehicles = [];
+          this.filteredVehicles = [];
+        }
         this.loading = false;
       },
       error: (error) => {
         console.error('Error loading vehicles:', error);
+        console.error('Error details:', JSON.stringify(error));
+        this.vehicles = [];
+        this.filteredVehicles = [];
         this.error = 'Failed to load vehicles. Please try again.';
         this.loading = false;
       }
@@ -258,4 +292,29 @@ export class DashboardPage implements OnInit {
     const company = this.companies.find(c => c.id === companyId);
     return company ? company.name : 'Unknown Company';
   }
+
+  updateNotificationCount() {
+    console.log('Updating notification count...');
+    this.notificationService.updateUnreadCount();
+    this.notificationService.unreadCount$.subscribe(count => {
+      console.log('Unread count updated:', count);
+      this.unreadCount = count;
+    });
+  }
+
+  // Check if user is properly authenticated
+  private   checkAuthentication() {
+    // Now optional - allow guest browsing
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    if (token && user) {
+      console.log('User is authenticated');
+      return true;
+    }
+    
+    console.log('User is browsing as guest');
+    return false; // But don't redirect - allow guest access
+  }
+
 }

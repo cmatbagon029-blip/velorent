@@ -47,6 +47,82 @@ ion-item {
   font-size: 1.1em;
 }
 
+.days-info-card {
+  --background: #1a1a1a;
+  border: 1px solid #ffd700;
+  margin-top: 1rem;
+  
+  .days-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #ffd700;
+    font-size: 1rem;
+    
+    ion-icon {
+      font-size: 1.5rem;
+    }
+    
+    strong {
+      color: #ffd700;
+      font-weight: 600;
+    }
+  }
+}
+
+.availability-warning-card {
+  --background: #2d2410;
+  border: 1px solid #f39c12;
+  margin-top: 1rem;
+  
+  .warning-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #f39c12;
+    font-size: 0.9rem;
+    
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.login-modal-content {
+  --background: #121212;
+  
+  .login-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+    
+    ion-icon {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      color: #ffd700;
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    p {
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    ion-button {
+      margin: 0.5rem 0;
+      --border-radius: 8px;
+    }
+  }
+}
+
 .image-preview {
   display: flex;
   justify-content: flex-start;
@@ -764,5 +840,345 @@ ion-modal ion-header ion-button {
     font-size: 0.9rem;
     line-height: 1.5;
     font-style: italic;
+  }
+}
+
+// Payment Notice Card Styling
+.payment-notice-card {
+  background: rgba(52, 152, 219, 0.05) !important;
+  border: 1px solid rgba(52, 152, 219, 0.2) !important;
+  border-radius: 12px !important;
+  margin: 16px 0 !important;
+
+  ion-card-content {
+    padding: 16px !important;
+  }
+}
+
+.payment-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  ion-icon {
+    color: #3498db !important;
+    font-size: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .notice-content {
+    flex: 1;
+
+    h4 {
+      color: #3498db !important;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: #e0e0e0 !important;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0;
+
+      strong {
+        color: #ffd700 !important;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Availability Status Cards
+.availability-loading {
+  background: rgba(52, 152, 219, 0.05) !important;
+  border: 1px solid rgba(52, 152, 219, 0.2) !important;
+  margin: 12px 0 !important;
+
+  .loading-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #3498db !important;
+    font-size: 0.9rem;
+  }
+}
+
+.availability-error {
+  background: rgba(231, 76, 60, 0.05) !important;
+  border: 1px solid rgba(231, 76, 60, 0.2) !important;
+  margin: 12px 0 !important;
+
+  .error-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #e74c3c !important;
+    font-size: 0.9rem;
+  }
+}
+
+.availability-success {
+  background: rgba(46, 204, 113, 0.05) !important;
+  border: 1px solid rgba(46, 204, 113, 0.2) !important;
+  margin: 12px 0 !important;
+
+  .success-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #2ecc71 !important;
+    font-size: 0.9rem;
+  }
+}
+
+// Company Availability Info
+.availability-info {
+  background: rgba(255, 215, 0, 0.05) !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  margin: 16px 0 !important;
+
+  ion-card-header {
+    padding-bottom: 8px !important;
+
+    ion-card-title {
+      color: #ffd700 !important;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+}
+
+.availability-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.day-availability {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &.available {
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+  }
+
+  &.unavailable {
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+  }
+
+  .day-name {
+    font-weight: 600;
+    color: #e0e0e0 !important;
+    text-transform: capitalize;
+  }
+
+  .day-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+
+    span {
+      color: #e0e0e0 !important;
+    }
+  }
+}
+
+// Rental limit indicator styles
+.rental-limit-card {
+  background: rgba(52, 152, 219, 0.05) !important;
+  border: 1px solid rgba(52, 152, 219, 0.2) !important;
+  border-radius: 12px !important;
+  margin: 16px 0 !important;
+
+  ion-card-content {
+    padding: 12px 16px !important;
+  }
+}
+
+.rental-limit-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  ion-icon {
+    color: #3498db !important;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .limit-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .limit-label {
+      color: #2c3e50 !important;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .limit-count {
+      color: #3498db !important;
+      font-weight: 600;
+      font-size: 1rem;
+      background: rgba(52, 152, 219, 0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .limit-message {
+      color: #e74c3c !important;
+      font-weight: 500;
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+  }
+}
+
+// Driver selection styles
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  color: #ffd700 !important;
+
+  ion-spinner {
+    margin-bottom: 10px;
+    --color: #ffd700;
+  }
+
+  p {
+    color: #e0e0e0 !important;
+    margin: 0;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  border-radius: 8px;
+  color: #e74c3c !important;
+  margin: 10px 0;
+
+  ion-icon {
+    color: #e74c3c !important;
+  }
+}
+
+.no-drivers {
+  text-align: center;
+  padding: 20px;
+  color: #e0e0e0 !important;
+
+  ion-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: #ffd700 !important;
+  }
+
+  h3 {
+    margin: 10px 0;
+    color: #ffd700 !important;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #cccccc !important;
+  }
+}
+
+.drivers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.driver-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.1);
+
+  &:hover {
+    border-color: #ffd700;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+    transform: translateY(-2px);
+  }
+
+  &.selected {
+    border-color: #ffd700;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .driver-info {
+    flex: 1;
+
+    .driver-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ffd700 !important;
+      margin-bottom: 8px;
+    }
+
+    .driver-details {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .driver-experience,
+      .driver-phone {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        color: #e0e0e0 !important;
+        font-weight: 500;
+
+        ion-icon {
+          font-size: 16px;
+          color: #ffd700 !important;
+        }
+      }
+    }
+  }
+
+  .driver-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+
+    ion-icon {
+      font-size: 24px;
+      color: #ffd700 !important;
+    }
   }
 } 

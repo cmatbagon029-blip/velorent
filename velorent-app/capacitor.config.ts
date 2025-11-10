@@ -1,9 +1,14 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'velorent-app',
-  webDir: 'www'
+  appId: 'com.velorent.app',
+  appName: 'Velorent',
+  webDir: 'www',
+  server: {
+    cleartext: true,
+    androidScheme: 'http',
+    hostname: 'localhost'
+  }
 };
 
 export default config;

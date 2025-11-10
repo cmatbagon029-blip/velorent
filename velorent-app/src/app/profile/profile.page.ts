@@ -4,18 +4,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { NotificationService } from '../services/notification.service';
 import { TermsModalComponent } from '../settings/settings.page';
 import { PrivacyModalComponent } from '../settings/settings.page';
 import { addIcons } from 'ionicons';
 import { 
-  home, 
-  searchOutline, 
-  carOutline, 
+  home,
+  carOutline,
   personOutline,
   personCircle,
+  personCircleOutline,
   logInOutline,
-  personAddOutline,
-  moonOutline,
   notificationsOutline,
   locationOutline,
   languageOutline,
@@ -28,19 +27,19 @@ import {
   keyOutline,
   settingsOutline,
   logOutOutline,
-  carSportOutline
+  calendarOutline,
+  logoGoogle,
+  logoFacebook
 } from 'ionicons/icons';
 
 // Register icons
 addIcons({ 
-  home, 
-  'search-outline': searchOutline, 
-  'car-outline': carOutline, 
+  home,
+  'car-outline': carOutline,
   'person-outline': personOutline,
   'person-circle': personCircle,
+  'person-circle-outline': personCircleOutline,
   'log-in-outline': logInOutline,
-  'person-add-outline': personAddOutline,
-  'moon-outline': moonOutline,
   'notifications-outline': notificationsOutline,
   'location-outline': locationOutline,
   'language-outline': languageOutline,
@@ -53,7 +52,9 @@ addIcons({
   'key-outline': keyOutline,
   'settings-outline': settingsOutline,
   'log-out-outline': logOutOutline,
-  'car-sport-outline': carSportOutline
+  'calendar-outline': calendarOutline,
+  'logo-google': logoGoogle,
+  'logo-facebook': logoFacebook
 });
 
 @Component({
@@ -65,9 +66,9 @@ addIcons({
 })
 export class ProfilePage implements OnInit {
   user: any = null;
+  unreadCount: number = 0;
   
   // App Settings (Available to all users)
-  darkMode: boolean = true;
   notifications: boolean = true;
   locationServices: boolean = true;
 
@@ -75,38 +76,49 @@ export class ProfilePage implements OnInit {
     private authService: AuthService, 
     private router: Router,
     private modalController: ModalController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      this.user = JSON.parse(userStr);
-    }
-    
-    // Load saved settings
+    this.loadUserData();
     this.loadSettings();
+    this.updateNotificationCount();
+  }
+
+  ionViewWillEnter() {
+    // Refresh user data when page is about to be displayed
+    this.loadUserData();
+    this.updateNotificationCount();
+  }
+
+  loadUserData() {
+    const userStr = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    
+    if (userStr) {
+      try {
+        this.user = JSON.parse(userStr);
+        console.log('User data loaded:', this.user.name, this.user.email);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        this.user = null;
+      }
+    } else {
+      this.user = null;
+    }
   }
 
   loadSettings() {
     // Load settings from localStorage
-    this.darkMode = localStorage.getItem('darkMode') === 'true' || true;
     this.notifications = localStorage.getItem('notifications') === 'true' || true;
     this.locationServices = localStorage.getItem('locationServices') === 'true' || true;
   }
 
   saveSettings() {
     // Save settings to localStorage
-    localStorage.setItem('darkMode', this.darkMode.toString());
     localStorage.setItem('notifications', this.notifications.toString());
     localStorage.setItem('locationServices', this.locationServices.toString());
-  }
-
-  // App Settings Methods
-  toggleDarkMode() {
-    this.saveSettings();
-    // Apply dark mode theme
-    document.body.classList.toggle('dark', this.darkMode);
   }
 
   toggleNotifications() {
@@ -253,11 +265,7 @@ export class ProfilePage implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  goToRegister() {
-    this.router.navigate(['/register']);
-  }
-
-  // Navigation methods
+  // Navigation methods for bottom navigation
   navigateToHome() {
     this.router.navigate(['/dashboard']);
   }
@@ -288,5 +296,12 @@ export class ProfilePage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  updateNotificationCount() {
+    this.notificationService.updateUnreadCount();
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
   }
 }

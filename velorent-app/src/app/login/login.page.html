@@ -71,6 +71,25 @@
           <p>Don't have an account? <a routerLink="/register">Create an account</a></p>
         </div>
       </form>
+
+      <!-- Social Login Options -->
+      <div class="social-login">
+        <div class="divider">
+          <span>or continue with</span>
+        </div>
+        
+        <div class="social-buttons">
+          <button type="button" class="social-btn google-btn" (click)="loginWithGoogle()">
+            <ion-icon name="logo-google"></ion-icon>
+            <span>Google</span>
+          </button>
+          
+          <button type="button" class="social-btn facebook-btn" (click)="loginWithFacebook()">
+            <ion-icon name="logo-facebook"></ion-icon>
+            <span>Facebook</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </ion-content>

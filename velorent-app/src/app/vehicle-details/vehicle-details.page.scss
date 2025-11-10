@@ -211,7 +211,8 @@ ion-content {
 }
 
 // Features Section
-.features-section {
+.details-section,
+.specifications-section {
   margin-bottom: 32px;
 
   h2 {
@@ -220,6 +221,107 @@ ion-content {
     font-weight: 600;
     margin-bottom: 20px;
     text-align: center;
+  }
+}
+
+.details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-item {
+  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.1);
+  }
+
+  ion-icon {
+    font-size: 32px;
+    color: #ffd700;
+    flex-shrink: 0;
+  }
+
+  .detail-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .detail-label {
+      color: #b8860b;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+.specifications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.spec-item {
+  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  text-align: center;
+
+  &:hover {
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.1);
+  }
+
+  ion-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+  }
+
+  .spec-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+
+    .spec-label {
+      color: #b8860b;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .spec-value {
+      color: #ffd700;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
   }
 }
 

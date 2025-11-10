@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { IonicModule, AlertController, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { ApiService } from '../api.service';
+import { NotificationService } from '../services/notification.service';
 import { addIcons } from 'ionicons';
 import { 
   home, 
@@ -57,7 +59,9 @@ export class NotificationsPage implements OnInit {
   constructor(
     private router: Router,
     private alertCtrl: AlertController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private apiService: ApiService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -65,19 +69,68 @@ export class NotificationsPage implements OnInit {
   }
 
   loadNotifications() {
-    // Start with empty notifications
-    this.notifications = [];
-    this.loading = false;
+    this.loading = true;
+    this.apiService.getMyBookings().subscribe({
+      next: (bookings) => {
+        this.notifications = [];
+        
+        // Convert company messages to notifications
+        bookings.forEach(booking => {
+          if (booking.company_message) {
+            this.notifications.push({
+              id: booking.id,
+              title: `Message from ${booking.company_name}`,
+              message: booking.company_message,
+              type: 'booking',
+              timestamp: new Date(booking.message_sent_at || booking.booking_date),
+              read: booking.notification_sent === 1,
+              companyName: booking.company_name,
+              bookingId: booking.id.toString()
+            });
+          }
+        });
+        
+        // Sort by timestamp (newest first)
+        this.notifications.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+        
+        this.loading = false;
+        console.log('Loaded notifications:', this.notifications);
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+        this.loading = false;
+      }
+    });
   }
 
   markAsRead(notification: Notification) {
     notification.read = true;
+    // Update the notification_sent status in backend
+    this.apiService.markNotificationAsRead(notification.id).subscribe({
+      next: () => {
+        console.log('Notification marked as read');
+        this.notificationService.updateUnreadCount();
+      },
+      error: (error) => {
+        console.error('Error marking notification as read:', error);
+      }
+    });
   }
 
   markAllAsRead() {
     this.notifications.forEach(notification => {
       notification.read = true;
+      // Update each notification in backend
+      this.apiService.markNotificationAsRead(notification.id).subscribe({
+        next: () => {
+          console.log('All notifications marked as read');
+        },
+        error: (error) => {
+          console.error('Error marking notifications as read:', error);
+        }
+      });
     });
+    this.notificationService.updateUnreadCount();
   }
 
   deleteNotification(notification: Notification) {

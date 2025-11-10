@@ -5,71 +5,78 @@
 </ion-header>
 
 <ion-content id="main-content" class="ion-padding">
-  <!-- User Profile Section (Only for logged-in users) -->
-  <ion-card *ngIf="user" class="profile-card">
+  <!-- User Profile Section -->
+  <ion-card class="profile-card">
     <ion-card-header>
-      <div class="profile-header">
-        <ion-avatar class="profile-avatar">
-          <ion-icon name="person-circle" class="avatar-icon"></ion-icon>
-        </ion-avatar>
-        <div class="profile-info">
-          <ion-card-title>{{ user.name }}</ion-card-title>
-          <ion-card-subtitle>{{ user.role | titlecase }}</ion-card-subtitle>
-        </div>
-      </div>
+      <ion-card-title>
+        <ion-icon name="person-circle" style="margin-right: 8px;"></ion-icon>
+        Profile Information
+      </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <div class="profile-field">
-        <span class="profile-label">ID</span>
-        <span class="profile-value">{{ user.id }}</span>
+      <!-- Logged in user information -->
+      <div *ngIf="user" class="user-profile">
+        <div class="profile-header">
+          <ion-avatar class="profile-avatar">
+            <img *ngIf="user.picture" [src]="user.picture" [alt]="user.name" class="profile-image">
+            <ion-icon *ngIf="!user.picture" name="person-circle" class="avatar-icon"></ion-icon>
+          </ion-avatar>
+          <div class="profile-info">
+            <h2 class="user-name">{{ user.name }}</h2>
+            <p class="user-role">{{ user.role | titlecase }}</p>
+          </div>
+        </div>
+        
+        <div class="profile-details">
+          <div class="profile-field">
+            <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+            <div class="field-content">
+              <span class="profile-label">Email Address</span>
+              <span class="profile-value">{{ user.email }}</span>
+            </div>
+          </div>
+          
+          <div class="profile-field" *ngIf="user.provider">
+            <ion-icon name="logo-google" *ngIf="user.provider === 'google'" class="field-icon"></ion-icon>
+            <ion-icon name="logo-facebook" *ngIf="user.provider === 'facebook'" class="field-icon"></ion-icon>
+            <div class="field-content">
+              <span class="profile-label">Login Provider</span>
+              <span class="profile-value">{{ user.provider | titlecase }}</span>
+            </div>
+          </div>
+          
+          <div class="profile-field" *ngIf="user.created_at">
+            <ion-icon name="calendar-outline" class="field-icon"></ion-icon>
+            <div class="field-content">
+              <span class="profile-label">Member Since</span>
+              <span class="profile-value">{{ user.created_at | date:'MMM dd, yyyy' }}</span>
+            </div>
+          </div>
+          
+          <div class="profile-field">
+            <ion-icon name="key-outline" class="field-icon"></ion-icon>
+            <div class="field-content">
+              <span class="profile-label">User ID</span>
+              <span class="profile-value">{{ user.id }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="profile-field">
-        <span class="profile-label">Email</span>
-        <span class="profile-value">{{ user.email }}</span>
-      </div>
-      <div class="profile-field">
-        <span class="profile-label">Role</span>
-        <span class="profile-value">{{ user.role }}</span>
+      
+      <!-- Not logged in message -->
+      <div *ngIf="!user" class="no-user-message">
+        <ion-icon name="person-circle-outline" class="no-user-icon"></ion-icon>
+        <h3>No User Logged In</h3>
+        <p>Please log in with Google or Facebook to view your profile information.</p>
+        <ion-button expand="block" fill="outline" (click)="goToLogin()" style="margin-top: 16px;">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Go to Login
+        </ion-button>
+        
       </div>
     </ion-card-content>
   </ion-card>
 
-  <!-- Quick Actions Section -->
-  <ion-card class="quick-actions-card">
-    <ion-card-header>
-      <ion-card-title>Quick Actions</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6" *ngIf="!user">
-            <ion-button expand="block" fill="outline" (click)="goToLogin()" class="action-button">
-              <ion-icon name="log-in-outline" slot="start"></ion-icon>
-              Login
-            </ion-button>
-          </ion-col>
-          <ion-col size="6" *ngIf="!user">
-            <ion-button expand="block" fill="outline" (click)="goToRegister()" class="action-button">
-              <ion-icon name="person-add-outline" slot="start"></ion-icon>
-              Register
-            </ion-button>
-          </ion-col>
-          <ion-col size="6" *ngIf="user">
-            <ion-button expand="block" fill="outline" (click)="navigateToMyRentals()" class="action-button">
-              <ion-icon name="car-outline" slot="start"></ion-icon>
-              My Rentals
-            </ion-button>
-          </ion-col>
-          <ion-col size="6" *ngIf="user">
-            <ion-button expand="block" fill="outline" (click)="navigateToHome()" class="action-button">
-              <ion-icon name="home-outline" slot="start"></ion-icon>
-              Browse Vehicles
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
 
   <!-- App Settings Section (Available to all users) -->
   <ion-card class="settings-card">
@@ -78,11 +85,6 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item>
-          <ion-icon name="moon-outline" slot="start"></ion-icon>
-          <ion-label>Dark Mode</ion-label>
-          <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()"></ion-toggle>
-        </ion-item>
         <ion-item>
           <ion-icon name="notifications-outline" slot="start"></ion-icon>
           <ion-label>Push Notifications</ion-label>
@@ -190,8 +192,13 @@
     </button>
     
     <button class="nav-button" (click)="navigateToNotifications()">
-      <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
-      <span class="nav-label">Notifications</span>
+      <div class="notification-wrapper">
+        <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+        <div *ngIf="unreadCount > 0" class="notification-badge">
+          {{ unreadCount }}
+        </div>
+      </div>
+      <span class="nav-label">Notifications ({{ unreadCount }})</span>
     </button>
     
     <button class="nav-button active" (click)="navigateToProfile()">

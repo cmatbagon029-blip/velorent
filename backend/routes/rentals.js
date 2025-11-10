@@ -59,7 +59,7 @@ router.get('/my-rentals', auth.verifyToken, async function(req, res) {
        LEFT JOIN rental_companies c ON r.companyId = c.id 
        WHERE r.userId = ? 
        ORDER BY r.createdAt DESC`,
-      [req.user.id]
+      [req.user.userId]
     );
 
     res.json(rentals);
@@ -135,21 +135,50 @@ router.post('/', auth.verifyToken, upload.fields([
     // Get fields from req.body (multer parses them as strings)
     const {
       fullName, mobileNumber, serviceType, rentFromDate, rentToDate, rentTime, destination, occasion, message, vehicleId, vehicleName,
-      totalCost, downPayment, remainingAmount, paymentMethod
+      totalCost, downPayment, remainingAmount, paymentMethod, driverId, driverName, driverPhone, driverExperience
     } = req.body;
+
+    console.log('=== BOOKING SUBMISSION DEBUG ===');
+    console.log('Service Type:', serviceType);
+    console.log('Driver ID:', driverId);
+    console.log('Driver Name:', driverName);
+    console.log('Driver Phone:', driverPhone);
+    console.log('Driver Experience:', driverExperience);
 
     // Validate required fields
     if (!fullName || !mobileNumber || !serviceType || !rentFromDate || !rentToDate || !rentTime || !destination) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Check for existing pending, approved, or active bookings for this user
-    const [existingBookings] = await connection.execute(
-      `SELECT id FROM bookings WHERE user_id = ? AND (status = 'Pending' OR status = 'Approved' OR status = 'Active') LIMIT 1`,
-      [req.user.id]
+    // Check if driver is required but not provided
+    if (serviceType === 'Pick-up/Drop-off' && (!driverId || !driverName)) {
+      console.log('Driver validation failed - service type requires driver but driver info missing');
+      console.log('Driver ID value:', driverId, 'Type:', typeof driverId);
+      console.log('Driver Name value:', driverName, 'Type:', typeof driverName);
+      return res.status(400).json({ error: 'Driver selection is required for Pick-up/Drop-off service' });
+    }
+
+    // Check for existing pending or active bookings for this user (not approved ones)
+    const [existingActiveBookings] = await connection.execute(
+      `SELECT id FROM bookings WHERE user_id = ? AND (status = 'Pending' OR status = 'Active') LIMIT 1`,
+      [req.user.userId]
     );
-    if (existingBookings.length > 0) {
-      return res.status(400).json({ error: 'You already have a pending, approved, or ongoing booking. Please complete or cancel it before making a new booking.' });
+    if (existingActiveBookings.length > 0) {
+      return res.status(400).json({ error: 'You already have a pending or ongoing booking. Please complete or cancel it before making a new booking.' });
+    }
+
+    // Check total rental limit (3 rentals maximum per user)
+    const [totalBookings] = await connection.execute(
+      `SELECT COUNT(*) as total FROM bookings WHERE user_id = ?`,
+      [req.user.userId]
+    );
+    const totalRentals = totalBookings[0].total;
+    console.log('Total rentals for user:', totalRentals);
+    
+    if (totalRentals >= 3) {
+      return res.status(400).json({ 
+        error: 'You have reached the maximum limit of 3 rentals. Please contact support if you need to make additional bookings.' 
+      });
     }
 
     // Get file paths from req.files
@@ -166,21 +195,21 @@ router.post('/', auth.verifyToken, upload.fields([
         vehicle_name = vehicle_name || vehicles[0].name;
         company_id = vehicles[0].company_id;
         if (company_id) {
-          const [companies] = await connection.execute('SELECT name FROM companies WHERE id = ?', [company_id]);
+          const [companies] = await connection.execute('SELECT company_name FROM companies WHERE id = ?', [company_id]);
           if (companies.length > 0) {
-            company_name = companies[0].name;
+            company_name = companies[0].company_name;
           }
         }
       }
     }
 
-    // Insert into bookings table (now with user_id, start_date, end_date, company_id, company_name, and payment info)
+    // Insert into bookings table (now with user_id, start_date, end_date, company_id, company_name, payment info, and driver info)
     await connection.execute(
       `INSERT INTO bookings (
-        user_id, user_name, mobile_number, vehicle_id, company_id, company_name, vehicle_name, service_type, start_date, end_date, rent_time, destination, occasion, message, valid_id_path, additional_id_path, total_cost, down_payment, remaining_payment, payment_method, booking_date, status
+        user_id, user_name, mobile_number, vehicle_id, company_id, company_name, vehicle_name, service_type, start_date, end_date, rent_time, destination, occasion, message, valid_id_path, additional_id_path, booking_date, status, driver_id, driver_name, driver_phone, driver_experience
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` ,
       [
-        req.user.id,
+        req.user.userId,
         fullName,
         mobileNumber,
         vehicleId,
@@ -196,12 +225,12 @@ router.post('/', auth.verifyToken, upload.fields([
         message || null,
         validIdPath,
         additionalIdPath,
-        totalCost || 0,
-        downPayment || 0,
-        remainingAmount || 0,
-        paymentMethod || null,
         new Date(),
-        'Pending'
+        'Pending',
+        driverId || null,
+        driverName || null,
+        driverPhone || null,
+        driverExperience || null
       ]
     );
 
@@ -325,7 +354,7 @@ router.get('/my-bookings', auth.verifyToken, async function(req, res) {
   let connection;
   try {
     console.log('=== MY-BOOKINGS DEBUG ===');
-    console.log('User ID from token:', req.user.id);
+    console.log('User ID from token:', req.user.userId);
     console.log('User object:', req.user);
     
     connection = await mysql.createConnection({
@@ -352,7 +381,7 @@ router.get('/my-bookings', auth.verifyToken, async function(req, res) {
 
     const [bookings] = await connection.execute(
       `SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_date DESC`,
-      [req.user.id]
+      [req.user.userId]
     );
 
     console.log('Found bookings:', bookings.length);
@@ -365,6 +394,40 @@ router.get('/my-bookings', auth.verifyToken, async function(req, res) {
       error: 'Failed to fetch bookings',
       details: error.message,
       stack: error.stack
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+
+// Mark notification as read
+router.put('/:id/mark-notification-read', auth.verifyToken, async function(req, res) {
+  let connection;
+  try {
+    const bookingId = req.params.id;
+    const userId = req.user.userId;
+    
+    connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'velorent'
+    });
+
+    // Update notification_sent to 1 for this booking
+    await connection.execute(
+      'UPDATE bookings SET notification_sent = 1 WHERE id = ? AND user_id = ?',
+      [bookingId, userId]
+    );
+
+    res.json({ message: 'Notification marked as read' });
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    res.status(500).json({ 
+      error: 'Failed to mark notification as read',
+      details: error.message
     });
   } finally {
     if (connection) {

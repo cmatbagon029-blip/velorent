@@ -80,4 +80,12 @@ export const routes: Routes = [
     path: 'chat',
     loadComponent: () => import('./chat/chat.page').then(m => m.ChatPage),
   },
+  {
+    path: 'auth/google/callback',
+    loadComponent: () => import('./auth/google-callback/google-callback.component').then(m => m.GoogleCallbackComponent),
+  },
+  {
+    path: 'auth/facebook/callback',
+    loadComponent: () => import('./auth/facebook-callback/facebook-callback.component').then(m => m.FacebookCallbackComponent),
+  },
 ];

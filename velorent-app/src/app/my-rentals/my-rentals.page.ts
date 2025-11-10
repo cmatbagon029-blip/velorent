@@ -3,6 +3,7 @@ import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../api.service';
+import { NotificationService } from '../services/notification.service';
 import { AlertModalComponent } from '../components/alert-modal/alert-modal.component';
 import { Rental } from '../../models/rental.model';
 import { addIcons } from 'ionicons';
@@ -34,12 +35,14 @@ export class MyRentalsPage implements OnInit {
   bookings: any[] = [];
   loading = true;
   error: string | null = null;
+  unreadCount: number = 0;
 
   constructor(
     private router: Router,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -50,10 +53,11 @@ export class MyRentalsPage implements OnInit {
       return;
     }
     this.loadBookings();
+    this.updateNotificationCount();
   }
 
   ionViewWillEnter() {
-    // Page entered
+    this.updateNotificationCount();
   }
 
   logout() {
@@ -74,6 +78,13 @@ export class MyRentalsPage implements OnInit {
     console.log('Token value:', token);
     console.log('User value:', user);
 
+    // Check if user is logged in
+    if (!token || !user) {
+      console.log('No token or user found, redirecting to login');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.apiService.getMyBookings().subscribe({
       next: (data) => {
         console.log('Bookings loaded:', data);
@@ -84,6 +95,17 @@ export class MyRentalsPage implements OnInit {
         console.error('Error loading bookings:', err);
         console.error('Error details:', err.error);
         console.error('Error status:', err.status);
+        
+        // Check if it's an authentication error
+        if (err.status === 401) {
+          console.log('Authentication error, redirecting to login');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('userInfo');
+          this.router.navigate(['/login']);
+          return;
+        }
+        
         this.error = 'Failed to load bookings';
         this.loading = false;
       }
@@ -145,7 +167,17 @@ export class MyRentalsPage implements OnInit {
   }
 
   formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', {
+    if (!date || date === '' || date === 'Invalid Date') {
+      return 'Invalid Date';
+    }
+    
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) {
+      console.error('Invalid date string:', date);
+      return 'Invalid Date';
+    }
+    
+    return dateObj.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -153,8 +185,19 @@ export class MyRentalsPage implements OnInit {
   }
 
   formatTime(time: string): string {
-    return time ? time.slice(0, 5) : '';
+    if (!time || time === '') {
+      return '';
+    }
+    
+    // Convert 24-hour format to 12-hour format
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    
+    return `${displayHour}:${minutes} ${ampm}`;
   }
+
 
   // Navigation methods
   navigateToHome() {
@@ -173,5 +216,12 @@ export class MyRentalsPage implements OnInit {
 
   navigateToProfile() {
     this.router.navigate(['/profile']);
+  }
+
+  updateNotificationCount() {
+    this.notificationService.updateUnreadCount();
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
   }
 } 

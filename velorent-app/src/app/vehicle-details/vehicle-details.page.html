@@ -73,22 +73,69 @@
       </div>
     </div>
 
-    <!-- Vehicle Features Section -->
-    <div class="features-section" *ngIf="vehicle.description || vehicle.features">
-      <h2>Vehicle Information</h2>
-      <div class="features-content">
-        <div class="feature-item" *ngIf="vehicle.description">
-          <ion-icon name="information-circle-outline"></ion-icon>
-          <div>
-            <h3>Description</h3>
-            <p>{{ vehicle.description }}</p>
+    <!-- Vehicle Details Section -->
+    <div class="details-section">
+      <h2>Vehicle Details</h2>
+      <div class="details-grid">
+        <div class="detail-item" *ngIf="vehicle.description">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <div class="detail-content">
+            <span class="detail-label">Description</span>
+            <span class="detail-value">{{ vehicle.description }}</span>
           </div>
         </div>
-        <div class="feature-item" *ngIf="vehicle.features">
-          <ion-icon name="checkmark-circle-outline"></ion-icon>
-          <div>
-            <h3>Features</h3>
-            <p>{{ vehicle.features }}</p>
+      </div>
+    </div>
+
+    <!-- Vehicle Specifications Section -->
+    <div class="specifications-section">
+      <h2>Specifications</h2>
+      <div class="specifications-grid">
+        <div class="spec-item">
+          <ion-icon name="calendar-outline" color="primary"></ion-icon>
+          <div class="spec-content">
+            <span class="spec-label">Year</span>
+            <span class="spec-value">{{ vehicle.year }}</span>
+          </div>
+        </div>
+        
+        <div class="spec-item">
+          <ion-icon name="color-palette-outline" color="primary"></ion-icon>
+          <div class="spec-content">
+            <span class="spec-label">Color</span>
+            <span class="spec-value">{{ vehicle.color }}</span>
+          </div>
+        </div>
+        
+        <div class="spec-item">
+          <ion-icon name="settings-outline" color="primary"></ion-icon>
+          <div class="spec-content">
+            <span class="spec-label">Engine Size</span>
+            <span class="spec-value">{{ vehicle.engine_size }}</span>
+          </div>
+        </div>
+        
+        <div class="spec-item">
+          <ion-icon name="cog-outline" color="primary"></ion-icon>
+          <div class="spec-content">
+            <span class="spec-label">Transmission</span>
+            <span class="spec-value">{{ vehicle.transmission }}</span>
+          </div>
+        </div>
+        
+        <div class="spec-item">
+          <ion-icon name="speedometer-outline" color="primary"></ion-icon>
+          <div class="spec-content">
+            <span class="spec-label">Mileage</span>
+            <span class="spec-value">{{ vehicle.mileage }}</span>
+          </div>
+        </div>
+        
+        <div class="spec-item" *ngIf="vehicle.capacity">
+          <ion-icon name="people-outline" color="primary"></ion-icon>
+          <div class="spec-content">
+            <span class="spec-label">Capacity</span>
+            <span class="spec-value">{{ vehicle.capacity }} persons</span>
           </div>
         </div>
       </div>

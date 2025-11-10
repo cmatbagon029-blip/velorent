@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import axios from 'axios';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -48,8 +49,13 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<{ success: boolean; message: string }> {
+    console.log('=== LOGIN ATTEMPT ===');
+    console.log('Email:', email);
+    console.log('Is Locked Out:', this.isLockedOut());
+    
     if (this.isLockedOut()) {
       const remainingTime = this.getRemainingLockoutTime();
+      console.log('Account locked, remaining time:', remainingTime);
       return {
         success: false,
         message: `Account is locked. Please try again in ${remainingTime} seconds.`
@@ -57,30 +63,43 @@ export class AuthService {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
+      const apiUrl = environment?.apiUrl || 'http://192.168.1.21:3000/api';
+      console.log('Sending login request to:', `${apiUrl}/auth/login`);
+      const response = await axios.post(`${apiUrl}/auth/login`, {
         email,
         password,
       });
 
+      console.log('Login response:', response.data);
+
       if (response.data.token) {
         // Successful login
+        console.log('Login successful, setting localStorage');
         this.clearAttempts();
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.removeItem('logged_out');
+        console.log('Token stored in localStorage');
         return { success: true, message: 'Login successful' };
       } else {
+        console.log('Login failed - no token in response');
         this.handleFailedAttempt();
         return { success: false, message: response.data.message || 'Login failed' };
       }
     } catch (error: any) {
+      console.error('Login error:', error);
+      console.error('Error details:', {
+        response: error.response?.data,
+        status: error.response?.status,
+        message: error.message
+      });
       this.handleFailedAttempt();
       if (error.response) {
         return { success: false, message: error.response.data.message || 'Login failed' };
       } else if (error.request) {
-        return { success: false, message: 'No response from server' };
+        return { success: false, message: 'No response from server. Please check if the server is running.' };
       } else {
-        return { success: false, message: 'Error setting up the request' };
+        return { success: false, message: 'Error setting up the request: ' + error.message };
       }
     }
   }

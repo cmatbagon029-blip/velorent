@@ -5,12 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { SocialAuthService } from '../services/social-auth.service';
 import { AlertModalComponent } from '../components/alert-modal/alert-modal.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { eyeOutline, eyeOffOutline, logoGoogle, logoFacebook } from 'ionicons/icons';
 
-addIcons({ eyeOutline, eyeOffOutline });
+addIcons({ eyeOutline, eyeOffOutline, logoGoogle, logoFacebook });
 
 @Component({
   selector: 'app-login',
@@ -34,13 +35,13 @@ export class LoginPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
+    private socialAuthService: SocialAuthService,
     private modalCtrl: ModalController,
     private formBuilder: FormBuilder
   ) {
-    // Clear any existing auth data when landing on login page
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-
+    // Don't clear auth data when landing on login page
+    // User might be checking login status
+    
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
@@ -132,6 +133,46 @@ export class LoginPage implements OnInit {
       } finally {
         this.isLoading = false;
       }
+    }
+  }
+
+  async loginWithGoogle() {
+    try {
+      this.isLoading = true;
+      
+      // Store return URL for after OAuth redirect
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+      localStorage.setItem('returnUrl', returnUrl);
+      console.log('Stored return URL:', returnUrl);
+      
+      // Use Google OAuth (this will redirect the main window)
+      await this.socialAuthService.loginWithGoogle();
+      
+    } catch (error) {
+      console.error('Google login error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Google login failed. Please try again.';
+      await this.showAlert('Google Login Error', errorMessage);
+      this.isLoading = false;
+    }
+  }
+
+  async loginWithFacebook() {
+    try {
+      this.isLoading = true;
+      
+      // Store return URL for after OAuth redirect
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+      localStorage.setItem('returnUrl', returnUrl);
+      console.log('Stored return URL:', returnUrl);
+      
+      // Use Facebook OAuth (this will redirect the main window)
+      await this.socialAuthService.loginWithFacebook();
+      
+    } catch (error) {
+      console.error('Facebook login error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Facebook login failed. Please try again.';
+      await this.showAlert('Facebook Login Error', errorMessage);
+      this.isLoading = false;
     }
   }
 }

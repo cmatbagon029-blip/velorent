@@ -1,17 +1,27 @@
 {
-  "name": "velorent-backend",
+  "name": "velorent",
   "version": "1.0.0",
-  "description": "Backend server for Velorent",
-  "main": "server.js",
+  "description": "Velorent - Vehicle Rental Application",
   "scripts": {
-    "start": "node server.js"
+    "start": "npm run dev",
+    "dev": "concurrently -n \"backend,frontend\" -c \"yellow,blue\" \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && node app.js",
+    "frontend": "cd velorent-app && ionic serve",
+    "backend:dev": "cd backend && node app.js",
+    "frontend:dev": "cd velorent-app && ionic serve",
+    "install:all": "npm install && cd backend && npm install && cd ../velorent-app && npm install",
+    "build:android": "cd velorent-app && npm run build:prod && npx cap sync",
+    "get-ip": "cd velorent-app && powershell -ExecutionPolicy Bypass -File get-ip.ps1"
   },
-  "dependencies": {
-    "axios": "^1.9.0",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "form-data": "^4.0.3",
-    "multer": "^2.0.1"
-  }
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "vehicle",
+    "rental",
+    "ionic",
+    "angular"
+  ],
+  "author": "",
+  "license": "ISC"
 }
