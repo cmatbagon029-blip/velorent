@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../api.service';
 import { NotificationService } from '../services/notification.service';
+import { BookingRequestService } from '../services/booking-request.service';
+import { RequestNotificationService } from '../services/request-notification.service';
 import { AlertModalComponent } from '../components/alert-modal/alert-modal.component';
+import { RequestModalComponent } from '../components/request-modal/request-modal.component';
 import { Rental } from '../../models/rental.model';
 import { addIcons } from 'ionicons';
 import { 
@@ -12,7 +15,12 @@ import {
   searchOutline, 
   carOutline, 
   personOutline,
-  notificationsOutline
+  notificationsOutline,
+  calendarOutline,
+  closeCircleOutline,
+  documentTextOutline,
+  refreshOutline,
+  trashOutline
 } from 'ionicons/icons';
 
 // Register icons
@@ -21,7 +29,12 @@ addIcons({
   'search-outline': searchOutline, 
   'car-outline': carOutline, 
   'person-outline': personOutline,
-  'notifications-outline': notificationsOutline
+  'notifications-outline': notificationsOutline,
+  'calendar-outline': calendarOutline,
+  'close-circle-outline': closeCircleOutline,
+  'document-text-outline': documentTextOutline,
+  'refresh-outline': refreshOutline,
+  'trash-outline': trashOutline
 });
 
 @Component({
@@ -36,13 +49,16 @@ export class MyRentalsPage implements OnInit {
   loading = true;
   error: string | null = null;
   unreadCount: number = 0;
+  requestUnreadCount: number = 0;
 
   constructor(
     private router: Router,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private apiService: ApiService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private bookingRequestService: BookingRequestService,
+    private requestNotificationService: RequestNotificationService
   ) {}
 
   ngOnInit() {
@@ -54,10 +70,13 @@ export class MyRentalsPage implements OnInit {
     }
     this.loadBookings();
     this.updateNotificationCount();
+    this.updateRequestNotificationCount();
   }
 
   ionViewWillEnter() {
+    this.loadBookings(); // Reload bookings when page is entered
     this.updateNotificationCount();
+    this.updateRequestNotificationCount();
   }
 
   logout() {
@@ -88,8 +107,21 @@ export class MyRentalsPage implements OnInit {
     this.apiService.getMyBookings().subscribe({
       next: (data) => {
         console.log('Bookings loaded:', data);
-        this.bookings = data;
+        console.log('Number of bookings:', data.length);
+        // Force refresh by creating new array reference
+        this.bookings = [...data];
         this.loading = false;
+        
+        // Log booking dates for debugging
+        data.forEach((booking: any, index: number) => {
+          console.log(`Booking ${index + 1} (ID: ${booking.id}):`, {
+            vehicle: booking.vehicle_name,
+            start_date: booking.start_date,
+            end_date: booking.end_date,
+            rent_time: booking.rent_time,
+            status: booking.status
+          });
+        });
       },
       error: (err) => {
         console.error('Error loading bookings:', err);
@@ -223,5 +255,145 @@ export class MyRentalsPage implements OnInit {
     this.notificationService.unreadCount$.subscribe(count => {
       this.unreadCount = count;
     });
+  }
+
+  updateRequestNotificationCount() {
+    this.requestNotificationService.updateUnreadCount();
+    this.requestNotificationService.unreadCount$.subscribe(count => {
+      this.requestUnreadCount = count;
+    });
+  }
+
+  canRequestReschedule(booking: any): boolean {
+    return booking.status === 'Pending' || booking.status === 'Approved';
+  }
+
+  canRequestCancellation(booking: any): boolean {
+    return booking.status === 'Pending' || booking.status === 'Approved';
+  }
+
+  async openRescheduleRequest(booking: any) {
+    const modal = await this.modalCtrl.create({
+      component: RequestModalComponent,
+      componentProps: {
+        booking: booking,
+        requestType: 'reschedule'
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    // Always reload bookings when modal closes to get latest data
+    setTimeout(() => {
+      this.loadBookings();
+    }, 500); // Small delay to ensure backend has processed
+  }
+
+  async openCancellationRequest(booking: any) {
+    const modal = await this.modalCtrl.create({
+      component: RequestModalComponent,
+      componentProps: {
+        booking: booking,
+        requestType: 'cancellation'
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    // Always reload bookings when modal closes to get latest data
+    setTimeout(() => {
+      this.loadBookings();
+    }, 500); // Small delay to ensure backend has processed
+  }
+
+  navigateToRequests() {
+    this.router.navigate(['/booking-requests']);
+  }
+
+  doRefresh(event: any) {
+    this.loadBookings();
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
+  }
+
+  getCancelledBookingsCount(): number {
+    return this.bookings.filter(b => b.status === 'Cancelled').length;
+  }
+
+  async deleteBooking(bookingId: number) {
+    const alert = await this.alertCtrl.create({
+      header: 'Delete Booking',
+      message: 'Are you sure you want to permanently delete this cancelled booking? This action cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: () => {
+            this.apiService.deleteBooking(bookingId).subscribe({
+              next: () => {
+                this.loadBookings(); // Reload the list
+              },
+              error: (error) => {
+                console.error('Error deleting booking:', error);
+                const errorMessage = error.error?.error || error.error?.details || error.message || 'Failed to delete booking. Please try again.';
+                this.alertCtrl.create({
+                  header: 'Error',
+                  message: errorMessage,
+                  buttons: ['OK']
+                }).then(alert => alert.present());
+              }
+            });
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async cleanupCancelledBookings() {
+    const cancelledBookings = this.bookings.filter(b => b.status === 'Cancelled');
+    if (cancelledBookings.length === 0) {
+      return;
+    }
+
+    const alert = await this.alertCtrl.create({
+      header: 'Clean Up Cancelled Bookings',
+      message: `Are you sure you want to permanently delete ${cancelledBookings.length} cancelled booking(s)? This action cannot be undone.`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete All',
+          role: 'destructive',
+          handler: () => {
+            const bookingIds = cancelledBookings.map(b => b.id);
+            this.apiService.deleteMultipleBookings(bookingIds).subscribe({
+              next: (response) => {
+                console.log('Deleted bookings:', response);
+                this.loadBookings(); // Reload the list
+              },
+              error: (error) => {
+                console.error('Error deleting bookings:', error);
+                this.alertCtrl.create({
+                  header: 'Error',
+                  message: error.error?.error || 'Failed to delete bookings. Please try again.',
+                  buttons: ['OK']
+                }).then(alert => alert.present());
+              }
+            });
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 } 

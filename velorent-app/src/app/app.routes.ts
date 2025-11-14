@@ -55,6 +55,11 @@ export const routes: Routes = [
     canActivate: [authGuard], // Require authentication to access my-rentals
   },
   {
+    path: 'booking-requests',
+    loadComponent: () => import('./booking-requests/booking-requests.page').then(m => m.BookingRequestsPage),
+    canActivate: [authGuard], // Require authentication to access booking requests
+  },
+  {
     path: 'vehicle/:id',
     loadComponent: () => import('./vehicle-details/vehicle-details.page').then(m => m.VehicleDetailsPage),
     // Public route: viewing vehicle details does not require auth

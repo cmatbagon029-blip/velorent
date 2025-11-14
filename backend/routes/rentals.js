@@ -251,6 +251,70 @@ router.post('/', auth.verifyToken, upload.fields([
   }
 });
 
+// Delete a cancelled booking (placed early to avoid route conflicts)
+router.delete('/bookings/:id', auth.verifyToken, async function(req, res) {
+  let connection;
+  try {
+    console.log('=== DELETE BOOKING REQUEST ===');
+    console.log('Booking ID:', req.params.id);
+    console.log('User ID:', req.user?.userId);
+    console.log('User object:', req.user);
+    
+    connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'velorent'
+    });
+
+    // Get the booking to verify it belongs to the user and is cancelled
+    const [bookings] = await connection.execute(
+      'SELECT * FROM bookings WHERE id = ? AND user_id = ?',
+      [req.params.id, req.user.userId]
+    );
+
+    console.log('Found bookings:', bookings.length);
+    if (bookings.length > 0) {
+      console.log('Booking status:', bookings[0].status);
+    }
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ error: 'Booking not found or does not belong to you' });
+    }
+
+    const booking = bookings[0];
+
+    // Only allow deletion of cancelled bookings
+    if (booking.status !== 'Cancelled') {
+      return res.status(400).json({ 
+        error: 'Only cancelled bookings can be deleted',
+        currentStatus: booking.status
+      });
+    }
+
+    // Delete the booking
+    const [result] = await connection.execute(
+      'DELETE FROM bookings WHERE id = ?',
+      [req.params.id]
+    );
+
+    console.log('Delete result:', result.affectedRows, 'rows affected');
+
+    res.json({ message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      error: 'Failed to delete booking',
+      details: error.message 
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+
 // Cancel rental
 router.post('/:id/cancel', auth.verifyToken, async function(req, res) {
   let connection;
@@ -278,6 +342,69 @@ router.post('/:id/cancel', auth.verifyToken, async function(req, res) {
     console.error('Error cancelling rental:', error);
     res.status(500).json({ 
       error: 'Failed to cancel rental',
+      details: error.message 
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+
+// Delete multiple cancelled bookings
+router.post('/bookings/delete-multiple', auth.verifyToken, async function(req, res) {
+  let connection;
+  try {
+    const { bookingIds } = req.body;
+
+    if (!bookingIds || !Array.isArray(bookingIds) || bookingIds.length === 0) {
+      return res.status(400).json({ error: 'bookingIds array is required' });
+    }
+
+    connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'velorent'
+    });
+
+    // Verify all bookings belong to the user and are cancelled
+    const placeholders = bookingIds.map(() => '?').join(',');
+    const [bookings] = await connection.execute(
+      `SELECT id, status FROM bookings 
+       WHERE id IN (${placeholders}) AND user_id = ?`,
+      [...bookingIds, req.user.userId]
+    );
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ error: 'No valid bookings found' });
+    }
+
+    // Check for non-cancelled bookings
+    const nonCancelled = bookings.filter(b => b.status !== 'Cancelled');
+    if (nonCancelled.length > 0) {
+      return res.status(400).json({ 
+        error: 'Only cancelled bookings can be deleted',
+        invalidIds: nonCancelled.map(b => ({ id: b.id, status: b.status }))
+      });
+    }
+
+    // Delete the bookings
+    const validIds = bookings.map(b => b.id);
+    const deletePlaceholders = validIds.map(() => '?').join(',');
+    await connection.execute(
+      `DELETE FROM bookings WHERE id IN (${deletePlaceholders})`,
+      validIds
+    );
+
+    res.json({ 
+      message: `${validIds.length} booking(s) deleted successfully`,
+      deletedCount: validIds.length
+    });
+  } catch (error) {
+    console.error('Error deleting bookings:', error);
+    res.status(500).json({ 
+      error: 'Failed to delete bookings',
       details: error.message 
     });
   } finally {
@@ -379,13 +506,135 @@ router.get('/my-bookings', auth.verifyToken, async function(req, res) {
     const [columns] = await connection.execute("DESCRIBE bookings");
     console.log('Bookings table columns:', columns);
 
+    // First, sync any approved reschedule requests with bookings
+    // This ensures booking dates are updated even if approval happened outside the API
+    // Get the most recent approved reschedule for each booking
+    const [approvedReschedules] = await connection.execute(
+      `SELECT r.id as request_id,
+              r.booking_id,
+              r.new_start_date,
+              r.new_end_date,
+              r.new_rent_time,
+              DATE_FORMAT(b.start_date, '%Y-%m-%d') as current_start_date, 
+              DATE_FORMAT(b.end_date, '%Y-%m-%d') as current_end_date, 
+              b.rent_time as current_rent_time,
+              DATE_FORMAT(r.new_start_date, '%Y-%m-%d') as formatted_new_start,
+              DATE_FORMAT(r.new_end_date, '%Y-%m-%d') as formatted_new_end
+       FROM requests r
+       JOIN bookings b ON r.booking_id = b.id
+       WHERE r.user_id = ? 
+       AND r.request_type = 'reschedule' 
+       AND r.status = 'approved' 
+       AND r.new_start_date IS NOT NULL
+       AND b.user_id = ?
+       AND r.id = (
+         SELECT MAX(r2.id) 
+         FROM requests r2 
+         WHERE r2.booking_id = r.booking_id 
+         AND r2.request_type = 'reschedule' 
+         AND r2.status = 'approved'
+       )`,
+      [req.user.userId, req.user.userId]
+    );
+
+    console.log(`Found ${approvedReschedules.length} approved reschedule requests to sync`);
+
+    // Update bookings with approved reschedule dates
+    for (const reschedule of approvedReschedules) {
+      // Use formatted dates for comparison (already formatted by DATE_FORMAT in SQL)
+      const currentStart = reschedule.current_start_date ? String(reschedule.current_start_date).trim() : null;
+      const newStart = reschedule.formatted_new_start ? String(reschedule.formatted_new_start).trim() : null;
+      const currentEnd = reschedule.current_end_date ? String(reschedule.current_end_date).trim() : null;
+      const newEnd = reschedule.formatted_new_end ? String(reschedule.formatted_new_end).trim() : null;
+      
+      // Check if dates need updating
+      const datesDiffer = currentStart !== newStart || currentEnd !== newEnd;
+      const timeDiffers = reschedule.new_rent_time && reschedule.current_rent_time !== reschedule.new_rent_time;
+      
+      console.log(`Checking booking ${reschedule.booking_id}:`);
+      console.log(`  Current dates: "${currentStart}" to "${currentEnd}"`);
+      console.log(`  New dates: "${newStart}" to "${newEnd}"`);
+      console.log(`  Dates differ: ${datesDiffer}`);
+      
+      if (datesDiffer || timeDiffers) {
+        console.log(`Syncing booking ${reschedule.booking_id}:`);
+        console.log(`  Updating from ${currentStart} to ${newStart}`);
+        console.log(`  Updating from ${currentEnd} to ${newEnd}`);
+        
+        // Use the raw date values from the request - ensure they're in correct format
+        // MySQL expects DATE format (YYYY-MM-DD) and TIME format (HH:MM:SS)
+        const updateResult = await connection.execute(
+          'UPDATE bookings SET start_date = DATE(?), end_date = DATE(?), rent_time = COALESCE(?, rent_time) WHERE id = ?',
+          [
+            reschedule.new_start_date,
+            reschedule.new_end_date,
+            reschedule.new_rent_time || null,
+            reschedule.booking_id
+          ]
+        );
+        
+        console.log(`✓ Updated booking ${reschedule.booking_id} with new dates`);
+        console.log(`  Rows affected: ${updateResult[0].affectedRows}`);
+        
+        if (updateResult[0].affectedRows === 0) {
+          console.error(`  WARNING: No rows were updated! Check if booking ${reschedule.booking_id} exists.`);
+        }
+        
+        // Verify the update immediately
+        const [verify] = await connection.execute(
+          'SELECT DATE_FORMAT(start_date, "%Y-%m-%d") as start_date, DATE_FORMAT(end_date, "%Y-%m-%d") as end_date, rent_time FROM bookings WHERE id = ?',
+          [reschedule.booking_id]
+        );
+        if (verify.length > 0) {
+          console.log(`  Verified: Booking now has dates ${verify[0].start_date} to ${verify[0].end_date}`);
+          if (verify[0].start_date !== newStart || verify[0].end_date !== newEnd) {
+            console.error(`  ERROR: Update verification failed! Expected ${newStart} to ${newEnd}, got ${verify[0].start_date} to ${verify[0].end_date}`);
+          }
+        }
+      } else {
+        console.log(`Booking ${reschedule.booking_id} already synced (dates match)`);
+      }
+    }
+
+    // Sync approved cancellations
+    const [approvedCancellations] = await connection.execute(
+      `SELECT * FROM requests 
+       WHERE user_id = ? 
+       AND request_type = 'cancellation' 
+       AND status = 'approved' 
+       AND booking_id IN (SELECT id FROM bookings WHERE user_id = ? AND status != 'Cancelled')`,
+      [req.user.userId, req.user.userId]
+    );
+
+    for (const cancellation of approvedCancellations) {
+      await connection.execute(
+        'UPDATE bookings SET status = "Cancelled" WHERE id = ?',
+        [cancellation.booking_id]
+      );
+    }
+
+    // Fetch bookings after sync to ensure we get updated dates
     const [bookings] = await connection.execute(
-      `SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_date DESC`,
+      `SELECT *, 
+              DATE_FORMAT(start_date, '%Y-%m-%d') as formatted_start_date,
+              DATE_FORMAT(end_date, '%Y-%m-%d') as formatted_end_date
+       FROM bookings 
+       WHERE user_id = ? 
+       ORDER BY booking_date DESC`,
       [req.user.userId]
     );
 
     console.log('Found bookings:', bookings.length);
-    console.log('Bookings data:', bookings);
+    console.log('Synced approved reschedules:', approvedReschedules.length);
+    console.log('Synced approved cancellations:', approvedCancellations.length);
+    
+    // Log booking dates for debugging
+    bookings.forEach((booking, index) => {
+      console.log(`Booking ${index + 1} (ID: ${booking.id}): ${booking.vehicle_name}`);
+      console.log(`  Dates: ${booking.formatted_start_date} to ${booking.formatted_end_date}`);
+      console.log(`  Time: ${booking.rent_time || 'N/A'}`);
+      console.log(`  Status: ${booking.status}`);
+    });
 
     res.json(bookings);
   } catch (error) {
@@ -501,6 +750,11 @@ router.get('/test-db', async function(req, res) {
       await connection.end();
     }
   }
+});
+
+// Test route to verify DELETE is working
+router.delete('/test-delete', (req, res) => {
+  res.json({ message: 'DELETE method is working' });
 });
 
 module.exports = router; 

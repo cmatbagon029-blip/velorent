@@ -111,6 +111,20 @@ export class ApiService {
     );
   }
 
+  // Delete a cancelled booking
+  deleteBooking(bookingId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/rentals/bookings/${bookingId}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Delete multiple cancelled bookings
+  deleteMultipleBookings(bookingIds: number[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/rentals/bookings/delete-multiple`, { bookingIds }, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Get available vehicles
   getAvailableVehicles(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/vehicles`).pipe(
@@ -192,6 +206,31 @@ export class ApiService {
   // Check vehicle availability
   checkVehicleAvailability(vehicleId: number, startDate: string, endDate: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/vehicles/${vehicleId}/availability?startDate=${startDate}&endDate=${endDate}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Notification endpoints
+  getMyNotifications(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/notifications/my-notifications`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getUnreadNotificationCount(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/notifications/unread-count`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  markNotificationAsReadById(notificationId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/notifications/${notificationId}/read`, {}, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  markAllNotificationsAsRead(): Observable<any> {
+    return this.http.put(`${this.apiUrl}/notifications/mark-all-read`, {}, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

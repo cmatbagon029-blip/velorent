@@ -328,4 +328,65 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Get company policies by company ID
+router.get('/:id/policies', async (req, res) => {
+  let connection;
+  try {
+    connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'velorent'
+    });
+
+    const [rows] = await connection.execute(
+      'SELECT * FROM company_policies WHERE company_id = ?',
+      [req.params.id]
+    );
+
+    if (rows.length === 0) {
+      // Return default policy if none exists
+      return res.json({
+        company_id: parseInt(req.params.id),
+        reschedule_terms: 'Rescheduling is free if requested at least 3 days before the booking start date. A fee of 10% applies for reschedule requests made within 3 days of the booking.',
+        cancellation_terms: 'Cancellation is allowed up to 24 hours before booking. A cancellation fee of 20% applies. Cancellations within 24 hours are non-refundable.',
+        refund_terms: 'Deposits and reservation fees are non-refundable. Full refunds are only available for cancellations made more than 7 days in advance.',
+        allow_reschedule: true,
+        allow_cancellation: true,
+        allow_refund: false,
+        reschedule_free_days: 3,
+        reschedule_fee_percentage: 10.00,
+        cancellation_fee_percentage: 20.00,
+        deposit_refundable: false
+      });
+    }
+
+    const policy = rows[0];
+    res.json({
+      company_id: policy.company_id,
+      reschedule_terms: policy.reschedule_terms,
+      cancellation_terms: policy.cancellation_terms,
+      refund_terms: policy.refund_terms,
+      allow_reschedule: Boolean(policy.allow_reschedule),
+      allow_cancellation: Boolean(policy.allow_cancellation),
+      allow_refund: Boolean(policy.allow_refund),
+      reschedule_free_days: policy.reschedule_free_days,
+      reschedule_fee_percentage: parseFloat(policy.reschedule_fee_percentage),
+      cancellation_fee_percentage: parseFloat(policy.cancellation_fee_percentage),
+      deposit_refundable: Boolean(policy.deposit_refundable),
+      last_updated: policy.last_updated
+    });
+  } catch (error) {
+    console.error('Error fetching company policies:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch company policies',
+      details: error.message 
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+
 module.exports = router; 

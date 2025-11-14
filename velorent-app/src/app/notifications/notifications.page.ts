@@ -77,16 +77,26 @@ export class NotificationsPage implements OnInit {
         // Convert company messages to notifications
         bookings.forEach(booking => {
           if (booking.company_message) {
-            this.notifications.push({
-              id: booking.id,
-              title: `Message from ${booking.company_name}`,
-              message: booking.company_message,
-              type: 'booking',
-              timestamp: new Date(booking.message_sent_at || booking.booking_date),
-              read: booking.notification_sent === 1,
-              companyName: booking.company_name,
-              bookingId: booking.id.toString()
-            });
+            // Clean up the message - remove any formatting issues
+            let cleanMessage = booking.company_message.trim();
+            
+            // Remove common formatting artifacts like "h [Admin Remarks]: ll"
+            cleanMessage = cleanMessage.replace(/^h\s*\[Admin Remarks\]:\s*ll\s*/i, '');
+            cleanMessage = cleanMessage.replace(/\[Admin Remarks\]:\s*/gi, '');
+            
+            // Only add if there's actual content
+            if (cleanMessage && cleanMessage.length > 0) {
+              this.notifications.push({
+                id: booking.id,
+                title: `Message from ${booking.company_name || 'Company'}`,
+                message: cleanMessage,
+                type: 'booking',
+                timestamp: new Date(booking.message_sent_at || booking.booking_date),
+                read: booking.notification_sent === 1,
+                companyName: booking.company_name,
+                bookingId: booking.id.toString()
+              });
+            }
           }
         });
         
@@ -197,6 +207,15 @@ export class NotificationsPage implements OnInit {
     const user = localStorage.getItem('user');
     if (user) {
       this.router.navigate(['/my-rentals']);
+    } else {
+      this.showLoginAlert();
+    }
+  }
+
+  navigateToRequests() {
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.router.navigate(['/booking-requests']);
     } else {
       this.showLoginAlert();
     }

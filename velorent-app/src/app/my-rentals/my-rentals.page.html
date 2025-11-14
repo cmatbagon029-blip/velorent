@@ -5,6 +5,10 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <ion-spinner name="crescent"></ion-spinner>
@@ -28,15 +32,66 @@
 
   <!-- Bookings List -->
   <ion-list *ngIf="!loading && !error && bookings.length > 0">
-    <ion-item *ngFor="let booking of bookings" class="booking-item">
-      <ion-label>
-        <h2>{{ booking.vehicle_name }}</h2>
-        <p><strong>Date:</strong> {{ formatDate(booking.start_date) }} {{ formatTime(booking.rent_time) }}</p>
-        <p><strong>Destination:</strong> {{ booking.destination }}</p>
-        <p><strong>Status:</strong> <ion-badge class="status-badge">{{ booking.status }}</ion-badge></p>
-      </ion-label>
-    </ion-item>
+    <ion-card *ngFor="let booking of bookings" class="booking-card">
+      <ion-card-header>
+        <ion-card-title>{{ booking.vehicle_name }}</ion-card-title>
+        <ion-card-subtitle>
+          <ion-badge [color]="getStatusColor(booking.status)">{{ booking.status }}</ion-badge>
+        </ion-card-subtitle>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="booking-details">
+          <p><strong>Date:</strong> {{ formatDate(booking.start_date) }} - {{ formatDate(booking.end_date) }}</p>
+          <p *ngIf="booking.rent_time"><strong>Time:</strong> {{ formatTime(booking.rent_time) }}</p>
+          <p><strong>Destination:</strong> {{ booking.destination }}</p>
+          <p *ngIf="booking.company_name"><strong>Company:</strong> {{ booking.company_name }}</p>
+        </div>
+
+        <!-- Request Actions -->
+        <div class="request-actions" *ngIf="canRequestReschedule(booking) || canRequestCancellation(booking)">
+          <ion-button 
+            *ngIf="canRequestReschedule(booking)"
+            fill="outline" 
+            size="small"
+            (click)="openRescheduleRequest(booking)">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            Request Reschedule
+          </ion-button>
+          
+          <ion-button 
+            *ngIf="canRequestCancellation(booking)"
+            fill="outline" 
+            color="danger"
+            size="small"
+            (click)="openCancellationRequest(booking)">
+            <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+            Request Cancel
+          </ion-button>
+        </div>
+
+        <!-- Delete button for cancelled bookings -->
+        <div class="delete-action" *ngIf="booking.status === 'Cancelled'">
+          <ion-button 
+            fill="clear" 
+            color="danger"
+            size="small"
+            (click)="deleteBooking(booking.id)">
+            <ion-icon name="trash-outline" slot="start"></ion-icon>
+            Delete
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </ion-list>
+
+  <!-- Action Buttons -->
+  <div *ngIf="!loading && !error && bookings.length > 0" class="view-requests-section">
+    <ion-button expand="block" fill="outline" (click)="navigateToRequests()">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      View All Requests
+    </ion-button>
+  </div>
 </ion-content>
 
 <!-- Bottom Navigation -->
@@ -50,6 +105,16 @@
     <button class="nav-button active" (click)="navigateToMyRentals()">
       <ion-icon name="car-outline" class="nav-icon"></ion-icon>
       <span class="nav-label">My Rentals</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToRequests()">
+      <div class="notification-wrapper">
+        <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
+        <div *ngIf="requestUnreadCount > 0" class="notification-badge">
+          {{ requestUnreadCount }}
+        </div>
+      </div>
+      <span class="nav-label">Requests{{ requestUnreadCount > 0 ? ' (' + requestUnreadCount + ')' : '' }}</span>
     </button>
     
     <button class="nav-button" (click)="navigateToNotifications()">

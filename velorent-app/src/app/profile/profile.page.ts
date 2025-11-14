@@ -283,6 +283,14 @@ export class ProfilePage implements OnInit {
     }
   }
 
+  navigateToRequests() {
+    if (this.user) {
+      this.router.navigate(['/booking-requests']);
+    } else {
+      this.showAlert('Login Required', 'Please log in to view your requests.');
+    }
+  }
+
   navigateToProfile() {
     // Already on profile page
     console.log('Already on Profile page');

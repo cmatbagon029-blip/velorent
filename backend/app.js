@@ -6,6 +6,8 @@ const vehicleRoutes = require('./routes/vehicles');
 const companyRoutes = require('./routes/companies');
 const rentalRoutes = require('./routes/rentals');
 const verificationRoutes = require('./routes/verification');
+const requestRoutes = require('./routes/requests');
+const notificationRoutes = require('./routes/notifications');
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/rentals', rentalRoutes);
+app.use('/api/requests', requestRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Use the verification routes BEFORE app.listen
 app.use('/api', verificationRoutes);

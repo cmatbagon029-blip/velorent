@@ -201,6 +201,75 @@ ion-button {
   margin-left: 48px !important;
 }
 
+.booking-card {
+  background: #1e1e1e;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px 0 rgba(255, 215, 0, 0.12);
+  margin-bottom: 24px;
+  color: #fff;
+
+  ion-card-header {
+    padding-bottom: 12px;
+  }
+
+  ion-card-title {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 1.2em;
+  }
+
+  ion-card-subtitle {
+    margin-top: 8px;
+  }
+}
+
+.booking-details {
+  p {
+    margin: 8px 0;
+    color: #fff;
+
+    strong {
+      color: #ffd700;
+      font-weight: 500;
+    }
+  }
+}
+
+.request-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+
+  ion-button {
+    flex: 1;
+    min-width: 140px;
+    --border-color: #ffd700;
+    --color: #ffd700;
+    margin: 0;
+
+    &[color="danger"] {
+      --border-color: #ff4444;
+      --color: #ff4444;
+    }
+  }
+}
+
+.view-requests-section {
+  margin: 24px 0;
+  padding: 0 16px;
+
+  ion-button {
+    --border-color: #ffd700;
+    --color: #ffd700;
+  }
+
+  .refresh-button {
+    --border-color: #22c55e;
+    --color: #22c55e;
+  }
+}
+
 :host ::ng-deep ion-item.booking-item {
   --background: #1e1e1e !important;
   background: #1e1e1e !important;

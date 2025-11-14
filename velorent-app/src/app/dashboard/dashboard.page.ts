@@ -10,6 +10,7 @@ import { ApiService } from '../api.service';
 import { Vehicle } from '../../models/vehicle.model';
 import { RentalCompany } from '../../models/rental-company.model';
 import { NotificationService } from '../services/notification.service';
+import { RequestNotificationService } from '../services/request-notification.service';
 import { addIcons } from 'ionicons';
 import { 
   star, 
@@ -18,7 +19,15 @@ import {
   carOutline, 
   personOutline,
   personCircleOutline,
-  notificationsOutline
+  notificationsOutline,
+  documentTextOutline,
+  appsOutline,
+  carSportOutline,
+  busOutline,
+  optionsOutline,
+  closeOutline,
+  checkmarkCircle,
+  checkmark
 } from 'ionicons/icons';
 import { TermsModalComponent } from '../settings/settings.page';
 import { PrivacyModalComponent } from '../settings/settings.page';
@@ -32,7 +41,15 @@ addIcons({
   'car-outline': carOutline, 
   'person-outline': personOutline,
   'person-circle-outline': personCircleOutline,
-  'notifications-outline': notificationsOutline
+  'notifications-outline': notificationsOutline,
+  'document-text-outline': documentTextOutline,
+  'apps-outline': appsOutline,
+  'car-sport-outline': carSportOutline,
+  'bus-outline': busOutline,
+  'options-outline': optionsOutline,
+  'close-outline': closeOutline,
+  'checkmark-circle': checkmarkCircle,
+  'checkmark': checkmark
 });
 
 @Component({
@@ -53,6 +70,8 @@ export class DashboardPage implements OnInit {
   showAllVehicles: boolean = false;
   readonly INITIAL_VEHICLE_COUNT = 4;
   unreadCount: number = 0;
+  requestUnreadCount: number = 0;
+  showFilters: boolean = false;
 
   get displayedVehicles(): Vehicle[] {
     if (this.showAllVehicles || this.filteredVehicles.length <= this.INITIAL_VEHICLE_COUNT) {
@@ -108,7 +127,8 @@ export class DashboardPage implements OnInit {
     private alertCtrl: AlertController,
     private apiService: ApiService,
     private navCtrl: NavController,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private requestNotificationService: RequestNotificationService
   ) {
     console.log('Dashboard component constructed');
   }
@@ -128,6 +148,7 @@ export class DashboardPage implements OnInit {
     // Only update notification count if user is logged in
     if (token && user) {
       this.updateNotificationCount();
+      this.updateRequestNotificationCount();
     }
   }
 
@@ -140,6 +161,7 @@ export class DashboardPage implements OnInit {
     // Only update notification count if user is logged in
     if (token && user) {
       this.updateNotificationCount();
+      this.updateRequestNotificationCount();
     }
   }
 
@@ -202,6 +224,40 @@ export class DashboardPage implements OnInit {
         vehicle.type.toLowerCase() === category.toLowerCase()
       );
     }
+  }
+
+  selectCategory(category: string) {
+    this.selectedCategory = category;
+    this.showAllVehicles = false; // Reset on filter
+    
+    if (category === 'all') {
+      this.filteredVehicles = [...this.vehicles];
+    } else {
+      this.filteredVehicles = this.vehicles.filter(vehicle => 
+        vehicle.type.toLowerCase() === category.toLowerCase()
+      );
+    }
+  }
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+
+  getCategoryLabel(category: string): string {
+    const labels: { [key: string]: string } = {
+      'all': 'All',
+      'sedan': 'Sedan',
+      'suv': 'SUV',
+      'hatchback': 'Hatchback',
+      'coupe': 'Coupe',
+      'convertible': 'Convertible',
+      'truck': 'Truck',
+      'van': 'Van',
+      'motorcycle': 'Motorcycle',
+      'bus': 'Bus',
+      'other': 'Other'
+    };
+    return labels[category] || 'All';
   }
 
   searchVehicles(event: any) {
@@ -283,6 +339,16 @@ export class DashboardPage implements OnInit {
     // Already on home page, could scroll to top or refresh
   }
 
+  navigateToRequests() {
+    console.log('Navigating to Requests...');
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.router.navigate(['/booking-requests']);
+    } else {
+      this.showLoginAlert();
+    }
+  }
+
   navigateToNotifications() {
     console.log('Navigating to Notifications...');
     this.router.navigate(['/notifications']);
@@ -299,6 +365,15 @@ export class DashboardPage implements OnInit {
     this.notificationService.unreadCount$.subscribe(count => {
       console.log('Unread count updated:', count);
       this.unreadCount = count;
+    });
+  }
+
+  updateRequestNotificationCount() {
+    console.log('Updating request notification count...');
+    this.requestNotificationService.updateUnreadCount();
+    this.requestNotificationService.unreadCount$.subscribe(count => {
+      console.log('Request unread count updated:', count);
+      this.requestUnreadCount = count;
     });
   }
 

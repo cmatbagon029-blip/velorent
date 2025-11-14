@@ -1,0 +1,191 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Requests</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Notification Banners -->
+  <div *ngIf="notifications.length > 0" class="notifications-banner-container">
+    <div class="banner-header">
+      <p class="banner-count" *ngIf="getUnreadNotificationCount() > 0">
+        {{ getUnreadNotificationCount() }} new notification{{ getUnreadNotificationCount() > 1 ? 's' : '' }}
+      </p>
+      <ion-button 
+        *ngIf="notifications.length > 0" 
+        fill="clear" 
+        size="small" 
+        (click)="dismissAllNotifications()"
+        class="dismiss-all-btn">
+        Dismiss All
+      </ion-button>
+    </div>
+    
+    <div class="notification-banners">
+      <div 
+        *ngFor="let notification of notifications" 
+        class="notification-banner"
+        [class.unread]="!notification.read"
+        [class.approved]="notification.status === 'approved'"
+        [class.rejected]="notification.status === 'rejected'">
+        <div class="banner-content" (click)="scrollToRequest(notification.requestId); markNotificationAsRead(notification)">
+          <ion-icon 
+            [name]="getNotificationIcon(notification.status)" 
+            [color]="getNotificationColor(notification.status)"
+            class="banner-icon">
+          </ion-icon>
+          <div class="banner-text">
+            <p class="banner-message">{{ notification.message }}</p>
+            <span class="banner-timestamp">
+              <ion-icon name="time-outline"></ion-icon>
+              {{ formatTimestamp(notification.timestamp) }}
+            </span>
+          </div>
+        </div>
+        <ion-button 
+          fill="clear" 
+          size="small" 
+          (click)="dismissNotification(notification); $event.stopPropagation()"
+          class="dismiss-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Buttons -->
+  <ion-segment [(ngModel)]="filterStatus" (ionChange)="loadRequests()">
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="pending">
+      <ion-label>Pending</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="approved">
+      <ion-label>Approved</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="rejected">
+      <ion-label>Rejected</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading requests...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button (click)="loadRequests()" style="--background: #ffd700; --color: #121212;">Try Again</ion-button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && getFilteredRequests().length === 0" class="empty-container">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h2>No Requests Found</h2>
+    <p *ngIf="filterStatus === 'all'">You haven't submitted any requests yet.</p>
+    <p *ngIf="filterStatus !== 'all'">No {{ filterStatus }} requests found.</p>
+  </div>
+
+  <!-- Requests List -->
+  <ion-list *ngIf="!loading && !error && getFilteredRequests().length > 0">
+    <ion-card 
+      *ngFor="let request of getFilteredRequests()" 
+      class="request-card"
+      [class.new-status]="hasNewStatus(request.id)"
+      [attr.data-request-id]="request.id">
+      <ion-card-header>
+        <div class="request-header">
+          <div>
+            <ion-icon [name]="getRequestTypeIcon(request.request_type)" class="request-type-icon"></ion-icon>
+            <ion-card-title>{{ request.request_type === 'reschedule' ? 'Reschedule' : 'Cancellation' }} Request</ion-card-title>
+          </div>
+          <ion-badge [color]="getStatusColor(request.status)">
+            {{ request.status }}
+          </ion-badge>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="request-details">
+          <p><strong>Vehicle:</strong> {{ request.vehicle_name }}</p>
+          <p><strong>Company:</strong> {{ request.company_name }}</p>
+          <p><strong>Original Date:</strong> {{ formatDate(request.original_start_date) }} - {{ formatDate(request.original_end_date) }}</p>
+          <p *ngIf="request.original_rent_time"><strong>Original Time:</strong> {{ formatTime(request.original_rent_time) }}</p>
+          
+          <div *ngIf="request.request_type === 'reschedule' && request.new_start_date" class="new-details">
+            <p><strong>New Date:</strong> {{ formatDate(request.new_start_date) }} - {{ formatDate(request.new_end_date) }}</p>
+            <p *ngIf="request.new_rent_time"><strong>New Time:</strong> {{ formatTime(request.new_rent_time) }}</p>
+          </div>
+
+          <div class="reason-section">
+            <p><strong>Reason:</strong></p>
+            <div class="reason-text">{{ cleanReasonText(request.reason) }}</div>
+          </div>
+
+          <div *ngIf="request.computed_fee && request.computed_fee > 0" class="fee-section">
+            <p><strong>Fee:</strong> {{ request.computed_fee }}%</p>
+          </div>
+
+          <div *ngIf="request.company_response" class="response-section">
+            <p><strong>Company Response:</strong></p>
+            <p class="response-text">{{ request.company_response }}</p>
+          </div>
+
+          <div class="request-meta">
+            <p><strong>Submitted:</strong> {{ formatDate(request.created_at) }}</p>
+            <p *ngIf="request.updated_at && request.updated_at !== request.created_at">
+              <strong>Updated:</strong> {{ formatDate(request.updated_at) }}
+            </p>
+          </div>
+
+          <!-- Delete button for rejected/completed requests -->
+          <div class="delete-action" *ngIf="request.status === 'rejected' || request.status === 'approved'">
+            <ion-button 
+              fill="clear" 
+              color="danger"
+              size="small"
+              (click)="deleteRequest(request.id)">
+              <ion-icon name="trash-outline" slot="start"></ion-icon>
+              Delete
+            </ion-button>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <div class="nav-container">
+    <button class="nav-button" (click)="navigateToHome()">
+      <ion-icon name="home" class="nav-icon"></ion-icon>
+      <span class="nav-label">Home</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToMyRentals()">
+      <ion-icon name="car-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">My Rentals</span>
+    </button>
+    
+    <button class="nav-button active" (click)="navigateToRequests()">
+      <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">Requests</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToNotifications()">
+      <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">Notifications</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToProfile()">
+      <ion-icon name="person-outline" class="nav-icon"></ion-icon>
+      <span class="nav-label">Profile</span>
+    </button>
+  </div>
+</div>
+

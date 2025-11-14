@@ -5,29 +5,116 @@
 </ion-header>
 
 <ion-content id="main-content">
-  <!-- Search Bar -->
-  <ion-searchbar
-    placeholder="Search vehicles..."
-    animated
-    class="search-bar"
-    (ionInput)="searchVehicles($event)">
-  </ion-searchbar>
-
-  <!-- Categories Section -->
-  <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterByCategory($event)" class="categories">
-    <ion-segment-button value="all">
-      <ion-label>All</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="sedan">
-      <ion-label>Sedan</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="suv">
-      <ion-label>SUV</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="van">
-      <ion-label>Van</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <!-- Enhanced Search Bar with Integrated Filters -->
+  <div class="search-filter-container">
+    <div class="search-bar-modern">
+      <div class="search-section">
+        <div class="search-icon-wrapper">
+          <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        </div>
+        <ion-searchbar
+          placeholder="Search vehicles..."
+          animated
+          class="search-input"
+          (ionInput)="searchVehicles($event)">
+        </ion-searchbar>
+        <button class="filter-toggle-btn" (click)="toggleFilters()" #filterBtn>
+          <ion-icon name="options-outline"></ion-icon>
+          <span *ngIf="selectedCategory !== 'all'" class="filter-badge">{{ getCategoryLabel(selectedCategory) }}</span>
+        </button>
+      </div>
+      
+      <!-- Compact Filter Modal -->
+      <div class="filter-modal-overlay" [class.active]="showFilters" (click)="toggleFilters()"></div>
+      <div class="filter-modal" [class.active]="showFilters" #filterModal>
+        <div class="filter-modal-header">
+          <span class="filter-title">Vehicle Type</span>
+          <button class="close-filters" (click)="toggleFilters()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="filter-options">
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'all'"
+            (click)="selectCategory('all'); toggleFilters()">
+            <span>All Vehicles</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'all'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'sedan'"
+            (click)="selectCategory('sedan'); toggleFilters()">
+            <span>Sedan</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'sedan'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'suv'"
+            (click)="selectCategory('suv'); toggleFilters()">
+            <span>SUV</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'suv'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'hatchback'"
+            (click)="selectCategory('hatchback'); toggleFilters()">
+            <span>Hatchback</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'hatchback'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'coupe'"
+            (click)="selectCategory('coupe'); toggleFilters()">
+            <span>Coupe</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'coupe'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'convertible'"
+            (click)="selectCategory('convertible'); toggleFilters()">
+            <span>Convertible</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'convertible'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'truck'"
+            (click)="selectCategory('truck'); toggleFilters()">
+            <span>Truck</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'truck'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'van'"
+            (click)="selectCategory('van'); toggleFilters()">
+            <span>Van</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'van'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'motorcycle'"
+            (click)="selectCategory('motorcycle'); toggleFilters()">
+            <span>Motorcycle</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'motorcycle'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'bus'"
+            (click)="selectCategory('bus'); toggleFilters()">
+            <span>Bus</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'bus'" class="check-icon"></ion-icon>
+          </button>
+          <button 
+            class="filter-option" 
+            [class.active]="selectedCategory === 'other'"
+            (click)="selectCategory('other'); toggleFilters()">
+            <span>Other</span>
+            <ion-icon name="checkmark" *ngIf="selectedCategory === 'other'" class="check-icon"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Vehicles Grid -->
   <ion-grid class="vehicles-grid">
@@ -101,13 +188,14 @@
     <div class="companies-carousel">
       <ion-slides [options]="companiesSwiperConfig" class="companies-swiper">
         <ion-slide *ngFor="let company of companies">
-          <div class="company-card" (click)="viewCompanyDetails(company.id)">
-            <div class="company-logo">
-              <img [src]="company.logoUrl" [alt]="company.name" (error)="company.logoUrl = 'assets/images/company-placeholder.svg'">
+          <div class="company-item" (click)="viewCompanyDetails(company.id)">
+            <div class="company-card">
+              <div class="company-logo">
+                <img [src]="company.logoUrl" [alt]="company.name" (error)="company.logoUrl = 'assets/images/company-placeholder.svg'">
+              </div>
             </div>
             <div class="company-info">
               <h3>{{ company.name }}</h3>
-              <p *ngIf="company.location">{{ company.location }}</p>
             </div>
           </div>
         </ion-slide>
@@ -139,6 +227,16 @@
     <button class="nav-button" (click)="navigateToMyRentals()">
       <ion-icon name="car-outline" class="nav-icon"></ion-icon>
       <span class="nav-label">My Rentals</span>
+    </button>
+    
+    <button class="nav-button" (click)="navigateToRequests()">
+      <div class="notification-wrapper">
+        <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
+        <div *ngIf="requestUnreadCount > 0" class="notification-badge">
+          {{ requestUnreadCount }}
+        </div>
+      </div>
+      <span class="nav-label">Requests{{ requestUnreadCount > 0 ? ' (' + requestUnreadCount + ')' : '' }}</span>
     </button>
     
     <button class="nav-button" (click)="navigateToNotifications()">
