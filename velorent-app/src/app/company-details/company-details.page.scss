@@ -338,6 +338,24 @@ ion-content {
         object-fit: cover;
       }
 
+      .status-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 10;
+        font-weight: 600;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+      }
+    }
+    
+    &.unavailable {
+      opacity: 0.7;
+      filter: grayscale(100%);
+      
+      img {
+        filter: grayscale(100%);
+      }
     }
 
     .vehicle-info {

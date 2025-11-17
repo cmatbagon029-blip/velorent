@@ -7,6 +7,7 @@ const config = require('../config');
 router.get('/', async (req, res) => {
   let connection;
   try {
+    const { status } = req.query; // Optional status filter
     console.log('Connecting to database...');
     connection = await mysql.createConnection({
       host: 'localhost',
@@ -15,24 +16,46 @@ router.get('/', async (req, res) => {
       database: 'velorent'
     });
 
-    // Fetch vehicles with company information
-    console.log('Fetching vehicles...');
-    const [vehicles] = await connection.execute(`
+    // Build query with optional status filter
+    let query = `
       SELECT 
         v.id,
         v.name,
+        v.model,
         v.type,
         v.price_with_driver,
         v.price_without_driver,
         v.Owner,
         v.image_path,
         v.company_id,
+        v.status,
+        v.year,
+        v.color,
+        v.engine_size,
+        v.transmission,
+        v.mileage,
+        v.seaters,
         c.company_name
       FROM vehicles v
       LEFT JOIN companies c ON v.company_id = c.id
-      WHERE c.status = 'approved' OR c.status IS NULL
-      ORDER BY v.id
-    `);
+      WHERE (c.status = 'approved' OR c.status IS NULL)
+    `;
+    
+    const params = [];
+    
+    // Add status filter if provided
+    if (status) {
+      const validStatuses = ['available', 'under maintenance', 'currently rented', 'unavailable'];
+      if (validStatuses.includes(status.toLowerCase())) {
+        query += ` AND v.status = ?`;
+        params.push(status);
+      }
+    }
+    
+    query += ` ORDER BY v.id`;
+
+    console.log('Fetching vehicles...');
+    const [vehicles] = await connection.execute(query, params);
 
     console.log('Raw vehicles fetched:', vehicles.length);
     
@@ -40,16 +63,22 @@ router.get('/', async (req, res) => {
     const transformedVehicles = vehicles.map(vehicle => ({
       id: vehicle.id,
       name: vehicle.name,
+      model: vehicle.model,
       type: vehicle.type,
       price_with_driver: vehicle.price_with_driver,
       price_without_driver: vehicle.price_without_driver,
       imageUrl: vehicle.image_path ? config.getS3Url(vehicle.image_path) : 'assets/images/vehicle-placeholder.svg',
       company_id: vehicle.company_id,
       company_name: vehicle.company_name || vehicle.Owner,
-      rating: 4.5, // Default rating
-      capacity: vehicle.type === 'Van' ? '12' : vehicle.type === 'SUV' ? '7' : '5',
-      color: ['White', 'Black', 'Silver', 'Blue', 'Red'][Math.floor(Math.random() * 5)],
-      mileage: Math.floor(Math.random() * 50000) + 10000
+      status: vehicle.status || 'available', // Default to available if not set
+      year: vehicle.year,
+      color: vehicle.color,
+      engine_size: vehicle.engine_size,
+      transmission: vehicle.transmission,
+      mileage: vehicle.mileage,
+      seaters: vehicle.seaters,
+      capacity: vehicle.seaters || (vehicle.type === 'Van' ? '12' : vehicle.type === 'SUV' ? '7' : '5'),
+      rating: 4.5 // Default rating
     }));
 
     console.log('Transformed vehicles:', transformedVehicles.length);
@@ -85,6 +114,36 @@ router.get('/:id/availability', async (req, res) => {
       password: '',
       database: 'velorent'
     });
+
+    // First, check vehicle status
+    const [vehicles] = await connection.execute(
+      'SELECT status FROM vehicles WHERE id = ?',
+      [vehicleId]
+    );
+
+    if (vehicles.length === 0) {
+      return res.status(404).json({ 
+        isAvailable: false, 
+        message: 'Vehicle not found.' 
+      });
+    }
+
+    const vehicleStatus = vehicles[0].status;
+
+    // Check if vehicle status makes it unavailable
+    if (vehicleStatus === 'unavailable' || vehicleStatus === 'under maintenance') {
+      return res.json({ 
+        isAvailable: false, 
+        message: `Vehicle is ${vehicleStatus}.` 
+      });
+    }
+
+    if (vehicleStatus === 'currently rented') {
+      return res.json({ 
+        isAvailable: false, 
+        message: 'Vehicle is currently rented.' 
+      });
+    }
 
     // Check for overlapping bookings with statuses that block new bookings
     const [conflicts] = await connection.execute(`

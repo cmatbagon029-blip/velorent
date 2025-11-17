@@ -67,11 +67,6 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   availabilityError: string = '';
   selectedDateAvailability: any = null;
 
-  // Driver selection
-  drivers: any[] = [];
-  selectedDriver: any = null;
-  loadingDrivers: boolean = false;
-  driversError: string = '';
 
   // Rental limit tracking
   userRentalCount: number = 0;
@@ -239,10 +234,6 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   acceptCompanyRules() {
     this.closeCompanyRulesModal();
     this.step = 2;
-    // Load drivers if service type requires a driver
-    if (this.serviceType === 'Pick-up/Drop-off' && this.vehicle?.company_id) {
-      this.loadDrivers();
-    }
   }
 
   onFileChange(event: any, type: 'valid' | 'additional') {
@@ -404,6 +395,13 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   }
 
   onTimeChange() {
+    // Clear any previous validation errors by re-validating
+    if (this.rentTime && this.rentFromDate) {
+      const isValid = this.isTimeAvailableForSelection(this.rentTime);
+      if (!isValid) {
+        console.warn('Selected time is not available:', this.rentTime);
+      }
+    }
     this.checkAvailability();
   }
 
@@ -431,18 +429,41 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
         this.availabilityError = '';
         this.selectedDateAvailability = { isAvailable: true, message: 'Available 24 hours' };
       } else {
-        // Check if time is within available range
-        const requestedTime = this.rentTime;
-        const startTime = dayAvailability.startTime;
-        const endTime = dayAvailability.endTime;
+        // Check if time is within available range using proper time comparison
+        const normalizeTime = (timeStr: string): string => {
+          if (!timeStr) return '00:00';
+          if (timeStr.length > 5) {
+            return timeStr.substring(0, 5);
+          }
+          if (timeStr.length === 5 && timeStr.includes(':')) {
+            return timeStr;
+          }
+          return '00:00';
+        };
 
-         if (requestedTime >= startTime && requestedTime <= endTime) {
-           this.availabilityError = '';
-           this.selectedDateAvailability = { isAvailable: true, message: `Available from ${this.formatTimeForDisplay(startTime)} to ${this.formatTimeForDisplay(endTime)}` };
-         } else {
-           this.availabilityError = `Not available at this time. Available from ${this.formatTimeForDisplay(startTime)} to ${this.formatTimeForDisplay(endTime)}`;
-           this.selectedDateAvailability = { isAvailable: false, message: `Not available at this time. Available from ${this.formatTimeForDisplay(startTime)} to ${this.formatTimeForDisplay(endTime)}` };
-         }
+        const timeToMinutes = (timeStr: string): number => {
+          if (!timeStr || !timeStr.includes(':')) return 0;
+          const parts = timeStr.split(':');
+          const hours = parseInt(parts[0], 10) || 0;
+          const minutes = parseInt(parts[1], 10) || 0;
+          return hours * 60 + minutes;
+        };
+
+        const requestedTime = normalizeTime(this.rentTime);
+        const startTime = normalizeTime(dayAvailability.startTime || '00:00');
+        const endTime = normalizeTime(dayAvailability.endTime || '23:59');
+
+        const requestedMinutes = timeToMinutes(requestedTime);
+        const startMinutes = timeToMinutes(startTime);
+        const endMinutes = timeToMinutes(endTime);
+
+        if (requestedMinutes >= startMinutes && requestedMinutes <= endMinutes) {
+          this.availabilityError = '';
+          this.selectedDateAvailability = { isAvailable: true, message: `Available from ${this.formatTimeForDisplay(dayAvailability.startTime)} to ${this.formatTimeForDisplay(dayAvailability.endTime)}` };
+        } else {
+          this.availabilityError = `Not available at this time. Available from ${this.formatTimeForDisplay(dayAvailability.startTime)} to ${this.formatTimeForDisplay(dayAvailability.endTime)}`;
+          this.selectedDateAvailability = { isAvailable: false, message: `Not available at this time. Available from ${this.formatTimeForDisplay(dayAvailability.startTime)} to ${this.formatTimeForDisplay(dayAvailability.endTime)}` };
+        }
       }
     } catch (error) {
       console.error('Error checking availability:', error);
@@ -524,28 +545,6 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
     console.log('Unavailable dates based on company schedule:', this.unavailableDates);
   }
 
-  async loadDrivers() {
-    if (!this.vehicle?.company_id) {
-      console.log('No vehicle or company_id found for drivers');
-      return;
-    }
-
-    try {
-      console.log('Loading drivers for company_id:', this.vehicle.company_id);
-      this.loadingDrivers = true;
-      this.driversError = '';
-      const response = await this.apiService.getDrivers(this.vehicle.company_id).toPromise();
-      console.log('Drivers response:', response);
-      this.drivers = response.drivers || [];
-      console.log('Set drivers to:', this.drivers);
-    } catch (error) {
-      console.error('Error loading drivers:', error);
-      this.driversError = 'Failed to load drivers. Please try again.';
-      this.drivers = [];
-    } finally {
-      this.loadingDrivers = false;
-    }
-  }
 
   loadUserRentalCount() {
     this.apiService.getMyBookings().subscribe({
@@ -665,7 +664,7 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
 
   // Check if a specific time is available for the selected date
   isTimeAvailableForSelection(time: string): boolean {
-    if (!this.rentFromDate || !this.companyAvailability.length) {
+    if (!this.rentFromDate || !this.companyAvailability.length || !time) {
       return true; // If no date selected or no availability data, allow all times
     }
 
@@ -684,11 +683,50 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
       return true;
     }
 
-    const requestedTime = time;
-    const startTime = dayAvailability.startTime;
-    const endTime = dayAvailability.endTime;
+    // Normalize time format (remove seconds if present, ensure HH:MM format)
+    const normalizeTime = (timeStr: string): string => {
+      if (!timeStr) return '00:00';
+      // Remove seconds if present (format: HH:MM:SS -> HH:MM)
+      if (timeStr.length > 5) {
+        return timeStr.substring(0, 5);
+      }
+      // Ensure it's in HH:MM format
+      if (timeStr.length === 5 && timeStr.includes(':')) {
+        return timeStr;
+      }
+      return '00:00';
+    };
 
-    return requestedTime >= startTime && requestedTime <= endTime;
+    const requestedTime = normalizeTime(time);
+    const startTime = normalizeTime(dayAvailability.startTime || '00:00');
+    const endTime = normalizeTime(dayAvailability.endTime || '23:59');
+
+    // Convert to minutes for proper comparison
+    const timeToMinutes = (timeStr: string): number => {
+      if (!timeStr || !timeStr.includes(':')) return 0;
+      const parts = timeStr.split(':');
+      const hours = parseInt(parts[0], 10) || 0;
+      const minutes = parseInt(parts[1], 10) || 0;
+      return hours * 60 + minutes;
+    };
+
+    const requestedMinutes = timeToMinutes(requestedTime);
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = timeToMinutes(endTime);
+
+    // Debug logging
+    console.log('Time validation:', {
+      requestedTime,
+      startTime,
+      endTime,
+      requestedMinutes,
+      startMinutes,
+      endMinutes,
+      isValid: requestedMinutes >= startMinutes && requestedMinutes <= endMinutes
+    });
+
+    // Allow times from start time (inclusive) to end time (inclusive)
+    return requestedMinutes >= startMinutes && requestedMinutes <= endMinutes;
   }
 
   // Get available end dates (must be after start date)
@@ -776,6 +814,173 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
     return `${displayHour}:${minutes} ${ampm}${periodLabel}`;
   }
 
+  formatTimeForClock(time: string): string {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
+  }
+
+  getTimePeriod(time: string): string {
+    if (!time) return '';
+    const [hours] = time.split(':');
+    const hour = parseInt(hours);
+    if (hour >= 6 && hour < 12) {
+      return 'Morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Evening';
+    } else {
+      return 'Night';
+    }
+  }
+
+  isMorningTime(time: string): boolean {
+    if (!time) return false;
+    const [hours] = time.split(':');
+    const hour = parseInt(hours);
+    return hour >= 6 && hour < 12;
+  }
+
+  isAfternoonTime(time: string): boolean {
+    if (!time) return false;
+    const [hours] = time.split(':');
+    const hour = parseInt(hours);
+    return hour >= 12 && hour < 17;
+  }
+
+  isEveningTime(time: string): boolean {
+    if (!time) return false;
+    const [hours] = time.split(':');
+    const hour = parseInt(hours);
+    return hour >= 17 && hour < 21;
+  }
+
+  isNightTime(time: string): boolean {
+    if (!time) return false;
+    const [hours] = time.split(':');
+    const hour = parseInt(hours);
+    return hour >= 21 || hour < 6;
+  }
+
+  getMinTime(): string {
+    if (!this.rentFromDate || !this.companyAvailability.length) {
+      return '00:00';
+    }
+
+    const dateObj = new Date(this.rentFromDate);
+    const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    
+    const dayAvailability = this.companyAvailability.find(
+      (avail: any) => avail.dayOfWeek === dayOfWeek
+    );
+
+    if (!dayAvailability || !dayAvailability.isAvailable) {
+      return '00:00';
+    }
+
+    if (dayAvailability.is24Hours) {
+      return '00:00';
+    }
+
+    // Ensure proper HH:MM format (remove seconds if present)
+    const startTime = dayAvailability.startTime || '';
+    if (startTime.length >= 5) {
+      return startTime.substring(0, 5);
+    }
+    return '00:00';
+  }
+
+  getMaxTime(): string {
+    if (!this.rentFromDate || !this.companyAvailability.length) {
+      return '23:59';
+    }
+
+    const dateObj = new Date(this.rentFromDate);
+    const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    
+    const dayAvailability = this.companyAvailability.find(
+      (avail: any) => avail.dayOfWeek === dayOfWeek
+    );
+
+    if (!dayAvailability || !dayAvailability.isAvailable) {
+      return '23:59';
+    }
+
+    if (dayAvailability.is24Hours) {
+      return '23:59';
+    }
+
+    // Ensure proper HH:MM format (remove seconds if present)
+    const endTime = dayAvailability.endTime || '';
+    if (endTime.length >= 5) {
+      return endTime.substring(0, 5);
+    }
+    return '23:59';
+  }
+
+  getAvailableDaysText(): string {
+    if (!this.companyAvailability.length) {
+      return 'Loading availability...';
+    }
+
+    const availableDays = this.companyAvailability
+      .filter(day => day.isAvailable)
+      .map(day => day.dayOfWeek.charAt(0).toUpperCase() + day.dayOfWeek.slice(1));
+
+    if (availableDays.length === 0) {
+      return 'No days available';
+    }
+
+    if (availableDays.length === 7) {
+      return 'Every day';
+    }
+
+    // Format as "Monday, Tuesday, Wednesday" or "Monday - Friday"
+    if (availableDays.length === 5 && 
+        availableDays.includes('Monday') && 
+        availableDays.includes('Friday') &&
+        !availableDays.includes('Saturday') && 
+        !availableDays.includes('Sunday')) {
+      return 'Monday - Friday';
+    }
+
+    return availableDays.join(', ');
+  }
+
+  getAvailableTimeRangeText(date: string): string {
+    if (!date || !this.companyAvailability.length) {
+      return '';
+    }
+
+    const dateObj = new Date(date);
+    const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    
+    const dayAvailability = this.companyAvailability.find(
+      (avail: any) => avail.dayOfWeek === dayOfWeek
+    );
+
+    if (!dayAvailability || !dayAvailability.isAvailable) {
+      return 'No times available';
+    }
+
+    if (dayAvailability.is24Hours) {
+      return '24 Hours';
+    }
+
+    const startTime = this.formatTimeForDisplay(dayAvailability.startTime);
+    const endTime = this.formatTimeForDisplay(dayAvailability.endTime);
+    
+    // Remove period labels from the range display
+    const startTimeClean = startTime.split(' (')[0];
+    const endTimeClean = endTime.split(' (')[0];
+    
+    return `${startTimeClean} - ${endTimeClean}`;
+  }
+
   async showToast(message: string, color: string = 'danger') {
     const toast = await this.toastCtrl.create({
       message,
@@ -824,11 +1029,6 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
       return;
     }
 
-    // Check if driver is required but not selected
-    if (this.serviceType === 'Pick-up/Drop-off' && !this.selectedDriver) {
-      this.showToast('Please select a driver for this service.');
-      return;
-    }
 
     // Availability is now enforced by the UI, so no need to check here
 
@@ -863,21 +1063,7 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
     formData.append('remainingAmount', this.remainingAmount.toString());
     formData.append('paymentMethod', this.paymentMethod);
     
-    // Add driver information if selected
-    if (this.selectedDriver) {
-      console.log('Adding driver info to form data:', {
-        driverId: this.selectedDriver.id,
-        driverName: this.selectedDriver.fullName,
-        driverPhone: this.selectedDriver.phone,
-        driverExperience: this.selectedDriver.experience
-      });
-      formData.append('driverId', this.selectedDriver.id.toString());
-      formData.append('driverName', this.selectedDriver.fullName);
-      formData.append('driverPhone', this.selectedDriver.phone);
-      formData.append('driverExperience', this.selectedDriver.experience);
-    } else {
-      console.log('No driver selected for service type:', this.serviceType);
-    }
+    // Driver information is no longer required
     
     if (this.validIdFile) formData.append('validId', this.validIdFile);
     if (this.additionalIdFile) formData.append('additionalId', this.additionalIdFile);

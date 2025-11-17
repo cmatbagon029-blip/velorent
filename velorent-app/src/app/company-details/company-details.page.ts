@@ -40,6 +40,7 @@ interface Vehicle {
   company_id?: number;
   description?: string;
   features?: string;
+  status?: string;
 }
 
 @Component({
@@ -133,5 +134,46 @@ export class CompanyDetailsPage implements OnInit {
       this.loadCompanyDetails(parseInt(companyId));
     }
     event.target.complete();
+  }
+
+  // Vehicle status helper functions
+  isVehicleAvailable(vehicle: Vehicle): boolean {
+    return vehicle.status === 'available' || !vehicle.status;
+  }
+
+  getStatusColor(status: string | undefined): string {
+    if (!status) return 'success';
+    
+    const statusLower = status.toLowerCase();
+    switch (statusLower) {
+      case 'available':
+        return 'success';
+      case 'under maintenance':
+        return 'warning';
+      case 'currently rented':
+        return 'tertiary';
+      case 'unavailable':
+        return 'danger';
+      default:
+        return 'medium';
+    }
+  }
+
+  getStatusLabel(status: string | undefined): string {
+    if (!status) return 'Available';
+    
+    const statusLower = status.toLowerCase();
+    switch (statusLower) {
+      case 'available':
+        return 'Available';
+      case 'under maintenance':
+        return 'Maintenance';
+      case 'currently rented':
+        return 'Rented';
+      case 'unavailable':
+        return 'Unavailable';
+      default:
+        return status;
+    }
   }
 } 

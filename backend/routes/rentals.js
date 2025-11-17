@@ -4,6 +4,7 @@ const mysql = require('mysql2/promise');
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const { uploadImageToS3 } = require('../utils/s3Upload');
 
 // Test endpoint to check database connection and table structure
 router.get('/test-db', async function(req, res) {
@@ -150,13 +151,7 @@ router.post('/', auth.verifyToken, upload.fields([
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Check if driver is required but not provided
-    if (serviceType === 'Pick-up/Drop-off' && (!driverId || !driverName)) {
-      console.log('Driver validation failed - service type requires driver but driver info missing');
-      console.log('Driver ID value:', driverId, 'Type:', typeof driverId);
-      console.log('Driver Name value:', driverName, 'Type:', typeof driverName);
-      return res.status(400).json({ error: 'Driver selection is required for Pick-up/Drop-off service' });
-    }
+    // Driver information is optional - no longer required for Pick-up/Drop-off service
 
     // Check for existing pending or active bookings for this user (not approved ones)
     const [existingActiveBookings] = await connection.execute(
@@ -181,9 +176,31 @@ router.post('/', auth.verifyToken, upload.fields([
       });
     }
 
-    // Get file paths from req.files
-    const validIdPath = req.files['validId'] ? req.files['validId'][0].path : null;
-    const additionalIdPath = req.files['additionalId'] ? req.files['additionalId'][0].path : null;
+    // Upload files to S3 and get URLs
+    let validIdPath = null;
+    let additionalIdPath = null;
+
+    if (req.files['validId'] && req.files['validId'][0]) {
+      const uploadResult = await uploadImageToS3(req.files['validId'][0], 'bookings/valid-ids');
+      if (uploadResult.success) {
+        validIdPath = uploadResult.url; // Store S3 URL instead of local path
+        console.log('Valid ID uploaded to S3:', uploadResult.url);
+      } else {
+        console.error('Failed to upload valid ID to S3:', uploadResult.message);
+        return res.status(500).json({ error: `Failed to upload valid ID: ${uploadResult.message}` });
+      }
+    }
+
+    if (req.files['additionalId'] && req.files['additionalId'][0]) {
+      const uploadResult = await uploadImageToS3(req.files['additionalId'][0], 'bookings/additional-ids');
+      if (uploadResult.success) {
+        additionalIdPath = uploadResult.url; // Store S3 URL instead of local path
+        console.log('Additional ID uploaded to S3:', uploadResult.url);
+      } else {
+        console.error('Failed to upload additional ID to S3:', uploadResult.message);
+        return res.status(500).json({ error: `Failed to upload additional ID: ${uploadResult.message}` });
+      }
+    }
 
     // Get vehicle name and company_id if not provided
     let vehicle_name = vehicleName;

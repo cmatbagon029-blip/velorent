@@ -110,11 +110,15 @@
       <div class="vehicles-grid">
         <div *ngFor="let vehicle of filteredVehicles" 
              class="vehicle-card"
+             [class.unavailable]="!isVehicleAvailable(vehicle)"
              (click)="viewVehicleDetails(vehicle.id)">
           <div class="vehicle-image">
             <img [src]="vehicle.imageUrl || 'assets/images/vehicle-placeholder.svg'"
                  [alt]="vehicle.name"
                  (error)="vehicle.imageUrl = 'assets/images/vehicle-placeholder.svg'"/>
+            <ion-badge *ngIf="vehicle.status" [color]="getStatusColor(vehicle.status)" class="status-badge">
+              {{ getStatusLabel(vehicle.status) }}
+            </ion-badge>
           </div>
           <div class="vehicle-info">
             <h3>{{ vehicle.name }}</h3>

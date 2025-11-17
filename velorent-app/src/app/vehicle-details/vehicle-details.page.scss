@@ -96,6 +96,16 @@ ion-content {
   justify-content: space-between;
   align-items: flex-start;
   z-index: 2;
+  
+  .status-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    z-index: 10;
+  }
 }
 
 .vehicle-type-badge {
@@ -394,6 +404,14 @@ ion-content {
   border: 1px solid rgba(255, 215, 0, 0.2);
   border-radius: 20px;
   text-align: center;
+  
+  .unavailable-message {
+    text-align: center;
+    color: #ef4444;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 
   ion-button {
     --background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);

@@ -82,6 +82,12 @@
         </ion-card-content>
       </ion-card>
 
+      <!-- Date Availability Info -->
+      <div class="inline-availability-info" *ngIf="companyAvailability.length > 0">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <span>Available days: {{ getAvailableDaysText() }}</span>
+      </div>
+
       <!-- Start Date -->
       <ion-item>
         <ion-label position="stacked">Start Date <span class="required">*</span></ion-label>
@@ -96,6 +102,12 @@
         </ion-input>
         <ion-icon name="calendar-outline" slot="end"></ion-icon>
       </ion-item>
+
+      <!-- Date Validation Error -->
+      <div class="inline-error" *ngIf="rentFromDate && !isDateAvailableForSelection(rentFromDate)">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        <span>This date is not available. {{ getAvailableDaysText() }}</span>
+      </div>
 
       <!-- End Date -->
       <ion-item>
@@ -112,6 +124,12 @@
         </ion-input>
         <ion-icon name="calendar-outline" slot="end"></ion-icon>
       </ion-item>
+
+      <!-- End Date Validation Error -->
+      <div class="inline-error" *ngIf="rentToDate && !isDateAvailableForSelection(rentToDate)">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        <span>This date is not available. {{ getAvailableDaysText() }}</span>
+      </div>
 
       <!-- Number of Days Info -->
       <ion-card *ngIf="rentFromDate && rentToDate" class="days-info-card">
@@ -161,95 +179,36 @@
         </ion-card-content>
       </ion-card>
 
+      <!-- Time Availability Info -->
+      <div class="inline-availability-info" *ngIf="rentFromDate && companyAvailability.length > 0 && getAvailableTimeSlots(rentFromDate).length > 0">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>Available times: {{ getAvailableTimeRangeText(rentFromDate) }}</span>
+      </div>
+
+      <!-- Time Validation Error -->
+      <div class="inline-error" *ngIf="rentFromDate && getAvailableTimeSlots(rentFromDate).length === 0">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        <span>No time slots available for this date. {{ getAvailableDaysText() }}</span>
+      </div>
+
       <ion-item>
         <ion-label position="stacked">Time of Rent <span class="required">*</span></ion-label>
-        <ion-select 
+        <ion-input 
+          type="time" 
           [(ngModel)]="rentTime" 
           name="rentTime" 
-          placeholder="Select time"
           (ionChange)="onTimeChange()"
-          interface="popover"
+          [readonly]="!rentFromDate"
           [disabled]="!rentFromDate">
-          <ion-select-option *ngFor="let time of getAvailableTimeSlots(rentFromDate)" [value]="time">
-            {{ formatTimeForDisplay(time) }}
-          </ion-select-option>
-        </ion-select>
+        </ion-input>
+        <ion-icon name="time-outline" slot="end"></ion-icon>
       </ion-item>
 
-
-      <!-- Company Availability Info -->
-      <ion-card *ngIf="companyAvailability.length > 0" class="availability-info">
-        <ion-card-header>
-          <ion-card-title>Company Availability</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="availability-schedule">
-            <div *ngFor="let day of companyAvailability" class="day-availability" [class.available]="day.isAvailable" [class.unavailable]="!day.isAvailable">
-              <div class="day-name">{{ day.dayOfWeek | titlecase }}</div>
-              <div class="day-status">
-                <ion-icon [name]="day.isAvailable ? 'checkmark-circle' : 'close-circle'" [color]="day.isAvailable ? 'success' : 'danger'"></ion-icon>
-                <span *ngIf="day.isAvailable && !day.is24Hours">{{ formatTimeForDisplay(day.startTime) }} - {{ formatTimeForDisplay(day.endTime) }}</span>
-                <span *ngIf="day.isAvailable && day.is24Hours">24 Hours</span>
-                <span *ngIf="!day.isAvailable">Closed</span>
-              </div>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
-
-      <!-- Driver Selection (only for Pick-up/Drop-off service) -->
-      <ion-card *ngIf="serviceType === 'Pick-up/Drop-off'">
-        <ion-card-header>
-          <ion-card-title>Choose Your Driver</ion-card-title>
-          <ion-card-subtitle>Select a professional driver for your journey</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <!-- Loading state -->
-          <div *ngIf="loadingDrivers" class="loading-container">
-            <ion-spinner name="crescent"></ion-spinner>
-            <p>Loading available drivers...</p>
-          </div>
-
-          <!-- Error state -->
-          <div *ngIf="driversError" class="error-message">
-            <ion-icon name="warning-outline" color="danger"></ion-icon>
-            <span>{{ driversError }}</span>
-          </div>
-
-          <!-- No drivers available -->
-          <div *ngIf="!loadingDrivers && !driversError && drivers.length === 0" class="no-drivers">
-            <ion-icon name="person-outline"></ion-icon>
-            <h3>No Drivers Available</h3>
-            <p>Sorry, there are no drivers available for this company at the moment.</p>
-          </div>
-
-          <!-- Driver selection -->
-          <div *ngIf="!loadingDrivers && !driversError && drivers.length > 0" class="drivers-list">
-            <div 
-              *ngFor="let driver of drivers" 
-              class="driver-option"
-              [class.selected]="selectedDriver?.id === driver.id"
-              (click)="selectedDriver = driver">
-              <div class="driver-info">
-                <div class="driver-name">{{ driver.fullName }}</div>
-                <div class="driver-details">
-                  <div class="driver-experience">
-                    <ion-icon name="star-outline"></ion-icon>
-                    <span>{{ driver.experience }}</span>
-                  </div>
-                  <div class="driver-phone">
-                    <ion-icon name="call-outline"></ion-icon>
-                    <span>{{ driver.phone }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="driver-selection" *ngIf="selectedDriver?.id === driver.id">
-                <ion-icon name="checkmark-circle" color="success"></ion-icon>
-              </div>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
+      <!-- Time Selection Validation Error -->
+      <div class="inline-error" *ngIf="rentTime && rentFromDate && !isTimeAvailableForSelection(rentTime)">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        <span>Selected time is not available. Available times: {{ getAvailableTimeRangeText(rentFromDate) }}</span>
+      </div>
 
       <ion-item>
         <ion-label position="stacked">Location <span class="required">*</span></ion-label>
@@ -340,7 +299,7 @@
 
       <ion-button expand="block" color="medium" (click)="prevStep()">Back</ion-button>
       <ion-button expand="block" type="submit" color="primary"
-        [disabled]="!rentFromDate || !rentToDate || !rentTime || !destination || (serviceType === 'Self Drive' && !validIdFile) || !additionalIdFile || (serviceType === 'Pick-up/Drop-off' && !selectedDriver) || userRentalCount >= maxRentals">
+        [disabled]="!rentFromDate || !rentToDate || !rentTime || !destination || (serviceType === 'Self Drive' && !validIdFile) || !additionalIdFile || userRentalCount >= maxRentals">
         Submit Booking
       </ion-button>
     </div>

@@ -11,6 +11,7 @@ import { addIcons } from 'ionicons';
 import { 
   home,
   carOutline,
+  carSportOutline,
   personOutline,
   personCircle,
   personCircleOutline,
@@ -36,6 +37,7 @@ import {
 addIcons({ 
   home,
   'car-outline': carOutline,
+  'car-sport-outline': carSportOutline,
   'person-outline': personOutline,
   'person-circle': personCircle,
   'person-circle-outline': personCircleOutline,
@@ -56,6 +58,129 @@ addIcons({
   'logo-google': logoGoogle,
   'logo-facebook': logoFacebook
 });
+
+// About Modal Component
+@Component({
+  selector: 'app-about-modal',
+  standalone: true,
+  imports: [IonicModule, CommonModule],
+  template: `
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>About VeloRent</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismiss()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="about-content">
+        <div class="about-header">
+          <ion-icon name="car-sport-outline" class="app-icon"></ion-icon>
+          <h2>VeloRent</h2>
+        </div>
+        
+        <p><strong>VeloRent</strong> is a comprehensive vehicle rental management system designed to connect customers with rental companies.</p>
+        
+        <h3>Features:</h3>
+        <ul>
+          <li>Browse and search vehicles</li>
+          <li>Book vehicles with or without drivers</li>
+          <li>Manage your bookings</li>
+          <li>Real-time booking status updates</li>
+        </ul>
+        
+        <h3>Developed by:</h3>
+        <p>Westen Leyte College of Ormoc</p>
+        <p>Capstone Project 2025</p>
+      </div>
+    </ion-content>
+  `,
+  styles: [`
+    :host {
+      --background: #000000;
+      --ion-background-color: #000000;
+    }
+    
+    ion-header {
+      --background: #000000;
+      background: #000000 !important;
+    }
+    
+    ion-toolbar {
+      --background: #000000;
+      background: #000000 !important;
+    }
+    
+    ion-title {
+      color: #ffd700 !important;
+    }
+    
+    ion-content {
+      --background: #000000;
+      background: #000000 !important;
+    }
+    
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #000000;
+    }
+    
+    .about-header {
+      text-align: center;
+      margin-bottom: 24px;
+      
+      .app-icon {
+        font-size: 64px;
+        color: #ffd700;
+        margin-bottom: 16px;
+      }
+      
+      h2 {
+        color: #ffd700;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+    }
+    
+    h3 {
+      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+    
+    p {
+      color: #e0e0e0;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      
+      strong {
+        color: #ffd700;
+      }
+    }
+    
+    ul {
+      color: #e0e0e0;
+      line-height: 1.8;
+      padding-left: 20px;
+      
+      li {
+        margin-bottom: 8px;
+      }
+    }
+  `]
+})
+export class AboutModalComponent {
+  constructor(private modalCtrl: ModalController) {}
+
+  dismiss() {
+    this.modalCtrl.dismiss();
+  }
+}
 
 @Component({
   selector: 'app-profile',
@@ -178,24 +303,10 @@ export class ProfilePage implements OnInit {
   }
 
   async openAbout() {
-    const alert = await this.alertController.create({
-      header: 'About VeloRent',
-      message: `
-        <p><strong>VeloRent</strong> is a comprehensive vehicle rental management system designed to connect customers with rental companies.</p>
-        
-        <p><strong>Features:</strong></p>
-        <p>• Browse and search vehicles</p>
-        <p>• Book vehicles with or without drivers</p>
-        <p>• Manage your bookings</p>
-        <p>• Real-time booking status updates</p>
-        
-        <p><strong>Developed by:</strong></p>
-        <p>Westen Leyte College of Ormoc</p>
-        <p>Capstone Project 2025</p>
-      `,
-      buttons: ['OK']
+    const modal = await this.modalController.create({
+      component: AboutModalComponent
     });
-    await alert.present();
+    return await modal.present();
   }
 
   async openContact() {

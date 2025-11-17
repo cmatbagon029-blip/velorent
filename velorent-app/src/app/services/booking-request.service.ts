@@ -31,6 +31,7 @@ export interface BookingRequest {
   new_rent_time?: string;
   computed_fee?: number;
   company_response?: string;
+  company_remarks?: string;
   created_at?: string;
   updated_at?: string;
   vehicle_name?: string;

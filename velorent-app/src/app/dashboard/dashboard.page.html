@@ -9,9 +9,6 @@
   <div class="search-filter-container">
     <div class="search-bar-modern">
       <div class="search-section">
-        <div class="search-icon-wrapper">
-          <ion-icon name="search-outline" class="search-icon"></ion-icon>
-        </div>
         <ion-searchbar
           placeholder="Search vehicles..."
           animated
@@ -120,11 +117,14 @@
   <ion-grid class="vehicles-grid">
     <ion-row>
       <ion-col size="6" size-md="4" size-lg="3" *ngFor="let vehicle of displayedVehicles">
-        <ion-card class="vehicle-card" (click)="viewVehicleDetails(vehicle.id)">
+        <ion-card class="vehicle-card" [class.unavailable]="!isVehicleAvailable(vehicle)" (click)="viewVehicleDetails(vehicle.id)">
           <div class="image-container">
             <img [src]="vehicle.imageUrl || 'assets/images/vehicle-placeholder.svg'" 
                  [alt]="vehicle.name"
                  (error)="vehicle.imageUrl = 'assets/images/vehicle-placeholder.svg'"/>
+            <ion-badge *ngIf="vehicle.status" [color]="getStatusColor(vehicle.status)" class="status-badge">
+              {{ getStatusLabel(vehicle.status) }}
+            </ion-badge>
           </div>
           <ion-card-header>
             <ion-card-subtitle>{{ vehicle.type }}</ion-card-subtitle>
@@ -140,8 +140,12 @@
               <span class="price">₱{{ vehicle.price_without_driver | number:'1.2-2' }}</span>
               <span class="per-day">/day without driver</span>
             </div>
-            <ion-button expand="block" color="primary" class="rent-button">
-              Rent Now
+            <ion-button 
+              expand="block" 
+              [color]="isVehicleAvailable(vehicle) ? 'primary' : 'medium'" 
+              class="rent-button"
+              [disabled]="!isVehicleAvailable(vehicle)">
+              {{ isVehicleAvailable(vehicle) ? 'Rent Now' : getStatusLabel(vehicle.status) }}
             </ion-button>
           </ion-card-content>
         </ion-card>

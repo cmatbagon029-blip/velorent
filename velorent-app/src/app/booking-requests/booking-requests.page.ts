@@ -101,8 +101,19 @@ export class BookingRequestsPage implements OnInit {
 
     this.bookingRequestService.getMyRequests().subscribe({
       next: (requests) => {
-        this.requests = requests;
-        this.checkForStatusChanges(requests);
+        // Extract admin remarks from reason field if company_remarks is not set
+        this.requests = requests.map(request => {
+          if (request.reason && !request.company_remarks) {
+            const adminRemarks = this.extractAdminRemarks(request.reason);
+            if (adminRemarks) {
+              request.company_remarks = adminRemarks;
+              // Clean the reason field
+              request.reason = this.cleanReasonText(request.reason);
+            }
+          }
+          return request;
+        });
+        this.checkForStatusChanges(this.requests);
         this.loading = false;
       },
       error: (err) => {
@@ -267,11 +278,13 @@ export class BookingRequestsPage implements OnInit {
   cleanReasonText(reason: string | undefined): string {
     if (!reason) return 'No reason provided';
     
-    // Remove common formatting artifacts and admin remarks prefixes
+    // Remove admin remarks from reason (they should be displayed separately)
     let cleaned = reason.trim();
     
     // Remove patterns like "sa [Admin Remarks]: a" or similar corrupted text
     cleaned = cleaned.replace(/^[a-z]+\s*\[Admin Remarks\]:\s*[a-z]\s*/i, '');
+    // Remove [Admin Remarks]: pattern and everything after it
+    cleaned = cleaned.replace(/\[Admin Remarks\]:\s*.+$/gi, '');
     cleaned = cleaned.replace(/\[Admin Remarks\]:\s*/gi, '');
     
     // Remove any leading/trailing whitespace and single character artifacts
@@ -283,6 +296,20 @@ export class BookingRequestsPage implements OnInit {
     }
     
     return cleaned;
+  }
+
+  extractAdminRemarks(reason: string | undefined): string | null {
+    if (!reason) return null;
+    
+    // Pattern to match [Admin Remarks]: content (captures everything after the colon)
+    const adminRemarksMatch = reason.match(/\[Admin Remarks\]:\s*(.+)$/is);
+    
+    if (adminRemarksMatch) {
+      // Extract admin remarks (everything after [Admin Remarks]:)
+      return adminRemarksMatch[1].trim();
+    }
+    
+    return null;
   }
 
   navigateToHome() {

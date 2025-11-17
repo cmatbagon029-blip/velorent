@@ -36,10 +36,9 @@
                (error)="vehicle.imageUrl = 'assets/images/vehicle-placeholder.svg'">
           <div class="image-overlay">
             <div class="vehicle-type-badge">{{ vehicle.type }}</div>
-            <div class="rating-badge" *ngIf="vehicle.rating">
-              <ion-icon name="star"></ion-icon>
-              <span>{{ vehicle.rating }}</span>
-            </div>
+            <ion-badge *ngIf="vehicle.status" [color]="getStatusColor(vehicle.status)" class="status-badge">
+              {{ getStatusLabel(vehicle.status) }}
+            </ion-badge>
           </div>
         </div>
       </div>
@@ -143,10 +142,18 @@
 
     <!-- Action Section -->
     <div class="action-section">
-      <ion-button expand="block" color="primary" size="large" (click)="goToRentVehicle()">
+      <ion-button 
+        expand="block" 
+        [color]="isVehicleAvailable() ? 'primary' : 'medium'" 
+        size="large" 
+        [disabled]="!isVehicleAvailable()"
+        (click)="goToRentVehicle()">
         <ion-icon name="calendar-outline" slot="start"></ion-icon>
-        Book This Vehicle
+        {{ isVehicleAvailable() ? 'Book This Vehicle' : getStatusLabel(vehicle.status) }}
       </ion-button>
+      <p *ngIf="!isVehicleAvailable()" class="unavailable-message">
+        This vehicle is currently {{ getStatusLabel(vehicle.status).toLowerCase() }} and cannot be booked.
+      </p>
     </div>
   </div>
 </ion-content>

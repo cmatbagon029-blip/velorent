@@ -121,8 +121,12 @@
             <p *ngIf="request.new_rent_time"><strong>New Time:</strong> {{ formatTime(request.new_rent_time) }}</p>
           </div>
 
+          <!-- Reason Section -->
           <div class="reason-section">
-            <p><strong>Reason:</strong></p>
+            <div class="section-header">
+              <ion-icon name="chatbubble-outline" class="section-icon"></ion-icon>
+              <p><strong>Your Reason:</strong></p>
+            </div>
             <div class="reason-text">{{ cleanReasonText(request.reason) }}</div>
           </div>
 
@@ -130,9 +134,24 @@
             <p><strong>Fee:</strong> {{ request.computed_fee }}%</p>
           </div>
 
+          <!-- Company Response Section -->
           <div *ngIf="request.company_response" class="response-section">
+            <div class="section-divider"></div>
+            <div class="section-header">
+              <ion-icon name="checkmark-circle-outline" class="section-icon response-icon"></ion-icon>
             <p><strong>Company Response:</strong></p>
-            <p class="response-text">{{ request.company_response }}</p>
+            </div>
+            <div class="response-text">{{ request.company_response }}</div>
+          </div>
+
+          <!-- Admin Remarks Section -->
+          <div *ngIf="request.company_remarks" class="remarks-section">
+            <div class="section-divider"></div>
+            <div class="section-header">
+              <ion-icon name="document-text-outline" class="section-icon remarks-icon"></ion-icon>
+              <p><strong>Admin Remarks:</strong></p>
+            </div>
+            <div class="remarks-text">{{ request.company_remarks }}</div>
           </div>
 
           <div class="request-meta">

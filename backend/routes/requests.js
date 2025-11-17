@@ -29,7 +29,28 @@ router.get('/my-requests', auth.verifyToken, async (req, res) => {
       [req.user.userId]
     );
 
-    res.json(requests);
+    // Extract admin remarks from reason field and add as computed property
+    const processedRequests = requests.map(request => {
+      if (request.reason) {
+        // Pattern to match [Admin Remarks]: content (captures everything after the colon)
+        const adminRemarksMatch = request.reason.match(/\[Admin Remarks\]:\s*(.+)$/is);
+        
+        if (adminRemarksMatch) {
+          // Extract admin remarks (everything after [Admin Remarks]:)
+          const adminRemarks = adminRemarksMatch[1].trim();
+          
+          // Add admin remarks as a computed property (not stored in DB)
+          request.company_remarks = adminRemarks;
+          
+          // Remove admin remarks from reason for display (everything from [Admin Remarks]: to end)
+          let cleanReason = request.reason.replace(/\[Admin Remarks\]:\s*.+$/is, '').trim();
+          request.reason = cleanReason || request.reason;
+        }
+      }
+      return request;
+    });
+
+    res.json(processedRequests);
   } catch (error) {
     console.error('Error fetching requests:', error);
     res.status(500).json({ 
@@ -72,7 +93,26 @@ router.get('/:id', auth.verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    res.json(requests[0]);
+    // Extract admin remarks from reason field and add as computed property
+    const request = requests[0];
+    if (request.reason) {
+      // Pattern to match [Admin Remarks]: content (captures everything after the colon)
+      const adminRemarksMatch = request.reason.match(/\[Admin Remarks\]:\s*(.+)$/is);
+      
+      if (adminRemarksMatch) {
+        // Extract admin remarks (everything after [Admin Remarks]:)
+        const adminRemarks = adminRemarksMatch[1].trim();
+        
+        // Add admin remarks as a computed property (not stored in DB)
+        request.company_remarks = adminRemarks;
+        
+        // Remove admin remarks from reason for display (everything from [Admin Remarks]: to end)
+        let cleanReason = request.reason.replace(/\[Admin Remarks\]:\s*.+$/is, '').trim();
+        request.reason = cleanReason || request.reason;
+      }
+    }
+
+    res.json(request);
   } catch (error) {
     console.error('Error fetching request:', error);
     res.status(500).json({ 
@@ -223,7 +263,19 @@ router.post('/', auth.verifyToken, async (req, res) => {
       });
     }
 
-    res.status(201).json(newRequests[0]);
+    // Extract admin remarks from reason field and add as computed property
+    const newRequest = newRequests[0];
+    if (newRequest && newRequest.reason) {
+      const adminRemarksMatch = newRequest.reason.match(/\[Admin Remarks\]:\s*(.+)$/is);
+      if (adminRemarksMatch) {
+        const adminRemarks = adminRemarksMatch[1].trim();
+        newRequest.company_remarks = adminRemarks;
+        let cleanReason = newRequest.reason.replace(/\[Admin Remarks\]:\s*.+$/is, '').trim();
+        newRequest.reason = cleanReason || newRequest.reason;
+      }
+    }
+
+    res.status(201).json(newRequest);
   } catch (error) {
     console.error('Error creating request:', error);
     console.error('Error stack:', error.stack);
@@ -387,7 +439,7 @@ router.put('/:id/approve', auth.verifyToken, async (req, res) => {
       return res.status(400).json({ error: 'Request is not pending' });
     }
 
-    // Update request status
+    // Update request status (company_remarks column doesn't exist, so we only update company_response)
     await connection.execute(
       'UPDATE requests SET status = ?, company_response = ?, updated_at = NOW() WHERE id = ?',
       [status, company_response || null, requestId]
@@ -442,7 +494,19 @@ router.put('/:id/approve', auth.verifyToken, async (req, res) => {
       [requestId]
     );
 
-    res.json(updatedRequests[0]);
+    // Extract admin remarks from reason field and add as computed property
+    const updatedRequest = updatedRequests[0];
+    if (updatedRequest && updatedRequest.reason) {
+      const adminRemarksMatch = updatedRequest.reason.match(/\[Admin Remarks\]:\s*(.+)$/is);
+      if (adminRemarksMatch) {
+        const adminRemarks = adminRemarksMatch[1].trim();
+        updatedRequest.company_remarks = adminRemarks;
+        let cleanReason = updatedRequest.reason.replace(/\[Admin Remarks\]:\s*.+$/is, '').trim();
+        updatedRequest.reason = cleanReason || updatedRequest.reason;
+      }
+    }
+
+    res.json(updatedRequest);
   } catch (error) {
     console.error('Error updating request:', error);
     res.status(500).json({ 

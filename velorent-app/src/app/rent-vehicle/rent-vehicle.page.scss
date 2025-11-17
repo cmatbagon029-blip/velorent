@@ -935,6 +935,78 @@ ion-modal ion-header ion-button {
 }
 
 // Company Availability Info
+// Time input uses same styling as date input (ion-item styles)
+
+.no-time-slots,
+.select-date-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+
+  ion-icon {
+    font-size: 2rem;
+    color: rgba(255, 215, 0, 0.2);
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+}
+
+// Inline Availability Info
+.inline-availability-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: rgba(255, 215, 0, 0.9);
+
+  ion-icon {
+    font-size: 1rem;
+    color: #ffd700;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1.4;
+  }
+}
+
+.inline-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #e74c3c;
+
+  ion-icon {
+    font-size: 1rem;
+    color: #e74c3c;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1.4;
+  }
+}
+
 .availability-info {
   background: rgba(255, 215, 0, 0.05) !important;
   border: 1px solid rgba(255, 215, 0, 0.2) !important;

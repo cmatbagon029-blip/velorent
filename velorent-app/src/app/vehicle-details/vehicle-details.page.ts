@@ -95,8 +95,49 @@ export class VehicleDetailsPage implements OnInit {
   }
 
   goToRentVehicle() {
-    if (this.vehicle) {
+    if (this.vehicle && this.isVehicleAvailable()) {
       this.router.navigate(['/rent-vehicle'], { queryParams: { vehicleId: this.vehicle.id } });
+    }
+  }
+
+  // Vehicle status helper functions
+  isVehicleAvailable(): boolean {
+    return this.vehicle?.status === 'available' || !this.vehicle?.status;
+  }
+
+  getStatusColor(status: string | undefined): string {
+    if (!status) return 'success';
+    
+    const statusLower = status.toLowerCase();
+    switch (statusLower) {
+      case 'available':
+        return 'success';
+      case 'under maintenance':
+        return 'warning';
+      case 'currently rented':
+        return 'tertiary';
+      case 'unavailable':
+        return 'danger';
+      default:
+        return 'medium';
+    }
+  }
+
+  getStatusLabel(status: string | undefined): string {
+    if (!status) return 'Available';
+    
+    const statusLower = status.toLowerCase();
+    switch (statusLower) {
+      case 'available':
+        return 'Available';
+      case 'under maintenance':
+        return 'Under Maintenance';
+      case 'currently rented':
+        return 'Currently Rented';
+      case 'unavailable':
+        return 'Unavailable';
+      default:
+        return status;
     }
   }
 } 
