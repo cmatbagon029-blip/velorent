@@ -1,6 +1,6 @@
 ion-content {
-  --background: #121212 !important;
-  background: #121212 !important;
+  --background: #1A1A1A !important;
+  background: #1A1A1A !important;
   --padding-bottom: 140px; /* allow scrolling past bottom nav */
   position: relative;
   height: 100%;
@@ -13,9 +13,9 @@ ion-content {
 ion-card {
   margin: 16px;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  background: #1e1e1e;
+  background: #2D2D2D;
   border: none;
   pointer-events: auto !important;
   position: relative;
@@ -23,50 +23,86 @@ ion-card {
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(255, 215, 0, 0.12);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
   }
 }
 
 ion-card-header {
-  background: #1e1e1e;
-  border-bottom: 1px solid #333;
+  background: #2D2D2D;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 16px;
 }
 
 ion-card-title {
-  color: #ffd700;
+  color: #FFFFFF;
   font-weight: 600;
   font-size: 1.2rem;
 }
+
 
 ion-card-content {
   padding: 16px;
 }
 
+// Global ion-badge styling for Available status
+ion-badge[color="success"] {
+  --background: #22C55E;
+  --color: white;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
 h2 {
-  color: #ffd700;
+  color: #FACC15;
   margin: 16px;
   font-weight: 600;
   font-size: 1.5rem;
 }
 
 ion-button {
-  --background: #ffd700;
-  --background-activated: #b8860b;
-  --background-hover: #b8860b;
+  --background: #2563EB;
+  --background-activated: #1D4ED8;
+  --background-hover: #1D4ED8;
+  --color: #FFFFFF;
   --border-radius: 12px;
   font-weight: 500;
   margin: 8px 0;
   height: 44px;
-  --box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+  --box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   pointer-events: auto !important;
   position: relative;
   z-index: 10 !important;
+  
+  // Rent Now button highlights briefly on press
+  &:active {
+    animation: buttonHighlight 0.4s ease-out;
+    box-shadow: 
+      0 4px 12px rgba(37, 99, 235, 0.3),
+      0 0 20px rgba(37, 99, 235, 0.4),
+      0 0 30px rgba(37, 99, 235, 0.3) !important;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%);
+      z-index: -1;
+      pointer-events: none;
+      border-radius: 12px;
+    }
+  }
 }
 
 ion-toolbar {
-  --background: #000000;
-  --color: #ffd700;
+  --background: #1A1A1A;
+  --color: #FACC15;
   --border-color: transparent;
 }
 
@@ -75,6 +111,22 @@ ion-title {
   font-weight: 600;
   font-size: 1.2rem;
   letter-spacing: 0.5px;
+  position: relative;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.5), 0 0 20px rgba(250, 204, 21, 0.3);
+  
+  // Subtle yellow glow behind logo
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
 }
 
 .dashboard-content {
@@ -92,18 +144,18 @@ ion-title {
 .privacy-link {
   display: inline-flex;
   align-items: center;
-  color: #ffd700;
+  color: #FACC15;
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.2s ease;
 
   ion-icon {
     margin-right: 8px;
-    color: #ffd700;
+    color: #FACC15;
   }
 
   &:hover {
-    color: #b8860b;
+    color: #FDE047;
   }
 }
 
@@ -126,74 +178,62 @@ ion-title {
   display: flex;
   align-items: center;
   gap: 0;
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(30, 30, 30, 0.9) 100%);
-  backdrop-filter: blur(30px);
-  border: 1.5px solid rgba(255, 215, 0, 0.2);
-  border-radius: 16px;
-  padding: 0;
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 215, 0, 0.1);
+  background: #2D2D2D;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-
-  &::before {
+  position: relative;
+  
+  // Gray-to-black gradient overlay
+  &::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(45, 45, 45, 0.3) 0%, rgba(26, 26, 26, 0.5) 100%);
+    pointer-events: none;
+    border-radius: 30px;
+    z-index: 0;
   }
 
   &:hover {
-    border-color: rgba(255, 215, 0, 0.35);
-    box-shadow: 
-      0 6px 32px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 215, 0, 0.15),
-      0 0 20px rgba(255, 215, 0, 0.1);
-
-    &::before {
-      opacity: 1;
-    }
+    border-color: #3F3F3F;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
   }
 
+  // Search bar expands smoothly on focus
   &:focus-within {
-    border-color: rgba(255, 215, 0, 0.5);
-    box-shadow: 
-      0 8px 40px rgba(0, 0, 0, 0.5),
-      inset 0 1px 0 rgba(255, 215, 0, 0.2),
-      0 0 30px rgba(255, 215, 0, 0.15);
-
-    &::before {
-      opacity: 1;
-    }
+    border-color: #4F4F4F;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    transform: scale(1.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  // Search icon inside container
   .search-icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 16px;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.03) 100%);
-    border-right: 1px solid rgba(255, 215, 0, 0.1);
+    padding: 0 12px 0 0;
     height: 100%;
-    min-width: 56px;
+    min-width: 40px;
+    z-index: 1;
+    position: relative;
   }
 
   .search-icon {
-    font-size: 22px;
-    color: #000000;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
     transition: all 0.3s ease;
   }
 
   &:focus-within .search-icon {
-    transform: scale(1.1);
-    color: #ffd700;
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+    color: rgba(255, 255, 255, 0.9);
   }
 
   .search-input {
@@ -201,28 +241,30 @@ ion-title {
     --background: transparent;
     --box-shadow: none;
     --border-radius: 0;
-    --color: #ffffff;
-    --placeholder-color: rgba(255, 255, 255, 0.5);
+    --color: #FFFFFF;
+    --placeholder-color: #B3B3B3;
     --icon-color: transparent;
-    padding: 14px 16px;
+    padding: 0;
     min-width: 0;
+    z-index: 1;
+    position: relative;
 
     ion-searchbar {
       --background: transparent;
       --box-shadow: none;
-      --color: #ffffff;
-      --placeholder-color: rgba(255, 255, 255, 0.5);
+      --color: #FFFFFF;
+      --placeholder-color: #B3B3B3;
     }
 
     .searchbar-input {
       background: transparent !important;
-      color: #ffffff !important;
+      color: #FFFFFF !important;
       font-size: 15px;
       font-weight: 400;
       padding: 0 !important;
 
       &::placeholder {
-        color: rgba(255, 255, 255, 0.5) !important;
+        color: #B3B3B3 !important;
       }
     }
 
@@ -235,12 +277,12 @@ ion-title {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 16px;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+    padding: 8px 16px;
+    background: transparent;
     border: none;
-    border-left: 1px solid rgba(255, 215, 0, 0.1);
-    border-radius: 0 16px 16px 0;
-    color: rgba(255, 215, 0, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 30px 30px 0;
+    color: #B3B3B3;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -248,6 +290,9 @@ ion-title {
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
+    z-index: 1;
+    margin-right: -20px;
+    margin-left: 8px;
 
     &::before {
       content: '';
@@ -267,18 +312,18 @@ ion-title {
 
     .filter-badge {
       font-size: 10px;
-      background: #ffd700;
+      background: #FACC15;
       color: #000;
       padding: 3px 7px;
       border-radius: 10px;
       font-weight: 700;
       margin-left: 4px;
-      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+      box-shadow: 0 2px 8px rgba(250, 204, 21, 0.3);
     }
 
     &:hover {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%);
-      color: #ffd700;
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.9);
 
       &::before {
         left: 100%;
@@ -355,7 +400,7 @@ ion-title {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.03) 100%);
 
     .filter-title {
-      color: #ffd700;
+      color: #FACC15;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.5px;
@@ -368,10 +413,10 @@ ion-title {
       justify-content: center;
       width: 28px;
       height: 28px;
-      background: rgba(255, 215, 0, 0.1);
-      border: 1px solid rgba(255, 215, 0, 0.2);
+      background: rgba(250, 204, 21, 0.1);
+      border: 1px solid rgba(250, 204, 21, 0.2);
       border-radius: 8px;
-      color: rgba(255, 215, 0, 0.8);
+      color: rgba(250, 204, 21, 0.8);
       cursor: pointer;
       transition: all 0.2s ease;
       padding: 0;
@@ -381,9 +426,9 @@ ion-title {
       }
 
       &:hover {
-        background: rgba(255, 215, 0, 0.2);
-        border-color: rgba(255, 215, 0, 0.4);
-        color: #ffd700;
+        background: rgba(250, 204, 21, 0.2);
+        border-color: rgba(250, 204, 21, 0.4);
+        color: #FACC15;
         transform: rotate(90deg);
       }
     }
@@ -405,11 +450,11 @@ ion-title {
     }
     
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 215, 0, 0.3);
+      background: rgba(250, 204, 21, 0.3);
       border-radius: 3px;
       
       &:hover {
-        background: rgba(255, 215, 0, 0.5);
+        background: rgba(250, 204, 21, 0.5);
       }
     }
   }
@@ -422,7 +467,7 @@ ion-title {
     background: transparent;
     border: none;
     border-radius: 10px;
-    color: rgba(255, 255, 255, 0.85);
+    color: #FFFFFF;
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
@@ -439,7 +484,7 @@ ion-title {
       transform: translateY(-50%);
       width: 3px;
       height: 0;
-      background: #ffd700;
+      background: #FACC15;
       border-radius: 0 3px 3px 0;
       transition: height 0.2s ease;
     }
@@ -451,15 +496,15 @@ ion-title {
 
     .check-icon {
       font-size: 18px;
-      color: #ffd700;
+      color: #FACC15;
       opacity: 0;
       transform: scale(0.7);
       transition: all 0.2s ease;
     }
 
     &:hover {
-      background: rgba(255, 215, 0, 0.08);
-      color: #ffffff;
+      background: rgba(250, 204, 21, 0.08);
+      color: #FFFFFF;
       padding-left: 18px;
 
       &::before {
@@ -468,8 +513,8 @@ ion-title {
     }
 
     &.active {
-      background: linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.05) 100%);
-      color: #ffd700;
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.15) 0%, rgba(250, 204, 21, 0.05) 100%);
+      color: #FACC15;
       font-weight: 500;
       padding-left: 18px;
 
@@ -483,7 +528,7 @@ ion-title {
       }
 
       &:hover {
-        background: linear-gradient(90deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+        background: linear-gradient(90deg, rgba(250, 204, 21, 0.2) 0%, rgba(250, 204, 21, 0.1) 100%);
       }
     }
 
@@ -496,16 +541,16 @@ ion-title {
 // Legacy categories (keeping for backward compatibility)
 .categories {
   padding: 12px;
-  background: #1e1e1e;
+  background: #2D2D2D;
   margin: 0 16px 16px;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(255, 215, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 
   ion-segment-button {
-    --color: #ffd700;
+    --color: #FACC15;
     --color-checked: #000000;
-    --background-checked: #ffd700;
-    --indicator-color: #ffd700;
+    --background-checked: #FACC15;
+    --indicator-color: #FACC15;
     font-size: 14px;
     font-weight: 500;
     --padding-top: 8px;
@@ -516,13 +561,13 @@ ion-title {
 .featured-companies {
   padding: 24px 32px;            /* extra side padding so glow doesn't touch edges */
   margin: 24px 16px 80px 16px; /* More space above bottom nav for scrolling */
-  background: #1e1e1e;
+  background: #2D2D2D;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 
   h2 {
     margin-bottom: 24px;
-    color: #ffd700;
+    color: #FACC15;
     font-size: 1.5rem;
     font-weight: 600;
   }
@@ -546,7 +591,7 @@ ion-title {
   width: 100%;
   height: 220px; /* ensure full circle and text are visible */
   align-items: center;
-  background: #1e1e1e;
+  background: #2D2D2D;
   overflow: visible; /* avoid clipping the circle */
   padding: 0 8px;                /* a bit of inset inside the slides area */
 }
@@ -555,6 +600,7 @@ ion-title {
   display: flex;
   justify-content: center;   /* center the item inside the slide */
   overflow: visible;          /* let the circle glow render fully */
+  margin: 0 20px;            /* add horizontal spacing between companies */
 }
 
 .company-item {
@@ -570,37 +616,62 @@ ion-title {
 .company-card {
   width: 150px;  /* reduced outer circle size */
   height: 150px;
-  background: #1e1e1e;
+  background: #2D2D2D;
   border-radius: 50%;
-  padding: 20px;
+  padding: 12px;            /* reduced padding to give more space for logo */
   display: flex;
   flex-direction: column;   /* stack elements vertically: logo on top, text below */
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
   position: relative; /* allow overlay positioning */
   margin: 0 auto;           /* center the circle itself */
+  overflow: visible;         /* allow glow to be visible */
+  
+  // Subtle yellow glow behind company logo
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110%;
+    height: 110%;
+    background: radial-gradient(circle, rgba(250, 204, 21, 0.15) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 50%;
+  }
 
   &:hover {
     transform: scale(1.05);
+    
+    &::before {
+      background: radial-gradient(circle, rgba(250, 204, 21, 0.25) 0%, transparent 70%);
+    }
   }
 
   .company-logo {
-    width: 90%;                 /* slightly larger, still inside circle */
-    height: 90%;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: 10px;        /* space for name */
-    background: #1e1e1e;
-    padding: 6px;               /* inner ring space to avoid clipping */
+    width: 100%;                /* use full available space */
+    height: 100%;                /* use full available space */
+    border-radius: 50%;         /* keep it circular */
+    overflow: hidden;            /* maintain circular shape */
+    margin-bottom: 0;           /* no margin needed */
+    background: transparent;   /* transparent background */
+    padding: 4px;               /* minimal padding to maximize logo space */
     box-sizing: border-box;     /* padding included in width/height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;                    /* take available space */
 
     img {
       width: 100%;
       height: 100%;
-      border-radius: 50%;       /* keep image round */
-      object-fit: contain;      /* show whole logo (no cropping) */
+      border-radius: 50%;       /* keep image circular */
+      object-fit: contain;      /* show whole logo (no cropping) - ensures full logo is visible */
+      object-position: center;  /* center the logo */
     }
   }
 
@@ -608,7 +679,7 @@ ion-title {
     margin: 6px 0 0 0;       /* outside and readable */
     font-size: 1rem;
     font-weight: 600;
-    color: #ffffff;            /* white as requested */
+    color: #FFFFFF;            /* white text */
     text-align: center;
   }
 
@@ -629,7 +700,7 @@ ion-title {
     display: flex;
     align-items: center;
     gap: 4px;
-    color: #ffd700;
+    color: #FACC15;
     font-size: 0.9rem;
 
     ion-icon {
@@ -661,6 +732,10 @@ ion-title {
 @media (max-width: 767px) {
   .companies-swiper {
     height: 180px; /* more room on phones */
+  }
+
+  .companies-swiper ion-slide {
+    margin: 0 15px;         /* spacing between companies on mobile */
   }
 
   .company-item {
@@ -720,17 +795,25 @@ ion-title {
         right: 8px;
         z-index: 10;
         font-weight: 600;
-        font-size: 0.75rem;
-        padding: 4px 8px;
+        font-size: 12px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      // Specific styling for Available badge
+      .status-badge[color="success"] {
+        background: #22C55E !important;
+        color: white !important;
       }
     }
     height: 100%;
     display: flex;
     flex-direction: column;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: #1e1e1e;
+    background: linear-gradient(180deg, #2D2D2D, #1A1A1A);
     border: none;
     transform: translateY(0) scale(1);
     animation: cardSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -741,14 +824,43 @@ ion-title {
       box-shadow: 0 12px 32px rgba(255, 215, 0, 0.2);
     }
 
+    // Card lifts slightly on tap
     &:active {
-      transform: translateY(-2px) scale(0.98);
+      transform: translateY(-4px) scale(0.99);
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     ion-card-header {
       padding: 16px;
-      background: #1e1e1e;
-      border-bottom: 1px solid #333;
+      background: transparent;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      
+      // Typography hierarchy
+      ion-card-title {
+        font-size: 19px;        // 18-20px range
+        font-weight: 700;      // Bold
+        line-height: 1.3;
+        margin-bottom: 4px;
+      }
+      
+      ion-card-subtitle {
+        font-size: 12px;         // 12px
+        font-weight: 400;        // Regular
+        color: #B3B3B3;          // Subtext gray
+        text-transform: capitalize;
+        margin-bottom: 6px;
+      }
+      
+      .vehicle-company {
+        margin-top: 4px;
+        
+        small {
+          font-size: 12px;       // 12px
+          font-weight: 500;      // Medium
+          color: #FACC15;
+          display: block;
+        }
+      }
     }
 
     ion-card-content {
@@ -757,17 +869,42 @@ ion-title {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      
+      .price-container {
+        margin: 12px 0;
+        
+        .price {
+          font-size: 16px;       // 16px
+          font-weight: 700;      // Bold
+          color: #FACC15;        // Highlight (gold)
+          display: inline-block;
+        }
+        
+        .per-day {
+          font-size: 12px;
+          font-weight: 400;
+          color: #B3B3B3;
+          margin-left: 4px;
+        }
+      }
+      
+      ion-button {
+        font-size: 15px;         // 14-16px range
+        font-weight: 600;        // Semibold
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+      }
     }
 
     .vehicle-price {
-      color: #ffd700;
+      color: #FACC15;
       font-size: 1.2rem;
       font-weight: 600;
       margin: 8px 0;
     }
 
     .vehicle-details {
-      color: #b8860b;
+      color: #B3B3B3;
       font-size: 0.9rem;
       margin: 8px 0;
     }
@@ -786,12 +923,12 @@ ion-title {
 
   ion-icon {
     font-size: 48px;
-    color: #ffd700;
+    color: #FACC15;
     margin-bottom: 16px;
   }
 
   p {
-    color: #b8860b;
+    color: #B3B3B3;
     margin-bottom: 16px;
     font-size: 1rem;
   }
@@ -804,21 +941,21 @@ ion-title {
   justify-content: center;
   padding: 48px 24px;
   text-align: center;
-  background: #1e1e1e;
+  background: #2D2D2D;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   margin: 24px 16px;
 
   ion-icon {
     font-size: 64px;
-    color: #ffd700;
+    color: #FACC15;
     margin-bottom: 24px;
   }
 
   p {
     margin: 0;
     font-size: 1.1rem;
-    color: #b8860b;
+    color: #B3B3B3;
   }
 }
 
@@ -862,9 +999,9 @@ ion-title {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: #000000;
-  border-top: 2px solid #ffd700;
-  box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(180deg, #1A1A1A, #0F0F0F);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 -4px 20px rgba(250, 204, 21, 0.2);
   backdrop-filter: blur(20px);
   
   .nav-container {
@@ -874,7 +1011,7 @@ ion-title {
     height: 80px;
     padding: 0 16px;
     
-    .nav-button {
+      .nav-button {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -884,15 +1021,22 @@ ion-title {
       padding: 8px 12px;
       border-radius: 12px;
       cursor: pointer;
-      color: #888888;
+      color: #B3B3B3;
       min-width: 60px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      // Tap animation
+      &:active {
+        transform: scale(0.95);
+      }
       
       .nav-icon {
         font-size: 1.8rem;
         margin-bottom: 4px;
-        transition: all 0.3s ease;
-        color: #ffffff !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #FFFFFF !important;
         display: block;
+        transform: scale(1);
       }
       
       .nav-label {
@@ -903,17 +1047,36 @@ ion-title {
       }
       
       &.active {
-        color: #ffd700;
-        background: rgba(255, 215, 0, 0.15);
+        color: #FACC15;
+        background: rgba(250, 204, 21, 0.15);
+        position: relative;
         
+        // Subtle yellow glow behind active menu item
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(circle, rgba(250, 204, 21, 0.2) 0%, transparent 70%);
+          z-index: -1;
+          pointer-events: none;
+          border-radius: 12px;
+        }
+        
+        // Bottom nav icons scale on selection
         .nav-icon {
-          transform: scale(1.1);
-          color: #ffd700;
+          transform: scale(1.15);
+          color: #FACC15;
+          filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.6));
+          animation: iconScaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .nav-label {
           font-weight: 600;
-          color: #ffd700;
+          color: #FACC15;
         }
       }
     }
@@ -950,15 +1113,15 @@ ion-title {
       }
       
       &:hover {
-        background: rgba(255, 215, 0, 0.1);
-        color: #ffd700;
+        background: rgba(250, 204, 21, 0.1);
+        color: #FACC15;
         
         .nav-icon {
-          color: #ffd700;
+          color: #FACC15;
         }
         
         .nav-label {
-          color: #ffd700;
+          color: #FACC15;
         }
       }
     }
@@ -1006,24 +1169,25 @@ ion-button, ion-card {
 /* Menu styles removed - using bottom navigation instead */
 
 .dashboard-header {
-  background: linear-gradient(135deg, #000000 0%, #1e1e1e 100%);
+  background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
   padding: 24px;
-  color: #ffd700;
+  color: #FACC15;
   border-radius: 0 0 24px 24px;
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(250, 204, 21, 0.15);
 
   .welcome-section {
     h1 {
       font-size: 24px;
       font-weight: 600;
       margin: 0;
-      color: #ffd700;
+      color: #FACC15;
     }
 
     p {
       margin: 8px 0 0;
       opacity: 0.9;
       font-size: 16px;
+      color: #B3B3B3;
     }
   }
 }
@@ -1037,10 +1201,10 @@ ion-button, ion-card {
   z-index: 1;
 
   .stat-card {
-    background: #1e1e1e;
+    background: #2D2D2D;
     padding: 20px;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease;
 
     &:hover {
@@ -1055,8 +1219,8 @@ ion-button, ion-card {
 
       ion-icon {
         font-size: 24px;
-        color: #ffd700;
-        background: rgba(255, 215, 0, 0.1);
+        color: #FACC15;
+        background: rgba(250, 204, 21, 0.1);
         padding: 12px;
         border-radius: 12px;
       }
@@ -1064,7 +1228,7 @@ ion-button, ion-card {
       h3 {
         margin: 0;
         font-size: 16px;
-        color: #ffd700;
+        color: #FACC15;
         font-weight: 600;
       }
     }
@@ -1072,12 +1236,12 @@ ion-button, ion-card {
     .stat-value {
       font-size: 28px;
       font-weight: 700;
-      color: #ffd700;
+      color: #FACC15;
       margin: 0;
     }
 
     .stat-label {
-      color: #b8860b;
+      color: #B3B3B3;
       font-size: 14px;
       margin: 4px 0 0;
     }
@@ -1235,6 +1399,31 @@ ion-button, ion-card {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+// Micro-animation keyframes
+@keyframes buttonHighlight {
+  0% {
+    background-color: #2563EB;
+  }
+  50% {
+    background-color: #3B82F6;
+  }
+  100% {
+    background-color: #2563EB;
+  }
+}
+
+@keyframes iconScaleIn {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.15);
   }
 }
 
@@ -1396,6 +1585,13 @@ ion-button {
   letter-spacing: 0.2px;
   padding: 6px 18px;
   transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+  overflow: visible;
+  
+  // Override the circular glow from general ion-button
+  &::before {
+    display: none;
+  }
 }
 
 .browse-all-btn:hover, .browse-all-btn:focus,
@@ -1403,4 +1599,11 @@ ion-button {
   transform: translateY(-2px) scale(1.03);
   --background: #18335c;
   --box-shadow: 0 4px 16px rgba(35, 83, 144, 0.22);
+}
+
+.browse-all-btn:active, .minimize-btn:active {
+  --box-shadow: 
+    0 2px 8px rgba(35, 83, 144, 0.18),
+    0 0 12px rgba(255, 215, 0, 0.2),
+    0 0 18px rgba(255, 215, 0, 0.12) !important;
 }

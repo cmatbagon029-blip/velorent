@@ -93,4 +93,12 @@ export const routes: Routes = [
     path: 'auth/facebook/callback',
     loadComponent: () => import('./auth/facebook-callback/facebook-callback.component').then(m => m.FacebookCallbackComponent),
   },
+  {
+    path: 'payment/success',
+    loadComponent: () => import('./payment-success/payment-success.page').then(m => m.PaymentSuccessPage),
+  },
+  {
+    path: 'payment/cancel',
+    loadComponent: () => import('./payment-cancel/payment-cancel.page').then(m => m.PaymentCancelPage),
+  },
 ];

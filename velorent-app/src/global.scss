@@ -472,3 +472,166 @@ ion-icon {
 ion-icon[name] {
   display: inline-block !important;
 }
+
+/* ============================================
+   MODERN PRIMARY BUTTON STYLES
+   Reusable gold/yellow gradient buttons with glow
+   ============================================ */
+
+.btn-primary-modern,
+ion-button.btn-primary-modern,
+.button-primary-modern {
+  --background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%) !important;
+  --background-activated: linear-gradient(135deg, #FFA500 0%, #FF8C00 50%, #FF7F00 100%) !important;
+  --background-hover: linear-gradient(135deg, #FFE44D 0%, #FFB84D 50%, #FF9F00 100%) !important;
+  --color: #000000 !important;
+  --border-radius: 20px !important;
+  --box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2) !important;
+  
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 16px auto !important;
+  height: 56px !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+  
+  /* Bold text with high contrast */
+  color: #000000 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+  
+  /* Inner glow effect */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  /* Hover state - scale up and brighter glow */
+  &:hover:not([disabled]) {
+    transform: scale(1.02) translateY(-2px) !important;
+    --box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.3) !important;
+    
+    &::before {
+      left: 100%;
+    }
+  }
+  
+  /* Active state - scale down */
+  &:active:not([disabled]) {
+    transform: scale(0.98) translateY(0) !important;
+    --box-shadow: 0 2px 15px rgba(255, 215, 0, 0.4), 0 0 25px rgba(255, 215, 0, 0.2) !important;
+    transition: all 0.1s ease !important;
+  }
+  
+  /* Disabled state */
+  &[disabled] {
+    --background: #4B5563 !important;
+    --background-activated: #374151 !important;
+    --background-hover: #4B5563 !important;
+    --color: #9CA3AF !important;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    text-shadow: none !important;
+  }
+  
+  /* Spinner color when loading */
+  ion-spinner {
+    --color: #000000 !important;
+  }
+  
+  /* Icon styling */
+  ion-icon {
+    color: #000000 !important;
+  }
+}
+
+/* Secondary button style - outline with gold border */
+.btn-secondary-modern,
+ion-button.btn-secondary-modern,
+.button-secondary-modern {
+  --background: transparent !important;
+  --background-activated: rgba(255, 215, 0, 0.1) !important;
+  --background-hover: rgba(255, 215, 0, 0.15) !important;
+  --color: #FFD700 !important;
+  --border-color: #FFD700 !important;
+  --border-width: 2px !important;
+  --border-style: solid !important;
+  --border-radius: 20px !important;
+  --box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1) !important;
+  
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 16px auto !important;
+  height: 56px !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: block !important;
+  
+  color: #FFD700 !important;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
+  
+  &:hover:not([disabled]) {
+    transform: scale(1.02) translateY(-2px) !important;
+    --box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2) !important;
+    --background-hover: rgba(255, 215, 0, 0.2) !important;
+  }
+  
+  &:active:not([disabled]) {
+    transform: scale(0.98) translateY(0) !important;
+    --box-shadow: 0 2px 12px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1) !important;
+    transition: all 0.1s ease !important;
+  }
+  
+  &[disabled] {
+    --color: #6B7280 !important;
+    --border-color: #6B7280 !important;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    opacity: 0.5 !important;
+    text-shadow: none !important;
+  }
+  
+  ion-icon {
+    color: #FFD700 !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .btn-primary-modern,
+  ion-button.btn-primary-modern,
+  .button-primary-modern,
+  .btn-secondary-modern,
+  ion-button.btn-secondary-modern,
+  .button-secondary-modern {
+    max-width: 100% !important;
+    height: 52px !important;
+    font-size: 1rem !important;
+    margin: 12px auto !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .btn-primary-modern,
+  ion-button.btn-primary-modern,
+  .button-primary-modern,
+  .btn-secondary-modern,
+  ion-button.btn-secondary-modern,
+  .button-secondary-modern {
+    margin: 20px auto !important;
+  }
+}

@@ -140,9 +140,32 @@ export class ApiService {
   }
 
   createRentalWithFiles(formData: FormData) {
-    return this.http.post(`${this.apiUrl}/rentals`, formData, {
-      headers: this.getHeaders().delete('Content-Type') // Let browser set boundary
-    });
+    // The auth interceptor should handle adding the Authorization header
+    // For FormData, we don't set Content-Type - browser will set it with boundary
+    const token = localStorage.getItem('token');
+    
+    console.log('=== CREATE RENTAL DEBUG ===');
+    console.log('Token exists:', !!token);
+    console.log('Token value (first 20 chars):', token ? token.substring(0, 20) + '...' : 'No token');
+    console.log('API URL:', `${this.apiUrl}/rentals`);
+    
+    if (!token) {
+      console.error('No token found in localStorage - user needs to log in');
+      return throwError(() => new Error('Authentication required. Please log in again.'));
+    }
+    
+    // Let the auth interceptor handle the Authorization header
+    // Don't set Content-Type - browser will set it with boundary for FormData
+    return this.http.post(`${this.apiUrl}/rentals`, formData).pipe(
+      catchError((error) => {
+        console.error('Error in createRentalWithFiles:', error);
+        if (error.status === 401) {
+          console.error('401 Unauthorized - Token might be expired or invalid');
+          console.error('Please log in again to get a fresh token');
+        }
+        return this.handleError(error);
+      })
+    );
   }
 
   createBooking(bookingData: any): Observable<any> {
@@ -235,6 +258,22 @@ export class ApiService {
     );
   }
 
+  // Payment endpoints
+  createPayment(amount: number, bookingId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/payments/create-payment`, {
+      amount: amount,
+      booking_id: bookingId
+    }, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getPaymentStatus(bookingId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/payments/status/${bookingId}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('API Error:', error);
     let errorMessage = 'An error occurred';
@@ -246,8 +285,17 @@ export class ApiService {
       // Network error - connection failed
       errorMessage = `Network Error: Unable to connect to server. Please check:\n1. Backend server is running on ${this.apiUrl}\n2. Device and server are on the same network\n3. Firewall allows connections on port 3000`;
     } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message || error.error?.message || 'Unknown error'}`;
+      // Server-side error - try to extract the actual error message
+      const errorData = error.error;
+      if (errorData?.message) {
+        errorMessage = errorData.message;
+      } else if (errorData?.error) {
+        errorMessage = errorData.error;
+      } else if (errorData?.details && Array.isArray(errorData.details) && errorData.details.length > 0) {
+        errorMessage = errorData.details[0];
+      } else {
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message || 'Unknown error'}`;
+      }
     }
     
     return throwError(() => new Error(errorMessage));

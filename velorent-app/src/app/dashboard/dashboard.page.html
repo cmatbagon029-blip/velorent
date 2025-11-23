@@ -250,7 +250,7 @@
           {{ unreadCount }}
         </div>
       </div>
-      <span class="nav-label">Notifications ({{ unreadCount }})</span>
+      <span class="nav-label">Notifications{{ unreadCount > 0 ? ' (' + unreadCount + ')' : '' }}</span>
     </button>
     
     <button class="nav-button" (click)="navigateToProfile()">

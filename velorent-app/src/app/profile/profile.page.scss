@@ -1,15 +1,15 @@
 ion-header, ion-toolbar {
-  --background: #000 !important;
-  background: #000 !important;
+  --background: #1A1A1A !important;
+  background: #1A1A1A !important;
 }
 
 ion-title {
-  color: #ffd700 !important;
+  color: #FACC15 !important;
   font-weight: 600;
 }
 
 ion-content {
-  --background: #121212;
+  --background: #1A1A1A;
   padding-bottom: 120px; /* Extra space for bottom navigation */
 }
 
@@ -17,13 +17,13 @@ ion-content {
 .profile-card {
   max-width: 100%;
   margin: 16px auto;
-  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
-  background: #1e1e1e;
-  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: #2D2D2D;
+  color: #FFFFFF;
   border-radius: 16px;
 
   ion-card-title {
-    color: #ffd700;
+    color: #FACC15;
     font-weight: 600;
     font-size: 1.3rem;
     margin-bottom: 4px;
@@ -43,18 +43,18 @@ ion-content {
       gap: 16px;
       margin-bottom: 24px;
       padding-bottom: 20px;
-      border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+      border-bottom: 2px solid rgba(250, 204, 21, 0.2);
 
       .profile-avatar {
         width: 80px;
         height: 80px;
-        background: linear-gradient(135deg, #ffd700, #b8860b);
+        background: linear-gradient(135deg, #FACC15, #FDE047);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
 
         .profile-image {
           width: 100%;
@@ -73,14 +73,14 @@ ion-content {
         flex: 1;
 
         .user-name {
-          color: #ffd700;
+          color: #FFFFFF;
           font-size: 1.5rem;
           font-weight: 700;
           margin: 0 0 4px 0;
         }
 
         .user-role {
-          color: #b8860b;
+          color: #B3B3B3;
           font-size: 1rem;
           margin: 0;
           font-weight: 500;
@@ -94,7 +94,7 @@ ion-content {
         align-items: center;
         gap: 12px;
         padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        border-bottom: 1px solid rgba(250, 204, 21, 0.1);
         
         &:last-child {
           border-bottom: none;
@@ -102,7 +102,7 @@ ion-content {
 
         .field-icon {
           font-size: 1.2rem;
-          color: #ffd700;
+          color: #FACC15;
           min-width: 20px;
         }
 
@@ -114,14 +114,14 @@ ion-content {
           
           .profile-label {
             font-weight: 500;
-            color: #b0b0b0;
+            color: #B3B3B3;
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
           }
           
           .profile-value {
-            color: #ffffff;
+            color: #FFFFFF;
             font-weight: 600;
             font-size: 1rem;
           }
@@ -137,19 +137,19 @@ ion-content {
 
     .no-user-icon {
       font-size: 4rem;
-      color: #666;
+      color: #B3B3B3;
       margin-bottom: 16px;
     }
 
     h3 {
-      color: #e0e0e0;
+      color: #FFFFFF;
       font-size: 1.3rem;
       font-weight: 600;
       margin: 0 0 8px 0;
     }
 
     p {
-      color: #b0b0b0;
+      color: #B3B3B3;
       font-size: 1rem;
       margin: 0 0 20px 0;
       line-height: 1.5;
@@ -157,8 +157,8 @@ ion-content {
 
     ion-button {
       --background: transparent;
-      --color: #ffd700;
-      --border-color: #ffd700;
+      --color: #FACC15;
+      --border-color: #FACC15;
       --border-width: 2px;
       --border-radius: 12px;
       font-weight: 600;
@@ -172,13 +172,13 @@ ion-content {
 .settings-card {
   max-width: 100%;
   margin: 16px auto;
-  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
-  background: #1e1e1e;
-  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: #2D2D2D;
+  color: #FFFFFF;
   border-radius: 16px;
 
   ion-card-title {
-    color: #ffd700;
+    color: #FACC15;
     font-weight: 600;
     font-size: 1.2rem;
   }
@@ -188,18 +188,18 @@ ion-content {
     
     ion-item {
       --background: transparent;
-      --color: #e0e0e0;
-      --border-color: rgba(255, 215, 0, 0.2);
+      --color: #FFFFFF;
+      --border-color: rgba(250, 204, 21, 0.2);
       --padding-start: 16px;
       --padding-end: 16px;
       --min-height: 50px;
       
       &:hover {
-        --background: rgba(255, 215, 0, 0.05);
+        --background: rgba(250, 204, 21, 0.05);
       }
       
       ion-icon {
-        color: #ffd700;
+        color: #FACC15;
         margin-right: 12px;
       }
       
@@ -208,12 +208,12 @@ ion-content {
       }
 
       ion-note {
-        color: #b8860b;
+        color: #B3B3B3;
       }
 
       ion-toggle {
-        --background: #333;
-        --background-checked: #ffd700;
+        --background: rgba(255, 255, 255, 0.1);
+        --background-checked: #FACC15;
         --handle-background: #fff;
         --handle-background-checked: #000;
       }
@@ -225,13 +225,13 @@ ion-content {
 .legal-card {
   max-width: 100%;
   margin: 16px auto;
-  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
-  background: #1e1e1e;
-  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: #2D2D2D;
+  color: #FFFFFF;
   border-radius: 16px;
 
   ion-card-title {
-    color: #ffd700;
+    color: #FACC15;
     font-weight: 600;
     font-size: 1.2rem;
   }
@@ -241,18 +241,18 @@ ion-content {
     
     ion-item {
       --background: transparent;
-      --color: #e0e0e0;
-      --border-color: rgba(255, 215, 0, 0.2);
+      --color: #FFFFFF;
+      --border-color: rgba(250, 204, 21, 0.2);
       --padding-start: 16px;
       --padding-end: 16px;
       --min-height: 50px;
       
       &:hover {
-        --background: rgba(255, 215, 0, 0.05);
+        --background: rgba(250, 204, 21, 0.05);
       }
       
       ion-icon {
-        color: #ffd700;
+        color: #FACC15;
         margin-right: 12px;
       }
       
@@ -267,13 +267,13 @@ ion-content {
 .account-card {
   max-width: 100%;
   margin: 16px auto;
-  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
-  background: #1e1e1e;
-  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: #2D2D2D;
+  color: #FFFFFF;
   border-radius: 16px;
 
   ion-card-title {
-    color: #ffd700;
+    color: #FACC15;
     font-weight: 600;
     font-size: 1.2rem;
   }
@@ -283,18 +283,18 @@ ion-content {
     
     ion-item {
       --background: transparent;
-      --color: #e0e0e0;
-      --border-color: rgba(255, 215, 0, 0.2);
+      --color: #FFFFFF;
+      --border-color: rgba(250, 204, 21, 0.2);
       --padding-start: 16px;
       --padding-end: 16px;
       --min-height: 50px;
       
       &:hover {
-        --background: rgba(255, 215, 0, 0.05);
+        --background: rgba(250, 204, 21, 0.05);
       }
       
       ion-icon {
-        color: #ffd700;
+        color: #FACC15;
         margin-right: 12px;
       }
       
@@ -309,9 +309,9 @@ ion-content {
 .app-info-card {
   max-width: 100%;
   margin: 16px auto 40px auto; /* Extra bottom margin for bottom nav */
-  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.08);
-  background: #1e1e1e;
-  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: #2D2D2D;
+  color: #FFFFFF;
   border-radius: 16px;
 
   .app-info {
@@ -320,25 +320,25 @@ ion-content {
 
     .app-icon {
       font-size: 3rem;
-      color: #ffd700;
+      color: #FACC15;
       margin-bottom: 16px;
     }
 
     h3 {
-      color: #ffd700;
+      color: #FACC15;
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 8px;
     }
 
     p {
-      color: #e0e0e0;
+      color: #FFFFFF;
       margin: 4px 0;
       font-size: 0.9rem;
     }
 
     .copyright {
-      color: #b8860b;
+      color: #B3B3B3;
       font-size: 0.8rem;
       margin-top: 16px;
     }
@@ -364,9 +364,9 @@ ion-content {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: #000000;
-  border-top: 2px solid #ffd700;
-  box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(180deg, #1A1A1A, #0F0F0F);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 -4px 20px rgba(250, 204, 21, 0.2);
   backdrop-filter: blur(20px);
   
   .nav-container {
@@ -386,14 +386,14 @@ ion-content {
       padding: 8px 12px;
       border-radius: 12px;
       cursor: pointer;
-      color: #888888;
+      color: #B3B3B3;
       min-width: 60px;
       
       .nav-icon {
         font-size: 1.8rem;
         margin-bottom: 4px;
         transition: all 0.3s ease;
-        color: #ffffff !important;
+        color: #FFFFFF !important;
         display: block;
       }
       
@@ -405,30 +405,30 @@ ion-content {
       }
       
       &.active {
-        color: #ffd700;
-        background: rgba(255, 215, 0, 0.15);
+        color: #FACC15;
+        background: rgba(250, 204, 21, 0.15);
         
         .nav-icon {
           transform: scale(1.1);
-          color: #ffd700;
+          color: #FACC15;
         }
         
         .nav-label {
           font-weight: 600;
-          color: #ffd700;
+          color: #FACC15;
         }
       }
       
       &:hover {
-        background: rgba(255, 215, 0, 0.1);
-        color: #ffd700;
+        background: rgba(250, 204, 21, 0.1);
+        color: #FACC15;
         
         .nav-icon {
-          color: #ffd700;
+          color: #FACC15;
         }
         
         .nav-label {
-          color: #ffd700;
+          color: #FACC15;
         }
       }
       

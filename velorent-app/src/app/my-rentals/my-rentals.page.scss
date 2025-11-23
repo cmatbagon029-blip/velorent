@@ -1,16 +1,16 @@
 ion-header, ion-toolbar {
-  --background: #000 !important;
-  background: #000 !important;
+  --background: #1A1A1A !important;
+  background: #1A1A1A !important;
 }
 
 ion-title {
-  color: #ffd700 !important;
+  color: #FACC15 !important;
   font-weight: 600;
 }
 
 ion-content {
-  --background: #121212;
-  background: #121212 !important;
+  --background: #1A1A1A;
+  background: #1A1A1A !important;
   padding-bottom: 120px; /* Extra space for bottom navigation */
 }
 
@@ -38,7 +38,7 @@ ion-content {
   }
 
   p {
-    color: #ffd700;
+    color: #FACC15;
     margin-bottom: 16px;
   }
 }
@@ -51,9 +51,9 @@ ion-list {
 }
 
 .booking-item {
-  background: #1e1e1e;
+  background: #2D2D2D;
   border-radius: 16px;
-  box-shadow: 0 4px 16px 0 rgba(255, 215, 0, 0.12);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.3);
   margin-bottom: 24px;
   padding: 22px 20px;
   display: flex;
@@ -62,28 +62,28 @@ ion-list {
 }
 
 .booking-item:hover {
-  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.16);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .booking-item h2 {
-  color: #ffd700;
+  color: #FFFFFF;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
 .booking-item p {
-  color: #fff;
+  color: #FFFFFF;
   margin: 4px 0;
 }
 
 .booking-item p strong {
-  color: #ffd700;
+  color: #FACC15;
   font-weight: 500;
 }
 
 .booking-item ion-badge {
-  background: #ffd700;
-  color: #121212;
+  background: #FACC15;
+  color: #000;
   font-weight: 600;
   margin-left: 32px;
 }
@@ -100,34 +100,34 @@ ion-button {
 .empty-state {
   ion-icon {
     font-size: 64px;
-    color: #ffd700;
+    color: #FACC15;
   }
 
   h2 {
-    color: #ffd700;
+    color: #FACC15;
     margin: 16px 0;
     font-weight: 600;
   }
 }
 
 .empty-container h2 {
-  color: #ffd700;
+  color: #FACC15;
   font-weight: 600;
 }
 
 .empty-container p {
-  color: #fff;
+  color: #FFFFFF;
 }
 
 .error-container ion-icon {
-  color: #ffd700 !important;
+  color: #FACC15 !important;
 }
 
 .rental-item {
-  --background: #1e1e1e;
+  --background: #2D2D2D;
   margin: 8px 0;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   ion-thumbnail {
     --size: 80px;
@@ -146,20 +146,20 @@ ion-button {
     h2 {
       font-size: 16px;
       font-weight: 600;
-      color: #ffd700;
+      color: #FFFFFF;
       margin-bottom: 4px;
     }
 
     p {
       display: flex;
       align-items: center;
-      color: #fff;
+      color: #FFFFFF;
       font-size: 14px;
       margin: 4px 0;
 
       ion-icon {
         margin-right: 8px;
-        color: #ffd700;
+        color: #FACC15;
       }
     }
 
@@ -172,9 +172,9 @@ ion-button {
     ion-button {
       --padding-start: 8px;
       --padding-end: 8px;
-      --background: #ffd700;
-      --color: #121212;
-      color: #121212;
+      --background: #2563EB;
+      --color: #FFFFFF;
+      color: #FFFFFF;
       font-weight: 600;
       border-radius: 6px;
     }
@@ -189,7 +189,7 @@ ion-button {
 }
 
 .status-row span {
-  color: #ffd700;
+  color: #FACC15;
   font-weight: 500;
 }
 
@@ -202,18 +202,18 @@ ion-button {
 }
 
 .booking-card {
-  background: #1e1e1e;
+  background: #2D2D2D;
   border-radius: 16px;
-  box-shadow: 0 4px 16px 0 rgba(255, 215, 0, 0.12);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.3);
   margin-bottom: 24px;
-  color: #fff;
+  color: #FFFFFF;
 
   ion-card-header {
     padding-bottom: 12px;
   }
 
   ion-card-title {
-    color: #ffd700;
+    color: #FFFFFF;
     font-weight: 600;
     font-size: 1.2em;
   }
@@ -226,10 +226,10 @@ ion-button {
 .booking-details {
   p {
     margin: 8px 0;
-    color: #fff;
+    color: #FFFFFF;
 
     strong {
-      color: #ffd700;
+      color: #FACC15;
       font-weight: 500;
     }
   }
@@ -244,8 +244,8 @@ ion-button {
   ion-button {
     flex: 1;
     min-width: 140px;
-    --border-color: #ffd700;
-    --color: #ffd700;
+    --border-color: #FACC15;
+    --color: #FACC15;
     margin: 0;
 
     &[color="danger"] {
@@ -260,21 +260,21 @@ ion-button {
   padding: 0 16px;
 
   ion-button {
-    --border-color: #ffd700;
-    --color: #ffd700;
+    --border-color: #FACC15;
+    --color: #FACC15;
   }
 
   .refresh-button {
-    --border-color: #22c55e;
-    --color: #22c55e;
+    --border-color: #22C55E;
+    --color: #22C55E;
   }
 }
 
 :host ::ng-deep ion-item.booking-item {
-  --background: #1e1e1e !important;
-  background: #1e1e1e !important;
+  --background: #2D2D2D !important;
+  background: #2D2D2D !important;
   border-radius: 16px !important;
-  box-shadow: 0 4px 16px 0 rgba(255, 215, 0, 0.12) !important;
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
 // Bottom Navigation - BLACK & GOLD THEME
@@ -284,9 +284,9 @@ ion-button {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: #000000;
-  border-top: 2px solid #ffd700;
-  box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(180deg, #1A1A1A, #0F0F0F);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 -4px 20px rgba(250, 204, 21, 0.2);
   backdrop-filter: blur(20px);
   
   .nav-container {
@@ -306,14 +306,14 @@ ion-button {
       padding: 8px 12px;
       border-radius: 12px;
       cursor: pointer;
-      color: #888888;
+      color: #B3B3B3;
       min-width: 60px;
       
       .nav-icon {
         font-size: 1.8rem;
         margin-bottom: 4px;
         transition: all 0.3s ease;
-        color: #ffffff !important;
+        color: #FFFFFF !important;
         display: block;
       }
       
@@ -325,17 +325,17 @@ ion-button {
       }
       
       &.active {
-        color: #ffd700;
-        background: rgba(255, 215, 0, 0.15);
+        color: #FACC15;
+        background: rgba(250, 204, 21, 0.15);
         
         .nav-icon {
           transform: scale(1.1);
-          color: #ffd700;
+          color: #FACC15;
         }
         
         .nav-label {
           font-weight: 600;
-          color: #ffd700;
+          color: #FACC15;
         }
       }
     }
@@ -372,15 +372,15 @@ ion-button {
       }
       
       &:hover {
-        background: rgba(255, 215, 0, 0.1);
-        color: #ffd700;
+        background: rgba(250, 204, 21, 0.1);
+        color: #FACC15;
         
         .nav-icon {
-          color: #ffd700;
+          color: #FACC15;
         }
         
         .nav-label {
-          color: #ffd700;
+          color: #FACC15;
         }
       }
       

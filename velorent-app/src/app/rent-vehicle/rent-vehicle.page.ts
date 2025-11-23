@@ -45,7 +45,14 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   downPayment: number = 0;
   remainingAmount: number = 0;
   paymentMethod: string = '';
-  paymentMethods = ['GCash'];
+  paymentMethods = ['GCash', 'GrabPay', 'PayMaya']; // Add more payment options
+
+  // Payment flow state
+  paymentInitiated: boolean = false;
+  paymentCheckoutUrl: string = '';
+  paymentStatus: string = 'pending'; // pending, paid, failed
+  tempBookingId: number | null = null;
+  isProcessingPayment: boolean = false;
 
   driverOptions = ['With Driver', 'Without Driver'];
 
@@ -1006,48 +1013,60 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
     this.router.navigate(['/register']);
   }
 
-  submitBooking() {
+  // Validate booking form before proceeding to payment
+  validateBookingForm(): boolean {
+    if (!this.vehicleId || !this.rentFromDate || !this.rentToDate || !this.rentTime || !this.withDriver || !this.destination) {
+      this.showToast('Please fill in all required fields.', 'danger');
+      return false;
+    }
+
+    if (!this.additionalIdFile) {
+      this.showToast('Please upload an additional valid ID.', 'danger');
+      return false;
+    }
+
+    if (!this.paymentMethod) {
+      this.showToast('Please select a payment method for the down payment.', 'danger');
+      return false;
+    }
+
+    return true;
+  }
+
+  // Step 1: Create booking and proceed to payment
+  proceedToPayment() {
     // Check if user is logged in
     const user = localStorage.getItem('user');
     const token = localStorage.getItem('token');
     
     if (!user || !token) {
-      // User is not logged in, show login prompt
       this.showLoginPrompt();
       return;
     }
 
-    // Check rental limit first
+    // Check rental limit
     if (this.userRentalCount >= this.maxRentals) {
       this.showToast('You have reached the maximum limit of 3 rentals. Please contact support if you need to make additional bookings.', 'danger');
       return;
     }
 
-    // Conditional validation for IDs
-    if (!this.vehicleId || !this.rentFromDate || !this.rentToDate || !this.rentTime || !this.withDriver || !this.destination) {
-      this.showToast('Please fill in all required fields.');
+    // Validate form
+    if (!this.validateBookingForm()) {
       return;
     }
 
-
-    // Availability is now enforced by the UI, so no need to check here
-
-    if (!this.additionalIdFile) {
-      this.showToast('Please upload an additional valid ID.');
-      return;
-    }
-
-    if (!this.paymentMethod) {
-      this.showToast('Please select a payment method for the down payment.');
-      return;
-    }
-
-    // Calculate costs before submission
+    // Calculate costs
     this.calculateTotalCost();
 
-    // Proceed with booking submission if all checks pass
+    if (this.isProcessingPayment) {
+      return; // Prevent multiple submissions
+    }
+
+    this.isProcessingPayment = true;
+
+    // First, create the booking
     const formData = new FormData();
-    formData.append('vehicleId', this.vehicleId.toString());
+    formData.append('vehicleId', this.vehicleId!.toString());
     formData.append('fullName', this.fullName);
     formData.append('mobileNumber', this.mobileNumber);
     formData.append('serviceType', this.serviceType);
@@ -1063,26 +1082,232 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
     formData.append('remainingAmount', this.remainingAmount.toString());
     formData.append('paymentMethod', this.paymentMethod);
     
-    // Driver information is no longer required
-    
     if (this.validIdFile) formData.append('validId', this.validIdFile);
     if (this.additionalIdFile) formData.append('additionalId', this.additionalIdFile);
 
     this.apiService.createRentalWithFiles(formData).subscribe({
-      next: (response) => {
-        this.showToast('Booking submitted successfully! Please pay the down payment to confirm your reservation.', 'success');
-        this.router.navigate(['/my-rentals']);
+      next: (response: any) => {
+        console.log('=== BOOKING CREATED RESPONSE ===');
+        console.log('Full response:', response);
+        console.log('Response type:', typeof response);
+        console.log('Response keys:', Object.keys(response || {}));
+        
+        // Get booking ID from response - check multiple possible locations
+        let bookingId = null;
+        
+        if (response) {
+          bookingId = response.booking_id || response.id || response.bookingId || 
+                     response.data?.booking_id || response.data?.id ||
+                     (response.insertId ? response.insertId : null);
+        }
+        
+        console.log('Extracted booking ID:', bookingId);
+        
+        if (!bookingId || isNaN(Number(bookingId))) {
+          console.error('Could not extract valid booking ID from response');
+          console.error('Response structure:', JSON.stringify(response, null, 2));
+          
+          // Try to get the latest booking for this user as fallback
+          this.getLatestBookingAndCreatePayment();
+          return;
+        }
+
+        this.tempBookingId = Number(bookingId);
+        
+        // Now create payment
+        this.createPaymentForBooking(Number(bookingId));
       },
       error: (error) => {
-        console.error('Error submitting booking:', error);
-        if (error?.error?.error && error.error.error.includes('pending or ongoing booking')) {
-          this.showToast('You already have a pending or ongoing booking. Please complete or cancel it before making a new booking.', 'danger');
-        } else if (error?.error?.error && error.error.error.includes('maximum limit of 3 rentals')) {
-          this.showToast('You have reached the maximum limit of 3 rentals. Please contact support if you need to make additional bookings.', 'danger');
+        this.isProcessingPayment = false;
+        console.error('Error creating booking:', error);
+        console.error('Error response:', error.error);
+        
+        // If error is about existing booking, try to get that booking and proceed with payment
+        const errorMessage = error?.error?.error || error?.error?.message || '';
+        if (errorMessage.includes('pending or ongoing booking')) {
+          // Booking already exists, try to get it and proceed with payment
+          this.getLatestBookingAndCreatePayment();
         } else {
-          this.showToast('Failed to submit booking. Please try again.');
+          this.handleBookingError(error);
         }
       }
     });
+  }
+
+  // Fallback: Get latest booking if we can't extract ID from response
+  getLatestBookingAndCreatePayment() {
+    console.log('Attempting to get latest booking...');
+    this.apiService.getMyBookings().subscribe({
+      next: (bookings: any[]) => {
+        if (bookings && bookings.length > 0) {
+          // Get the most recent booking (should be the one just created)
+          const latestBooking = bookings[0]; // Assuming they're sorted by date DESC
+          const bookingId = latestBooking.id;
+          
+          console.log('Found latest booking ID:', bookingId);
+          
+          if (bookingId) {
+            this.tempBookingId = bookingId;
+            this.createPaymentForBooking(bookingId);
+          } else {
+            this.showToast('Could not find booking. Please check My Rentals and try payment from there.', 'warning');
+            this.isProcessingPayment = false;
+            setTimeout(() => {
+        this.router.navigate(['/my-rentals']);
+            }, 3000);
+          }
+        } else {
+          this.showToast('Booking may have been created but could not be found. Please check My Rentals.', 'warning');
+          this.isProcessingPayment = false;
+          setTimeout(() => {
+            this.router.navigate(['/my-rentals']);
+          }, 3000);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching bookings:', error);
+        this.showToast('Could not retrieve booking. Please check My Rentals manually.', 'warning');
+        this.isProcessingPayment = false;
+        setTimeout(() => {
+          this.router.navigate(['/my-rentals']);
+        }, 3000);
+      }
+    });
+  }
+
+  // Step 2: Create payment for the booking
+  createPaymentForBooking(bookingId: number) {
+    this.apiService.createPayment(this.downPayment, bookingId).subscribe({
+      next: (paymentResponse: any) => {
+        this.paymentCheckoutUrl = paymentResponse.checkout_url;
+        this.paymentInitiated = true;
+        this.isProcessingPayment = false;
+        
+        // Redirect to payment URL in the same window
+        if (this.paymentCheckoutUrl) {
+          // Store booking ID in sessionStorage so we can track it after redirect
+          sessionStorage.setItem('pendingPaymentBookingId', bookingId.toString());
+          
+          // Redirect to PayMongo checkout in the same window
+          window.location.href = this.paymentCheckoutUrl;
+        } else {
+          this.showToast('Payment URL not received. Please try again.', 'danger');
+        }
+      },
+      error: (error: any) => {
+        this.isProcessingPayment = false;
+        console.error('=== PAYMENT ERROR DEBUG ===');
+        console.error('Full error object:', error);
+        
+        // Show detailed error message
+        let errorMessage = 'Failed to create payment. ';
+        
+        // The error might be wrapped, try to get the actual error
+        const httpError = error.error || error;
+        
+        // Check for message field (most common)
+        if (httpError?.message) {
+          errorMessage += httpError.message;
+        }
+        // Check for error field
+        else if (httpError?.error) {
+          errorMessage += httpError.error;
+        }
+        // Check for details array
+        else if (httpError?.details && Array.isArray(httpError.details) && httpError.details.length > 0) {
+          errorMessage += httpError.details[0];
+        }
+        // Check for paymongo_error
+        else if (httpError?.paymongo_error) {
+          const pmError = httpError.paymongo_error;
+          if (Array.isArray(pmError) && pmError.length > 0) {
+            errorMessage += pmError[0].detail || pmError[0].message || JSON.stringify(pmError[0]);
+          } else if (pmError.message) {
+            errorMessage += pmError.message;
+          } else {
+            errorMessage += JSON.stringify(pmError);
+          }
+        }
+        // Last resort
+        else {
+          errorMessage += 'Please check your PayMongo API key configuration.';
+          console.error('Full error structure:', JSON.stringify(httpError, null, 2));
+        }
+        
+        // Special handling for API key errors
+        if (errorMessage.includes('API key') && errorMessage.includes('does not exist')) {
+          errorMessage += ' Please update your PayMongo secret key in backend/config.env file.';
+        }
+        
+        console.error('Final error message:', errorMessage);
+        this.showToast(errorMessage, 'danger');
+      }
+    });
+  }
+
+  // Poll payment status after user completes payment
+  startPaymentStatusPolling(bookingId: number) {
+    const maxAttempts = 60; // Poll for 5 minutes (60 * 5 seconds)
+    let attempts = 0;
+    
+    const pollInterval = setInterval(() => {
+      attempts++;
+      
+      this.apiService.getPaymentStatus(bookingId).subscribe({
+        next: (paymentStatus: any) => {
+          if (paymentStatus.status === 'paid') {
+            clearInterval(pollInterval);
+            this.paymentStatus = 'paid';
+            this.showToast('Payment confirmed! Your booking has been submitted successfully.', 'success');
+            setTimeout(() => {
+              this.router.navigate(['/my-rentals']);
+            }, 2000);
+          } else if (paymentStatus.status === 'failed') {
+            clearInterval(pollInterval);
+            this.paymentStatus = 'failed';
+            this.showToast('Payment failed. Please try again.', 'danger');
+          }
+        },
+        error: (error) => {
+          console.error('Error checking payment status:', error);
+        }
+      });
+
+      if (attempts >= maxAttempts) {
+        clearInterval(pollInterval);
+        this.showToast('Payment verification timeout. Please check your booking status in My Rentals.', 'warning');
+      }
+    }, 5000); // Poll every 5 seconds
+  }
+
+  // Handle booking creation errors
+  handleBookingError(error: any) {
+    // Check for authentication errors
+    if (error?.status === 401 || error?.error?.message?.includes('token') || error?.error?.message?.includes('Token')) {
+      this.showToast('Your session has expired. Please log in again.', 'danger');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 2000);
+      return;
+    }
+    
+    // Check error message
+    const errorMessage = error?.error?.error || error?.error?.message || error?.message || '';
+    
+    if (errorMessage.includes('pending or ongoing booking')) {
+          this.showToast('You already have a pending or ongoing booking. Please complete or cancel it before making a new booking.', 'danger');
+    } else if (errorMessage.includes('maximum limit of 3 rentals')) {
+          this.showToast('You have reached the maximum limit of 3 rentals. Please contact support if you need to make additional bookings.', 'danger');
+        } else {
+      const displayMessage = errorMessage || 'Failed to create booking. Please try again.';
+      this.showToast(displayMessage, 'danger');
+        }
+      }
+
+  // Legacy method - now redirects to proceedToPayment
+  submitBooking() {
+    this.proceedToPayment();
   }
 }

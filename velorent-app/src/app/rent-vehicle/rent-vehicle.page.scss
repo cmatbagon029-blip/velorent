@@ -1,608 +1,1602 @@
+// ============================================
+// RENT VEHICLE PAGE - Homepage Theme Match
+// ============================================
+
+// Color Palette
+$bg-primary: #0D0D0D;
+$card-bg: #1A1A1A;
+$accent-gold: #FACC15;
+$available-green: #2ECC71;
+$button-blue: #3A82F7;
+$text-primary: #FFFFFF;
+$text-secondary: #B3B3B3;
+
+// ============================================
+// ION CONTENT & LAYOUT
+// ============================================
 ion-content {
-  --background: #121212 !important;
-  background: #121212 !important;
+  --background: $bg-primary !important;
+  background: $bg-primary !important;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 24px;
+  --padding-bottom: 24px;
 }
 
+// ============================================
+// TYPOGRAPHY & HEADINGS
+// ============================================
 h2 {
-  margin-top: 1.5rem;
-  font-size: 1.5rem;
+  color: $accent-gold;
+  margin: 0;
   font-weight: 700;
-  color: #ffd700;
-  text-align: center;
-  margin-bottom: 1.5rem;
+  font-size: 22px;
 }
 
+h3, h4, h5, h6 {
+  color: $accent-gold;
+  font-weight: 600;
+}
+
+// ============================================
+// FORM CONTAINER
+// ============================================
 form {
-  max-width: 540px;
+  max-width: 650px;
   margin: 0 auto;
+  padding: 0 8px;
 }
 
-ion-card {
-  box-shadow: 0 4px 20px rgba(52, 152, 219, 0.08);
-  border-radius: 16px;
-  margin-bottom: 1.5rem;
+// ============================================
+// STEP 2 CONTAINER & HEADER
+// ============================================
+.step2-container {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 0 8px;
 }
 
-ion-item {
-  --background: #181818;
-  --color: #e0e0e0;
-  --placeholder-color: #b8860b;
-  border: 1px solid #ffd700;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.04);
+.step2-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 0 4px;
+
+  .back-button-header {
+    --color: $accent-gold;
+    color: $accent-gold;
+    font-weight: 500;
+    margin: 0;
+    padding: 0;
+    min-height: auto;
+    height: auto;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+
+  .step2-title {
+    flex: 1;
+    color: $accent-gold;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    text-align: left;
+  }
+}
+
+// ============================================
+// STEP 1 - PERSONAL INFORMATION
+// ============================================
+.step1-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 24px 0;
+}
+
+.personal-info-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 24px auto !important;
+  border-radius: 20px !important;
+  background: $card-bg !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba($accent-gold, 0.1) !important;
+    border-color: rgba($accent-gold, 0.2) !important;
+  }
+
+  ion-card-header {
+    background: rgba($accent-gold, 0.1) !important;
+    border-bottom: 2px solid rgba($accent-gold, 0.2) !important;
+    padding: 24px 20px !important;
+    margin: 0 !important;
+    text-align: center;
+  }
+
+  ion-card-content {
+    padding: 24px 20px !important;
+  }
+}
+
+.section-subtitle {
+  color: $text-secondary !important;
+  font-size: 0.95rem !important;
+  margin: 12px 0 0 0 !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  text-align: center;
+}
+
+.form-field-item {
+  margin-bottom: 20px !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  --inner-padding-end: 0 !important;
+  --inner-padding-start: 0 !important;
+  --padding-top: 0 !important;
+  --padding-bottom: 0 !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  --border-color: rgba(255, 255, 255, 0.15) !important;
+  --border-width: 1px !important;
+  --border-style: solid !important;
+
+  &:last-child {
+    margin-bottom: 0 !important;
+  }
 
   ion-label {
-    color: #ffd700;
+    margin-bottom: 10px !important;
+    color: $text-primary !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
   }
 
-  ion-input, ion-select, ion-datetime, ion-textarea {
-    --color: #ffd700;
-    --placeholder-color: #b8860b;
+  ion-input,
+  ion-select,
+  ion-textarea {
+    width: 100% !important;
+    --padding-start: 16px !important;
+    --padding-end: 16px !important;
+    --border-color: rgba(255, 255, 255, 0.15) !important;
   }
 }
 
-.required {
-  color: #e74c3c;
-  font-size: 1.1em;
+// ============================================
+// FORM SECTION CARDS
+// ============================================
+.form-section-card {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto 28px auto !important;
+  border-radius: 18px !important;
+  background: $card-bg !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 20px rgba($accent-gold, 0.1) !important;
+    border-color: rgba($accent-gold, 0.2) !important;
+  }
+
+  ion-card-header {
+    background: rgba($accent-gold, 0.1) !important;
+    border-bottom: 2px solid rgba($accent-gold, 0.2) !important;
+    padding: 24px 28px !important;
+    margin: 0 !important;
+  }
+
+  ion-card-content {
+    padding: 28px !important;
+  }
 }
 
-.days-info-card {
-  --background: #1a1a1a;
-  border: 1px solid #ffd700;
-  margin-top: 1rem;
-  
-  .days-info {
+.section-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  color: $accent-gold !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+  margin: 0 !important;
+
+  ion-icon {
+    font-size: 22px !important;
+    color: $accent-gold !important;
+  }
+}
+
+// ============================================
+// VEHICLE INFO HEADER (in Vehicle Details Section)
+// ============================================
+.vehicle-info-header {
+  text-align: center;
+  margin: 20px 0 24px 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  .vehicle-name {
+    color: $text-primary !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    margin: 0 0 8px 0 !important;
+  }
+
+  .vehicle-type {
+    color: $text-secondary !important;
+    font-size: 1rem !important;
+    margin: 0 !important;
+    text-transform: capitalize;
+  }
+}
+
+// ============================================
+// RENTAL SCHEDULE - 2 COLUMN DATE LAYOUT
+// ============================================
+.date-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  .date-field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.time-field {
+  margin-top: 20px !important;
+}
+
+.rental-duration-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  margin: 20px 0;
+  background: rgba($available-green, 0.12);
+  border: 1px solid rgba($available-green, 0.3);
+  border-radius: 12px;
+  color: $available-green;
+  font-size: 0.95rem;
+
+  ion-icon {
+    font-size: 20px;
+    color: $available-green;
+    flex-shrink: 0;
+  }
+
+  strong {
+    color: $available-green;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+}
+
+// ============================================
+// AVAILABILITY BANNERS (Color-coded)
+// ============================================
+.availability-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  min-height: 44px;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  ion-spinner {
+    --color: currentColor;
+    width: 18px;
+    height: 18px;
+  }
+
+  span {
+    flex: 1;
+  }
+
+  &.success {
+    background: rgba(46, 204, 113, 0.15);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    color: #2ECC71;
+
+    ion-icon {
+      color: #2ECC71;
+    }
+  }
+
+  &.warning {
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #FBBF24;
+
+    ion-icon {
+      color: #FBBF24;
+    }
+  }
+
+  &.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #EF4444;
+
+    ion-icon {
+      color: #EF4444;
+    }
+  }
+
+  &.info {
+    background: rgba(58, 130, 247, 0.15);
+    border: 1px solid rgba(58, 130, 247, 0.3);
+    color: #3A82F7;
+
+    ion-icon {
+      color: #3A82F7;
+    }
+  }
+
+  &.loading {
+    background: rgba(58, 130, 247, 0.15);
+    border: 1px solid rgba(58, 130, 247, 0.3);
+    color: #3A82F7;
+  }
+}
+
+// ============================================
+// UPLOAD BOXES (Drag and Drop Style)
+// ============================================
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.upload-box {
+  position: relative;
+
+  .file-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .upload-label {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    color: #ffd700;
-    font-size: 1rem;
-    
-    ion-icon {
-      font-size: 1.5rem;
+    gap: 12px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 80px;
+
+    &:hover {
+      background: rgba($accent-gold, 0.1);
+      border-color: rgba($accent-gold, 0.4);
+      transform: translateY(-2px);
     }
-    
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .upload-icon {
+    font-size: 32px;
+    color: $accent-gold;
+    flex-shrink: 0;
+  }
+
+  .upload-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .upload-title {
+    color: $text-primary;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .upload-hint {
+    color: $text-secondary;
+    font-size: 0.85rem;
+  }
+
+  .upload-success {
+    font-size: 24px;
+    color: $available-green;
+    flex-shrink: 0;
+  }
+
+  .image-preview {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba($accent-gold, 0.3);
+    }
+  }
+}
+
+// ============================================
+// PAYMENT SECTION
+// ============================================
+.payment-section {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.payment-select-item {
+  margin-bottom: 20px !important;
+}
+
+.payment-info-box {
+  padding: 16px;
+  background: rgba($accent-gold, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba($accent-gold, 0.2);
+  text-align: center;
+
+  .payment-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 12px;
+
+    .payment-icon {
+      font-size: 28px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba($accent-gold, 0.15);
+      transition: all 0.3s ease;
+
+      &.gcash-icon {
+        color: #0070BA;
+      }
+
+      &.grabpay-icon {
+        color: #00B14F;
+      }
+
+      &.paymaya-icon {
+        color: #00A8E8;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+        background: rgba($accent-gold, 0.25);
+      }
+    }
+  }
+
+  .payment-info-text {
+    color: $text-secondary !important;
+    font-size: 0.85rem !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+
     strong {
-      color: #ffd700;
+      color: $accent-gold !important;
       font-weight: 600;
     }
   }
 }
 
-.availability-warning-card {
-  --background: #2d2410;
-  border: 1px solid #f39c12;
-  margin-top: 1rem;
-  
-  .warning-content {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: #f39c12;
-    font-size: 0.9rem;
-    
-    ion-icon {
-      font-size: 1.5rem;
+// ============================================
+// FORM ACTIONS (Buttons Container)
+// ============================================
+.form-actions {
+  max-width: 650px;
+  margin: 32px auto 24px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 8px;
+}
+
+// ============================================
+// CARDS - Matching Homepage Style
+// ============================================
+ion-card {
+  margin: 0 0 20px 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: $card-bg;
+  border: none;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+// ============================================
+// VEHICLE IMAGE CONTAINER (now inside form section)
+// ============================================
+.vehicle-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 60%; // 5:3 aspect ratio
+  border-radius: 16px;
+  overflow: hidden;
+  background: $card-bg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  animation: imageBounce 0.8s ease-out;
+  margin-bottom: 20px;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+
+  // Scroll-triggered bounce animation
+  @keyframes imageBounce {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.02);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .image-gradient-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .vehicle-status-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &[color="success"] {
+      --background: $available-green;
+      --color: #FFFFFF;
+      background: $available-green !important;
+      color: #FFFFFF !important;
+    }
+
+    &[color="warning"] {
+      --background: #F59E0B;
+      --color: #FFFFFF;
+      background: #F59E0B !important;
+      color: #FFFFFF !important;
     }
   }
 }
 
-.login-modal-content {
-  --background: #121212;
-  
-  .login-prompt {
+// ============================================
+// PRICING DETAILS (now inside Vehicle Details section)
+// ============================================
+.pricing-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.pricing-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pricing-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  .pricing-icon {
+    font-size: 24px;
+    color: $accent-gold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .pricing-title {
+    flex: 1;
+
+    h3 {
+      color: $text-primary;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      line-height: 1.3;
+    }
+
+    .vehicle-type {
+      color: $text-secondary;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin: 0;
+      text-transform: capitalize;
+    }
+  }
+}
+
+.pricing-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba($accent-gold, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba($accent-gold, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  // Tap animation
+  &:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  // Hover effect
+  &:hover {
+    background: rgba($accent-gold, 0.12);
+    border-color: rgba($accent-gold, 0.3);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  // Mobile: 100ms color shift on tap
+  @media (max-width: 768px) {
+    &:active {
+      background: rgba($accent-gold, 0.15);
+      transition: background 0.1s ease;
+    }
+  }
+
+  // Selected state
+  &.selected {
+    background: rgba($accent-gold, 0.15);
+    border-color: $accent-gold;
+    border-width: 2px;
+    box-shadow: 0 4px 16px rgba($accent-gold, 0.3), 0 0 20px rgba($accent-gold, 0.1);
+
+    .price-amount {
+      color: $accent-gold;
+    }
+  }
+
+  ion-icon {
+    font-size: 22px;
+    color: $accent-gold;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .check-icon {
+    font-size: 20px;
+    color: $accent-gold;
+    margin-left: auto;
+    animation: checkmarkPop 0.3s ease-out;
+  }
+
+  .price-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    text-align: center;
-    
-    ion-icon {
-      font-size: 5rem;
-      margin-bottom: 1.5rem;
+    gap: 4px;
+
+    .price-label {
+      color: $text-secondary;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    
-    h2 {
-      color: #ffd700;
-      font-size: 1.5rem;
-      margin: 1rem 0;
-    }
-    
-    p {
-      color: #e0e0e0;
-      font-size: 1rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
-    
-    ion-button {
-      margin: 0.5rem 0;
-      --border-radius: 8px;
+
+    .price-amount {
+      color: $accent-gold;
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1.2;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+
+      .price-unit {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: $text-secondary;
+      }
     }
   }
 }
 
-.image-preview {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0.5rem 0 1.2rem 0;
-  img {
-    max-width: 120px;
-    max-height: 80px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.10);
-    border: 1px solid #e1eaf4;
+ion-card-header {
+  background: $card-bg;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+}
+
+ion-card-title {
+  color: $text-primary;
+        font-weight: 600;
+  font-size: 1.2rem;
+}
+
+ion-card-subtitle {
+  color: $text-secondary;
+  font-size: 0.9rem;
+}
+
+ion-card-content {
+  padding: 20px;
+  color: $text-primary;
+}
+
+// ============================================
+// FORM ITEMS - Improved Styling
+// ============================================
+ion-item {
+  --background: $card-bg;
+  --color: $text-primary;
+  --placeholder-color: $text-secondary;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    box-shadow: 0 4px 12px rgba(58, 130, 247, 0.2);
+    border: 1px solid rgba(58, 130, 247, 0.3);
+  }
+
+  ion-label {
+    color: $text-primary;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  ion-input, ion-select, ion-textarea {
+    --color: $text-primary !important;
+    --placeholder-color: $text-secondary !important;
+    color: $text-primary !important;
+  }
+  
+  // Ensure native input text is white
+  input, textarea, select {
+    color: $text-primary !important;
+  }
+  
+  // Target the actual input element inside ion-input
+  .native-input, .native-textarea {
+    color: $text-primary !important;
   }
 }
 
-ion-button[type='submit'] {
-  margin-top: 1.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.10);
-  --background: #ffd700;
-  --background-activated: #b8860b;
-  color: #232323;
+.required {
+  color: #EF4444;
+  font-size: 1.1em;
+  margin-left: 4px;
 }
 
-input[type='file'] {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.small-datetime {
-  --width: 140px;
-  max-width: 140px;
-  font-size: 0.95rem;
-  margin: 0 auto;
-}
-
-.booking-form-container {
-  background: #232323 !important;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
-  padding: 24px;
-  margin: 24px auto;
-  max-width: 600px;
-}
-
-h1, h3, h4, h5, h6 {
-  color: #ffd700;
-}
-
+// ============================================
+// BUTTONS - Bright Blue Matching Homepage
+// ============================================
 ion-button {
-  --background: #ffd700;
-  --background-activated: #b8860b;
+  --background: $button-blue;
+  --background-activated: #2563EB;
+  --background-hover: #2563EB;
+  --color: $text-primary;
   --border-radius: 12px;
   font-weight: 600;
-  color: #232323;
-  margin-top: 12px;
+  margin: 16px 0;
+  height: 48px;
+  --box-shadow: 0 4px 12px rgba(58, 130, 247, 0.3);
+  transition: all 0.2s ease;
+
+  &:hover {
+    --box-shadow: 0 6px 16px rgba(58, 130, 247, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &[color="medium"] {
+    --background: #4B5563;
+    --background-activated: #374151;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &[color="primary"] {
+    --background: $button-blue;
+  }
 }
 
-.summary-card {
-  background: #232323 !important;
-  color: #e0e0e0;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.08);
-  padding: 16px;
-  margin-top: 24px;
-}
-
-ion-progress-bar {
-  --background: #232323;
-  --progress-background: #ffd700;
-}
-
-.step-indicator {
-  color: #ffd700;
-}
-
-form, .booking-form-container, .summary-card, p, li, label, span {
-  color: #e0e0e0;
-}
-
-.booking-form-container, ion-card, .card, .mat-card, ion-card-header, ion-card-content {
-  background: #232323 !important;
-  color: #e0e0e0 !important;
-  border-radius: 16px;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: #ffd700;
-}
-
-form, .booking-form-container, .summary-card, p, li, label, span {
-  color: #e0e0e0;
-}
-
-ion-item {
-  --background: #181818;
-  --color: #e0e0e0;
-  --placeholder-color: #b8860b;
-  border: 1px solid #ffd700;
-  border-radius: 10px;
-  margin-bottom: 12px;
-}
-
-ion-label {
-  color: #ffd700;
-}
-
-.summary-card {
-  background: #232323 !important;
-  color: #e0e0e0;
-}
-
-ion-button, ion-button[type='submit'] {
-  --background: #ffd700;
-  --background-activated: #b8860b;
-  color: #232323;
-  font-weight: 600;
-  border-radius: 12px;
-}
-
+// ============================================
+// HEADER & TOOLBAR
+// ============================================
 ion-header, ion-toolbar {
-  --background: #000000 !important;
-  background: #000000 !important;
-  --color: #ffd700 !important;
-  color: #ffd700 !important;
+  --background: $bg-primary !important;
+  background: $bg-primary !important;
+  --color: $accent-gold !important;
+  color: $accent-gold !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-ion-title, ion-toolbar ion-title {
-  color: #ffd700 !important;
-}
-
-ion-back-button, ion-buttons, ion-toolbar ion-buttons, ion-toolbar ion-back-button {
-  color: #ffd700 !important;
-  --color: #ffd700 !important;
-}
-
-.personal-info-title, ion-card-title.personal-info-title {
-  color: #ffd700 !important;
-}
-
-.form-yellow-text, ion-input, ion-select, ion-datetime, ion-textarea, ion-card-title, ion-card-subtitle {
-  color: #ffd700 !important;
-}
-
-::ng-deep input, ::ng-deep select, ::ng-deep textarea, ::ng-deep .native-input {
-  color: #ffd700 !important;
-}
-
-::ng-deep input::placeholder, ::ng-deep textarea::placeholder {
-  color: #b8860b !important;
-  opacity: 1;
-}
-
-ion-input, ion-select, ion-datetime, ion-textarea {
-  --color: #ffd700 !important;
-  --placeholder-color: #b8860b !important;
-}
-
-// Modal Styles
-ion-modal {
-  --background: #121212;
-  --color: #e0e0e0;
-}
-
-ion-modal ion-header {
-  --background: #232323 !important;
-  background: #232323 !important;
-  border-bottom: 1px solid #ffd700;
-}
-
-ion-modal ion-toolbar {
-  --background: #232323 !important;
-  background: #232323 !important;
-}
-
-ion-modal ion-title {
-  color: #ffd700 !important;
+ion-title {
+  color: $accent-gold !important;
   font-weight: 600;
 }
 
-ion-modal ion-content {
-  --background: #1a1a1a !important;
-  background: #1a1a1a !important;
-  color: #e0e0e0 !important;
+ion-back-button {
+  --color: $accent-gold !important;
+  color: $accent-gold !important;
 }
 
-.terms-content {
+// ============================================
+// SPECIAL CARDS
+// ============================================
+.rental-limit-card {
+  background: rgba(58, 130, 247, 0.1) !important;
+  border: 1px solid rgba(58, 130, 247, 0.3) !important;
+  border-radius: 16px !important;
+  margin-bottom: 24px !important;
+
+  ion-card-content {
+    padding: 16px 20px !important;
+  }
+}
+
+.rental-limit-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  ion-icon {
+    color: $button-blue !important;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .limit-text {
+  flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .limit-label {
+      color: $text-primary !important;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .limit-count {
+      color: $button-blue !important;
+      font-weight: 700;
+      font-size: 1.1rem;
+      background: rgba(58, 130, 247, 0.15);
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .limit-message {
+      color: #EF4444 !important;
+      font-weight: 500;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+  }
+}
+
+// Old availability card styles removed - now using .availability-banner classes
+
+// ============================================
+// COST BREAKDOWN - Enhanced Design
+// ============================================
+.cost-breakdown {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto 28px auto !important;
+  background: linear-gradient(135deg, $card-bg 0%, darken($card-bg, 2%) 100%) !important;
+  border: 2px solid rgba($accent-gold, 0.3) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  overflow: hidden;
+
+  ion-card-header {
+    background: rgba($accent-gold, 0.15) !important;
+    border-bottom: 2px solid rgba($accent-gold, 0.2) !important;
+    padding: 24px 28px !important;
+
+    ion-card-title {
+      color: $accent-gold !important;
+      font-weight: 700 !important;
+      font-size: 18px !important;
+      text-align: left !important;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      ion-icon {
+        font-size: 22px;
+        color: $accent-gold;
+      }
+    }
+  }
+
+  ion-card-content {
+    padding: 28px !important;
+  }
+}
+
+.cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1rem;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  span:first-child {
+    color: $text-primary !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .amount {
+    color: $text-primary !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem;
+  }
+
+  &.down-payment {
+    background: rgba($accent-gold, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+    border: 1px solid rgba($accent-gold, 0.3);
+    border-bottom: none;
+
+    span:first-child {
+      color: $accent-gold !important;
+      font-weight: 600;
+    }
+
+    .amount {
+      color: $accent-gold !important;
+      font-weight: 800 !important;
+      font-size: 1.4rem;
+    }
+  }
+
+  &.remaining {
+    span:first-child {
+      color: $text-secondary !important;
+    }
+
+    .amount {
+      color: $text-secondary !important;
+      font-weight: 600;
+    }
+  }
+}
+
+.payment-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
   padding: 16px;
-  max-width: 600px;
-  margin: 0 auto;
-  
-  h2 {
-    color: #ffd700 !important;
-    text-align: center;
-    margin-bottom: 24px;
-    font-size: 1.8rem;
+  background: rgba($accent-gold, 0.08);
+  border-radius: 12px;
+  border-left: 4px solid $accent-gold;
+
+  ion-icon {
+    color: $accent-gold !important;
+    font-size: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
   }
-  
-  h3 {
-    color: #ffd700 !important;
-    margin-top: 24px;
-    margin-bottom: 12px;
-    font-size: 1.2rem;
-    border-bottom: 1px solid #ffd700;
-    padding-bottom: 8px;
+
+  span {
+    color: $text-secondary !important;
+    font-size: 0.9rem;
+    line-height: 1.6;
   }
+}
+
+// ============================================
+// VEHICLE DETAILS CARD - Enhanced Design
+// ============================================
+.vehicle-details-card {
+  background: linear-gradient(135deg, $card-bg 0%, darken($card-bg, 2%) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+  margin: 0 0 20px 0 !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
   
-  ul {
-    margin-left: 16px;
-    margin-bottom: 16px;
-    
-    li {
-      color: #e0e0e0 !important;
-      margin-bottom: 8px;
-      line-height: 1.5;
-      
-      strong {
-        color: #ffd700 !important;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+    transform: translateY(-2px);
+  }
+
+  ion-card-header {
+    padding: 12px 16px 4px 16px !important;
+    background: transparent !important;
+    border-bottom: none !important;
+
+    ion-card-title {
+      color: $accent-gold !important;
+      font-size: 1.1rem !important;
+      font-weight: 700 !important;
+      margin: 0 0 4px 0 !important;
+    }
+  }
+
+  .gold-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, $accent-gold 20%, $accent-gold 80%, transparent 100%);
+      margin: 0;
+    box-shadow: 0 2px 8px rgba($accent-gold, 0.3);
+  }
+
+  ion-card-content {
+    padding: 4px 16px 12px 16px !important;
+  }
+}
+
+.vehicle-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 0;
+  min-height: 0;
+  
+  // Hide empty grid to remove spacing
+  &:empty {
+    display: none;
+    margin: 0;
+    padding: 0;
+    height: 0;
+  }
+
+  .spec-item {
+  display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInSpec 0.5s ease-out forwards;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    // Staggered fade-in animation
+    @for $i from 1 through 6 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{0.3 + ($i * 0.1)}s;
+      }
+    }
+
+    &:hover {
+      background: rgba($accent-gold, 0.08);
+      border-color: rgba($accent-gold, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .spec-icon {
+      font-size: 22px;
+      color: $accent-gold;
+    flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+    display: flex;
+    align-items: center;
+      justify-content: center;
+      background: rgba($accent-gold, 0.1);
+      border-radius: 8px;
+      padding: 6px;
+    }
+
+    .spec-content {
+    flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .spec-label {
+        color: $text-secondary;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .spec-value {
+        color: $text-primary;
+        font-size: 0.95rem;
         font-weight: 600;
       }
     }
   }
-  
-  p {
-    color: #e0e0e0 !important;
-    line-height: 1.6;
-    margin-bottom: 16px;
-  }
 }
 
-.scroll-indicator {
-  text-align: center;
-  padding: 20px;
-  margin-top: 20px;
-  background: rgba(255, 215, 0, 0.1);
-  border-radius: 12px;
-  border: 1px solid #ffd700;
-  
-  ion-icon {
-    font-size: 2rem;
-    color: #ffd700;
-    margin-bottom: 8px;
-  }
-  
+.vehicle-description {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+
   p {
-    color: #ffd700 !important;
-    font-weight: 500;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    line-height: 1.5;
     margin: 0;
   }
 }
 
-ion-modal ion-footer {
-  --background: #232323 !important;
-  background: #232323 !important;
-  border-top: 1px solid #ffd700;
+// Add spacing only if specs grid exists and has items
+.vehicle-specs-grid:not(:empty):has(.spec-item) ~ .vehicle-description {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-ion-modal ion-footer ion-toolbar {
-  --background: #232323 !important;
-  background: #232323 !important;
+// ============================================
+// BOOK VEHICLE BUTTON - Now uses global btn-primary-modern
+// Additional customizations can be added here if needed
+// ============================================
+.book-vehicle-button {
+  // Inherits all styles from .btn-primary-modern
+  // Add any page-specific overrides here if needed
 }
 
-ion-modal ion-button {
-  --background: #ffd700;
-  --background-activated: #b8860b;
-  --background-disabled: #666;
-  color: #232323;
-  font-weight: 600;
+// ============================================
+// INLINE INFO & ERRORS
+// ============================================
+.inline-availability-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  background: rgba($accent-gold, 0.1);
+  border: 1px solid rgba($accent-gold, 0.3);
   border-radius: 12px;
-  margin: 8px 16px;
-  
-  &:disabled {
-    color: #999;
+  font-size: 0.9rem;
+  color: $accent-gold;
+
+  ion-icon {
+    font-size: 20px;
+    color: $accent-gold;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1.5;
   }
 }
 
-ion-modal ion-button ion-icon {
-  margin-right: 8px;
+.inline-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #EF4444;
+
+  ion-icon {
+    font-size: 20px;
+    color: #EF4444;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1.5;
+  }
 }
 
-// Service Type Modal Styles
-// Service Type Modal (small)
+// ============================================
+// PAYMENT NOTICE CARD
+// ============================================
+.payment-notice-card {
+  background: rgba(58, 130, 247, 0.1) !important;
+  border: 1px solid rgba(58, 130, 247, 0.3) !important;
+  border-radius: 16px !important;
+  margin: 20px 0 !important;
+
+  ion-card-content {
+    padding: 20px !important;
+  }
+}
+
+.payment-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  ion-icon {
+    color: $button-blue !important;
+    font-size: 24px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .notice-content {
+    flex: 1;
+
+    h4 {
+      color: $button-blue !important;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: $text-secondary !important;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+
+      strong {
+        color: $accent-gold !important;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// ============================================
+// PAYMENT STATUS CARD
+// ============================================
+.payment-status-card {
+  background: rgba(58, 130, 247, 0.1) !important;
+  border: 1px solid rgba(58, 130, 247, 0.3) !important;
+  border-radius: 16px !important;
+  margin: 20px 0 !important;
+
+  ion-card-content {
+    color: $text-primary !important;
+  }
+
+  .payment-status {
+  display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    ion-icon {
+      font-size: 32px;
+      color: $button-blue;
+      flex-shrink: 0;
+    }
+
+    div {
+      flex: 1;
+
+      h3 {
+        color: $text-primary !important;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+      }
+
+      p {
+        color: $text-primary !important;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// ============================================
+// IMAGE PREVIEW
+// ============================================
+.image-preview {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 12px 0 20px 0;
+
+  img {
+    max-width: 150px;
+    max-height: 100px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// ============================================
+// FILE INPUT
+// ============================================
+input[type='file'] {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: $text-primary !important;
+  padding: 8px;
+  background: $card-bg;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  width: 100%;
+}
+
+// ============================================
+// GLOBAL INPUT TEXT COLOR FIX
+// ============================================
+::ng-deep {
+  // Force white text color for all inputs
+  ion-input input,
+  ion-textarea textarea,
+  input[type="text"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="time"],
+  input[type="email"],
+  input[type="number"],
+  textarea {
+    color: $text-primary !important;
+    caret-color: $accent-gold !important;
+  }
+  
+  // Input placeholder color
+  ion-input input::placeholder,
+  ion-textarea textarea::placeholder,
+  input::placeholder,
+  textarea::placeholder {
+    color: $text-secondary !important;
+    opacity: 0.7 !important;
+  }
+  
+  // Select dropdown text
+  ion-select {
+    --color: $text-primary !important;
+  }
+  
+  // Native input wrapper
+  .native-input,
+  .native-textarea {
+    color: $text-primary !important;
+  }
+  
+  // Ionic input wrapper
+  .input-wrapper {
+    input, textarea {
+      color: $text-primary !important;
+    }
+  }
+}
+
+// ============================================
+// MODAL STYLES
+// ============================================
 ion-modal {
-  --width: 320px;
-  --height: auto;
-  --max-width: 90vw;
-  --max-height: 80vh;
-  --border-radius: 16px;
-  --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --background: $bg-primary;
+  --color: $text-primary;
 }
 
-// Company Rules Modal (larger)
-ion-modal[data-modal="company-rules"] {
-  --width: 90vw;
-  --height: 85vh;
-  --max-width: 600px;
-  --max-height: 90vh;
-  --border-radius: 16px;
-  --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+ion-modal ion-header {
+  --background: $card-bg !important;
+  background: $card-bg !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+ion-modal ion-toolbar {
+  --background: $card-bg !important;
+  background: $card-bg !important;
+}
+
+ion-modal ion-title {
+  color: $accent-gold !important;
+    font-weight: 600;
+}
+
+ion-modal ion-content {
+  --background: $bg-primary !important;
+  background: $bg-primary !important;
+  color: $text-primary !important;
+}
+
+ion-modal ion-footer {
+  --background: $card-bg !important;
+  background: $card-bg !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+ion-modal ion-button {
+  --background: $button-blue;
+  --background-activated: #2563EB;
+  --background-disabled: #4B5563;
+  --color: $text-primary;
+  font-weight: 600;
+  border-radius: 12px;
+  margin: 8px 16px;
+
+  &:disabled {
+    --color: $text-secondary;
+  }
+}
+
+// ============================================
+// SERVICE TYPE MODAL
+// ============================================
 .service-modal-content {
-  --background: #1a1a1a !important;
-  background: #1a1a1a !important;
-  padding: 12px;
-  min-height: 200px;
+  --background: $bg-primary !important;
+  background: $bg-primary !important;
+  padding: 20px;
 }
 
 .service-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-width: 280px;
+  gap: 12px;
+  max-width: 100%;
   margin: 0 auto;
-  min-height: 100px;
-  background: rgba(255, 215, 0, 0.1);
-  padding: 10px;
-  border-radius: 8px;
 }
 
 .service-option {
-  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
-  border: 2px solid rgba(255, 215, 0, 0.2);
-  border-radius: 10px;
-  padding: 12px;
+  background: $card-bg;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    border-color: rgba(255, 215, 0, 0.4);
+    border-color: rgba($accent-gold, 0.4);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.15);
-
-    &::before {
-      opacity: 1;
-    }
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   &.selected {
-    border-color: #ffd700;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
-    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.2);
-
-    &::before {
-      opacity: 1;
-    }
+    border-color: $accent-gold;
+    background: rgba($accent-gold, 0.1);
+    box-shadow: 0 4px 16px rgba($accent-gold, 0.2);
   }
 }
 
 .service-icon {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, $accent-gold 0%, darken($accent-gold, 10%) 100%);
+  border-radius: 12px;
+    display: flex;
+    align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 12px rgba($accent-gold, 0.3);
 
   ion-icon {
-    font-size: 16px;
+    font-size: 24px;
     color: #000;
   }
 }
 
 .service-info {
   flex: 1;
-  z-index: 1;
-  position: relative;
 
   h3 {
-    color: #ffd700;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin: 0 0 1px 0;
+    color: $text-primary;
+    font-size: 1.1rem;
+      font-weight: 600;
+    margin: 0 0 4px 0;
   }
 
   p {
-    color: #e0e0e0;
-    font-size: 0.75rem;
+    color: $text-secondary;
+    font-size: 0.9rem;
     margin: 0;
-    opacity: 0.8;
   }
 }
 
 .service-check {
-  z-index: 1;
-  position: relative;
-
   ion-icon {
-    font-size: 18px;
-    color: #ffd700;
+    font-size: 28px;
+    color: $accent-gold;
   }
 }
 
-// Modal Header and Footer Styling
-ion-modal ion-header ion-toolbar {
-  --background: #232323 !important;
-  background: #232323 !important;
-  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-ion-modal ion-title {
-  color: #ffd700 !important;
-  font-weight: 600;
-}
-
-ion-modal ion-footer ion-toolbar {
-  --background: #232323 !important;
-  background: #232323 !important;
-  border-top: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-ion-modal ion-button {
-  --background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
-  --background-activated: #b8860b;
-  --color: #000;
-  font-weight: 600;
-  border-radius: 6px;
-  margin: 2px 8px;
-  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
-  transition: all 0.3s ease;
-  font-size: 0.85rem;
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(255, 215, 0, 0.4);
-  }
-
-  &:disabled {
-    --background: #666;
-    --color: #999;
-    box-shadow: none;
-    transform: none;
-  }
-}
-
-// Close button styling
-ion-modal ion-header ion-button {
-  --background: transparent;
-  --color: #ffd700;
-  --background-activated: rgba(255, 215, 0, 0.1);
-  box-shadow: none;
-  margin: 0;
-
-  ion-icon {
-    font-size: 20px;
-  }
-}
-
-// Company Rules Modal Styles
+// ============================================
+// COMPANY RULES MODAL
+// ============================================
 .company-rules-content {
-  --background: #1a1a1a !important;
-  background: #1a1a1a !important;
-  padding: 20px;
-  max-height: 70vh;
-  overflow-y: auto;
+  --background: $bg-primary !important;
+  background: $bg-primary !important;
+  padding: 24px;
 }
 
 .loading-container {
@@ -612,15 +1606,15 @@ ion-modal ion-header ion-button {
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  
+
   ion-spinner {
-    --color: #ffd700;
+    --color: $accent-gold;
     margin-bottom: 16px;
   }
-  
+
   p {
-    color: #ffd700;
-    font-size: 0.9rem;
+    color: $text-secondary;
+    font-size: 0.95rem;
     margin: 0;
   }
 }
@@ -632,22 +1626,22 @@ ion-modal ion-header ion-button {
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  
+
   ion-icon {
-    font-size: 48px;
-    color: #ffd700;
+    font-size: 64px;
+    color: $accent-gold;
     margin-bottom: 16px;
   }
-  
+
   h3 {
-    color: #ffd700;
-    font-size: 1.2rem;
+    color: $accent-gold;
+    font-size: 1.3rem;
     margin: 0 0 8px 0;
   }
-  
+
   p {
-    color: #cccccc;
-    font-size: 0.9rem;
+    color: $text-secondary;
+    font-size: 0.95rem;
     margin: 0;
   }
 }
@@ -658,50 +1652,52 @@ ion-modal ion-header ion-button {
 
 .rules-header {
   text-align: center;
-  margin-bottom: 24px;
-  padding: 20px;
-  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  
+  margin-bottom: 32px;
+  padding: 24px;
+  background: $card-bg;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
   ion-icon {
-    font-size: 32px;
-    color: #ffd700;
-    margin-bottom: 12px;
+    font-size: 48px;
+    color: $accent-gold;
+    margin-bottom: 16px;
   }
-  
+
   h2 {
-    color: #ffd700;
-    font-size: 1.3rem;
-    margin: 0 0 8px 0;
-    font-weight: 600;
+    color: $accent-gold;
+    font-size: 1.5rem;
+    margin: 0 0 12px 0;
+    font-weight: 700;
   }
-  
+
   p {
-    color: #cccccc;
-    font-size: 0.9rem;
+    color: $text-secondary;
+    font-size: 0.95rem;
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.6;
   }
 }
 
 .rules-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .rule-item {
-  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  border-radius: 12px;
-  padding: 16px;
+  background: $card-bg;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
   transition: all 0.3s ease;
-  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
   &:hover {
-    border-color: rgba(255, 215, 0, 0.4);
+    border-color: rgba($accent-gold, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -710,15 +1706,15 @@ ion-modal ion-header ion-button {
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
-  
+
   ion-icon {
-    font-size: 20px;
-    color: #ffd700;
+    font-size: 24px;
+    color: $accent-gold;
     flex-shrink: 0;
   }
-  
+
   h3 {
-    color: #ffd700;
+    color: $accent-gold;
     font-size: 1.2rem;
     margin: 0;
     font-weight: 700;
@@ -727,530 +1723,385 @@ ion-modal ion-header ion-button {
 
 .rule-content {
   p {
-    color: #cccccc;
+    color: $text-secondary;
     font-size: 1rem;
     line-height: 1.7;
     margin: 0;
     white-space: pre-line;
-    text-align: justify;
   }
 }
 
-// Cost Breakdown Styles
-.cost-breakdown {
-  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%) !important;
-  border: 2px solid #ffd700 !important;
-  border-radius: 16px !important;
-  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.15) !important;
-  margin: 20px 0 !important;
-
-  ion-card-header {
-    background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%) !important;
-    border-radius: 14px 14px 0 0 !important;
-    padding: 16px !important;
-
-    ion-card-title {
-      color: #000 !important;
-      font-weight: 700 !important;
-      font-size: 1.2rem !important;
-      text-align: center !important;
-      margin: 0 !important;
-    }
-  }
-
-  ion-card-content {
-    padding: 20px !important;
-    background: transparent !important;
-  }
-}
-
-.cost-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-  font-size: 1rem;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  span:first-child {
-    color: #e0e0e0 !important;
-    font-weight: 500;
-  }
-
-  .amount {
-    color: #ffd700 !important;
-    font-weight: 700 !important;
-    font-size: 1.1rem;
-  }
-
-  &.down-payment {
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin: 8px 0;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-
-    span:first-child {
-      color: #ffd700 !important;
-      font-weight: 600;
-    }
-
-    .amount {
-      color: #ffd700 !important;
-      font-weight: 800 !important;
-      font-size: 1.2rem;
-    }
-  }
-
-  &.remaining {
-    span:first-child {
-      color: #cccccc !important;
-    }
-
-    .amount {
-      color: #cccccc !important;
-      font-weight: 600;
-    }
-  }
-}
-
-.payment-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 16px;
-  padding: 12px;
-  background: rgba(255, 215, 0, 0.05);
-  border-radius: 8px;
-  border-left: 4px solid #ffd700;
-
-  ion-icon {
-    color: #ffd700 !important;
-    font-size: 18px;
-    margin-top: 2px;
-    flex-shrink: 0;
-  }
-
-  span {
-    color: #e0e0e0 !important;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    font-style: italic;
-  }
-}
-
-// Payment Notice Card Styling
-.payment-notice-card {
-  background: rgba(52, 152, 219, 0.05) !important;
-  border: 1px solid rgba(52, 152, 219, 0.2) !important;
-  border-radius: 12px !important;
-  margin: 16px 0 !important;
-
-  ion-card-content {
-    padding: 16px !important;
-  }
-}
-
-.payment-notice {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-
-  ion-icon {
-    color: #3498db !important;
-    font-size: 20px;
-    margin-top: 2px;
-    flex-shrink: 0;
-  }
-
-  .notice-content {
-    flex: 1;
-
-    h4 {
-      color: #3498db !important;
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0 0 8px 0;
-    }
-
-    p {
-      color: #e0e0e0 !important;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin: 0;
-
-      strong {
-        color: #ffd700 !important;
-        font-weight: 600;
-      }
-    }
-  }
-}
-
-// Availability Status Cards
-.availability-loading {
-  background: rgba(52, 152, 219, 0.05) !important;
-  border: 1px solid rgba(52, 152, 219, 0.2) !important;
-  margin: 12px 0 !important;
-
-  .loading-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #3498db !important;
-    font-size: 0.9rem;
-  }
-}
-
-.availability-error {
-  background: rgba(231, 76, 60, 0.05) !important;
-  border: 1px solid rgba(231, 76, 60, 0.2) !important;
-  margin: 12px 0 !important;
-
-  .error-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #e74c3c !important;
-    font-size: 0.9rem;
-  }
-}
-
-.availability-success {
-  background: rgba(46, 204, 113, 0.05) !important;
-  border: 1px solid rgba(46, 204, 113, 0.2) !important;
-  margin: 12px 0 !important;
-
-  .success-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #2ecc71 !important;
-    font-size: 0.9rem;
-  }
-}
-
-// Company Availability Info
-// Time input uses same styling as date input (ion-item styles)
-
-.no-time-slots,
-.select-date-prompt {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.4);
-
-  ion-icon {
-    font-size: 2rem;
-    color: rgba(255, 215, 0, 0.2);
-    margin-bottom: 8px;
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.85rem;
-  }
-}
-
-// Inline Availability Info
-.inline-availability-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  background: rgba(255, 215, 0, 0.08);
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  border-radius: 6px;
-  font-size: 0.85rem;
-  color: rgba(255, 215, 0, 0.9);
-
-  ion-icon {
-    font-size: 1rem;
-    color: #ffd700;
-    flex-shrink: 0;
-  }
-
-  span {
-    line-height: 1.4;
-  }
-}
-
-.inline-error {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  background: rgba(231, 76, 60, 0.1);
-  border: 1px solid rgba(231, 76, 60, 0.3);
-  border-radius: 6px;
-  font-size: 0.85rem;
-  color: #e74c3c;
-
-  ion-icon {
-    font-size: 1rem;
-    color: #e74c3c;
-    flex-shrink: 0;
-  }
-
-  span {
-    line-height: 1.4;
-  }
-}
-
-.availability-info {
-  background: rgba(255, 215, 0, 0.05) !important;
-  border: 1px solid rgba(255, 215, 0, 0.2) !important;
-  margin: 16px 0 !important;
-
-  ion-card-header {
-    padding-bottom: 8px !important;
-
-    ion-card-title {
-      color: #ffd700 !important;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-  }
-}
-
-.availability-schedule {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.day-availability {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-
-  &.available {
-    background: rgba(46, 204, 113, 0.1);
-    border: 1px solid rgba(46, 204, 113, 0.3);
-  }
-
-  &.unavailable {
-    background: rgba(231, 76, 60, 0.1);
-    border: 1px solid rgba(231, 76, 60, 0.3);
-  }
-
-  .day-name {
-    font-weight: 600;
-    color: #e0e0e0 !important;
-    text-transform: capitalize;
-  }
-
-  .day-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-
-    span {
-      color: #e0e0e0 !important;
-    }
-  }
-}
-
-// Rental limit indicator styles
-.rental-limit-card {
-  background: rgba(52, 152, 219, 0.05) !important;
-  border: 1px solid rgba(52, 152, 219, 0.2) !important;
-  border-radius: 12px !important;
-  margin: 16px 0 !important;
-
-  ion-card-content {
-    padding: 12px 16px !important;
-  }
-}
-
-.rental-limit-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  ion-icon {
-    color: #3498db !important;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .limit-text {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-
-    .limit-label {
-      color: #2c3e50 !important;
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
-
-    .limit-count {
-      color: #3498db !important;
-      font-weight: 600;
-      font-size: 1rem;
-      background: rgba(52, 152, 219, 0.1);
-      padding: 2px 8px;
-      border-radius: 12px;
-    }
-
-    .limit-message {
-      color: #e74c3c !important;
-      font-weight: 500;
-      font-size: 0.85rem;
-      font-style: italic;
-    }
-  }
-}
-
-// Driver selection styles
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  color: #ffd700 !important;
-
-  ion-spinner {
-    margin-bottom: 10px;
-    --color: #ffd700;
-  }
-
-  p {
-    color: #e0e0e0 !important;
-    margin: 0;
-  }
-}
-
-.error-message {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background: rgba(231, 76, 60, 0.1);
-  border: 1px solid rgba(231, 76, 60, 0.3);
-  border-radius: 8px;
-  color: #e74c3c !important;
-  margin: 10px 0;
-
-  ion-icon {
-    color: #e74c3c !important;
-  }
-}
-
-.no-drivers {
-  text-align: center;
-  padding: 20px;
-  color: #e0e0e0 !important;
-
-  ion-icon {
-    font-size: 48px;
-    margin-bottom: 10px;
-    color: #ffd700 !important;
+// ============================================
+// TERMS MODAL
+// ============================================
+.terms-content {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+
+  h2 {
+    color: $accent-gold !important;
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 1.8rem;
   }
 
   h3 {
-    margin: 10px 0;
-    color: #ffd700 !important;
-    font-weight: 600;
+    color: $accent-gold !important;
+    margin-top: 32px;
+    margin-bottom: 16px;
+    font-size: 1.3rem;
+    border-bottom: 2px solid rgba($accent-gold, 0.3);
+    padding-bottom: 12px;
+  }
+
+  ul {
+    margin-left: 20px;
+    margin-bottom: 24px;
+
+    li {
+      color: $text-secondary !important;
+      margin-bottom: 12px;
+      line-height: 1.7;
+
+      strong {
+        color: $accent-gold !important;
+      font-weight: 600;
+      }
+    }
   }
 
   p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #cccccc !important;
+    color: $text-secondary !important;
+    line-height: 1.7;
+    margin-bottom: 20px;
   }
 }
 
-.drivers-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+// ============================================
+// LOGIN MODAL
+// ============================================
+.login-modal-content {
+  --background: $bg-primary;
 
-.driver-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border: 2px solid #ffd700;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #232323 0%, #1a1a1a 100%);
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.1);
-
-  &:hover {
-    border-color: #ffd700;
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
-    transform: translateY(-2px);
-  }
-
-  &.selected {
-    border-color: #ffd700;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-    transform: translateY(-2px);
-  }
-
-  .driver-info {
-    flex: 1;
-
-    .driver-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #ffd700 !important;
-      margin-bottom: 8px;
-    }
-
-    .driver-details {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-
-      .driver-experience,
-      .driver-phone {
+  .login-prompt {
         display: flex;
+    flex-direction: column;
         align-items: center;
-        gap: 6px;
-        font-size: 0.9rem;
-        color: #e0e0e0 !important;
-        font-weight: 500;
+    padding: 32px 24px;
+    text-align: center;
 
         ion-icon {
-          font-size: 16px;
-          color: #ffd700 !important;
+      font-size: 80px;
+      color: $button-blue;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      color: $accent-gold;
+      font-size: 1.6rem;
+      margin: 0 0 16px 0;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    ion-button {
+      margin: 8px 0;
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+}
+
+// ============================================
+// DEBUG & INFO MESSAGES
+// ============================================
+.service-type-selected {
+  color: $accent-gold;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba($accent-gold, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid $accent-gold;
+}
+
+.service-selection-info {
+  color: $accent-gold;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  text-align: center;
+  padding: 12px;
+  background: rgba($accent-gold, 0.1);
+  border-radius: 12px;
+}
+
+// ============================================
+// ANIMATIONS & KEYFRAMES
+// ============================================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInSpec {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes checkmarkPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes imageBounce {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// ============================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================
+@media (max-width: 768px) {
+  form {
+    padding: 0 4px;
+  }
+
+  .step1-container {
+    min-height: auto;
+    padding: 16px 0;
+  }
+
+  .personal-info-card {
+    max-width: 100% !important;
+    margin: 0 auto 20px auto !important;
+    border-radius: 16px !important;
+
+    ion-card-header {
+      padding: 20px 16px !important;
+    }
+
+    ion-card-content {
+      padding: 20px 16px !important;
+    }
+  }
+
+  .form-field-item {
+    margin-bottom: 20px !important;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem !important;
+    margin: 10px 0 0 0 !important;
+  }
+
+  .step2-container {
+    padding: 0 4px;
+  }
+
+  .step2-header {
+    margin-bottom: 24px;
+    gap: 12px;
+
+    .step2-title {
+      font-size: 20px;
+    }
+  }
+
+  .form-section-card {
+    margin: 0 0 24px 0 !important;
+    border-radius: 16px !important;
+    max-width: 100% !important;
+
+    ion-card-header {
+      padding: 20px 16px !important;
+    }
+
+    ion-card-content {
+      padding: 24px 16px !important;
+    }
+  }
+
+  .section-title {
+    font-size: 16px !important;
+
+    ion-icon {
+      font-size: 20px !important;
+    }
+  }
+
+  .date-fields-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .availability-banner {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-height: 36px;
+
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+
+  .upload-label {
+    padding: 16px;
+    min-height: 70px;
+  }
+
+  .upload-icon {
+    font-size: 28px;
+  }
+
+  .payment-info-box {
+    padding: 14px;
+
+    .payment-icons {
+      gap: 16px;
+
+      .payment-icon {
+        font-size: 24px;
+        padding: 8px;
+      }
+    }
+
+    .payment-info-text {
+      font-size: 0.8rem !important;
+    }
+  }
+
+  .section-title {
+    font-size: 1.1rem !important;
+
+    ion-icon {
+      font-size: 20px !important;
+    }
+  }
+
+  .vehicle-info-header {
+    margin: 16px 0 20px 0;
+    padding-bottom: 16px;
+
+    .vehicle-name {
+      font-size: 1.3rem !important;
+    }
+  }
+
+  .payment-methods-info {
+    padding: 16px;
+
+    .payment-icons {
+      gap: 16px;
+
+      .payment-icon {
+        font-size: 28px;
+        padding: 10px;
+      }
+    }
+
+    .payment-instructions {
+      font-size: 0.85rem !important;
+    }
+  }
+
+  ion-card {
+    margin: 0 0 16px 0;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .vehicle-specs-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    .spec-item {
+      padding: 10px;
+      gap: 10px;
+
+      .spec-icon {
+    width: 32px;
+    height: 32px;
+        font-size: 20px;
+        padding: 5px;
+      }
+
+      .spec-content {
+        .spec-label {
+          font-size: 0.7rem;
+        }
+
+        .spec-value {
+          font-size: 0.9rem;
         }
       }
     }
   }
 
-  .driver-selection {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
+  .vehicle-description {
+    margin-top: 10px;
+    padding-top: 10px;
 
-    ion-icon {
-      font-size: 24px;
-      color: #ffd700 !important;
+    p {
+      font-size: 0.85rem;
+      line-height: 1.5;
     }
+  }
+
+  .vehicle-pricing-card {
+    .pricing-header {
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+
+      .pricing-icon {
+        margin: 0 auto;
+      }
+    }
+  }
+
+  .book-vehicle-button {
+    font-size: 1rem !important;
+    height: 52px !important;
+    margin: 24px 0 20px 0 !important;
   }
 } 

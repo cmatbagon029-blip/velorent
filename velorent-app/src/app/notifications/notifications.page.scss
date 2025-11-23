@@ -1,17 +1,17 @@
 ion-header, ion-toolbar {
-  --background: #000 !important;
-  background: #000 !important;
+  --background: #1A1A1A !important;
+  background: #1A1A1A !important;
 }
 
 ion-title {
-  color: #ffd700 !important;
+  color: #FACC15 !important;
   font-weight: 600;
 }
 
 // Chat Button Styling
 .chat-button {
-  --color: #ffd700 !important;
-  --background: rgba(255, 215, 0, 0.1) !important;
+  --color: #FACC15 !important;
+  --background: rgba(250, 204, 21, 0.1) !important;
   --border-radius: 50% !important;
   --padding-start: 12px !important;
   --padding-end: 12px !important;
@@ -21,19 +21,19 @@ ion-title {
   transition: all 0.3s ease !important;
 
   &:hover {
-    --background: rgba(255, 215, 0, 0.2) !important;
+    --background: rgba(250, 204, 21, 0.2) !important;
     transform: scale(1.1) !important;
   }
 
   .chat-icon {
     font-size: 1.5rem !important;
-    color: #ffd700 !important;
+    color: #FACC15 !important;
   }
 }
 
 ion-content {
-  --background: #121212;
-  background: #121212 !important;
+  --background: #1A1A1A;
+  background: #1A1A1A !important;
   padding-bottom: 120px; /* Extra space for bottom navigation */
 }
 
@@ -90,21 +90,21 @@ ion-content {
 }
 
 .notification-item {
-  --background: #1e1e1e;
-  --border-color: #333;
+  --background: #2D2D2D;
+  --border-color: rgba(255, 255, 255, 0.1);
   margin-bottom: 12px;
   border-radius: 12px;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
 
   &.unread {
-    --background: #2a2a2a;
-    border-color: #ffd700;
-    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.1);
+    --background: #333333;
+    border-color: #FACC15;
+    box-shadow: 0 2px 8px rgba(250, 204, 21, 0.1);
   }
 
   &:hover {
-    --background: #2a2a2a;
+    --background: #333333;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
@@ -112,7 +112,7 @@ ion-content {
   .notification-avatar {
     width: 40px;
     height: 40px;
-    background: #333;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -124,14 +124,14 @@ ion-content {
   }
 
   .notification-title {
-    color: #fff;
+    color: #FFFFFF;
     font-size: 1rem;
     font-weight: 600;
     margin: 0 0 4px 0;
   }
 
   .notification-message {
-    color: #ccc;
+    color: #B3B3B3;
     font-size: 0.9rem;
     margin: 0 0 8px 0;
     line-height: 1.4;
@@ -146,7 +146,7 @@ ion-content {
       display: flex;
       align-items: center;
       gap: 4px;
-      color: #999;
+      color: #B3B3B3;
       font-size: 0.8rem;
 
       ion-icon {
@@ -164,9 +164,9 @@ ion-content {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: #000000;
-  border-top: 2px solid #ffd700;
-  box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(180deg, #1A1A1A, #0F0F0F);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 -4px 20px rgba(250, 204, 21, 0.2);
   backdrop-filter: blur(20px);
   
   .nav-container {
@@ -186,14 +186,14 @@ ion-content {
       padding: 8px 12px;
       border-radius: 12px;
       cursor: pointer;
-      color: #888888;
+      color: #B3B3B3;
       min-width: 60px;
       
       .nav-icon {
         font-size: 1.8rem;
         margin-bottom: 4px;
         transition: all 0.3s ease;
-        color: #ffffff !important;
+        color: #FFFFFF !important;
         display: block;
       }
       
@@ -205,30 +205,30 @@ ion-content {
       }
       
       &.active {
-        color: #ffd700;
-        background: rgba(255, 215, 0, 0.15);
+        color: #FACC15;
+        background: rgba(250, 204, 21, 0.15);
         
         .nav-icon {
           transform: scale(1.1);
-          color: #ffd700;
+          color: #FACC15;
         }
         
         .nav-label {
           font-weight: 600;
-          color: #ffd700;
+          color: #FACC15;
         }
       }
       
       &:hover {
-        background: rgba(255, 215, 0, 0.1);
-        color: #ffd700;
+        background: rgba(250, 204, 21, 0.1);
+        color: #FACC15;
         
         .nav-icon {
-          color: #ffd700;
+          color: #FACC15;
         }
         
         .nav-label {
-          color: #ffd700;
+          color: #FACC15;
         }
       }
       
