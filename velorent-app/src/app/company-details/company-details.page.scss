@@ -304,48 +304,69 @@ ion-content {
 
 .vehicles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 0;
 
-  .vehicle-card {
-    background: #ffffff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: 1px solid #f0f0f0;
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+    .vehicle-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #141414 !important;
+      border: 2px solid #ffd000;
+      border-radius: 18px;
+      padding: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-      border-color: rgba(52, 152, 219, 0.2);
+      box-shadow: 0 8px 32px rgba(255, 215, 0, 0.15);
+      border-color: #ffd000;
     }
 
     .vehicle-image {
       position: relative;
       width: 100%;
-      padding-top: 60%;
+      height: 120px;
       overflow: hidden;
+      border-radius: 12px 12px 0 0;
+      margin-bottom: 8px;
 
       img {
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: 120px;
+        object-fit: contain;
+        background: #232323;
       }
 
       .status-badge {
         position: absolute;
-        top: 8px;
-        right: 8px;
+        top: 6px;
+        right: 6px;
         z-index: 10;
         font-weight: 600;
-        font-size: 0.75rem;
-        padding: 4px 8px;
+        font-size: 0.7rem;
+        padding: 3px 6px;
       }
     }
     
@@ -359,84 +380,95 @@ ion-content {
     }
 
     .vehicle-info {
-      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 0;
 
       h3 {
-        color: #2c3e50;
-        font-size: 1.1rem;
+        color: #ffd700 !important;
+        font-size: 0.95rem;
         font-weight: 600;
-        margin: 0 0 8px 0;
+        margin: 0 0 5px 0;
+        line-height: 1.3;
       }
 
       .vehicle-meta {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
 
         .type {
-          background: #f8f9fa;
-          color: #7f8c8d;
+          background: #181818 !important;
+          color: #ffd700 !important;
+          border: 1px solid #ffd700 !important;
           padding: 4px 8px;
           border-radius: 6px;
           font-size: 0.8rem;
+          font-weight: 500;
         }
 
         .rating {
           display: flex;
           align-items: center;
           gap: 4px;
-          color: #f1c40f;
+          color: #ffd700 !important;
 
           ion-icon {
             font-size: 18px;
+            color: #ffd700 !important;
           }
 
           span {
-            color: #2c3e50;
+            color: #ffd700 !important;
             font-weight: 500;
           }
         }
       }
 
       .price {
-        background: #f6fafd;
-        border-radius: 8px;
-        padding: 8px 12px;
-        margin-top: 6px;
-        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.06);
+        background: #181818 !important;
+        border: 2px solid #ffd000;
+        border-radius: 10px;
+        padding: 8px;
+        margin-top: auto;
         display: flex;
         flex-direction: column;
         gap: 4px;
-        min-width: 140px;
 
         .price-row {
           display: flex;
           align-items: center;
-          gap: 6px;
-          font-size: 0.9rem;
+          gap: 4px;
+          font-size: 0.8rem;
           font-weight: 500;
-          color: #2c3e50;
+          color: #fff !important;
 
           .label {
-            font-size: 0.8rem;
-            color: #7f8c8d;
+            font-size: 0.7rem;
+            color: #fff !important;
             font-weight: 400;
             min-width: 80px;
             display: flex;
             align-items: center;
             gap: 3px;
+
+            ion-icon {
+              font-size: 13px;
+              color: #ffd700 !important;
+            }
           }
 
           .amount {
-            color: #3498db;
-            font-size: 1rem;
+            color: #ffd700 !important;
+            font-size: 0.85rem;
             font-weight: 600;
           }
 
           .per-day {
-            color: #7f8c8d;
-            font-size: 0.75rem;
+            color: #fff !important;
+            font-size: 0.65rem;
             font-weight: 400;
           }
         }
@@ -517,14 +549,23 @@ ion-content {
   }
 
   .vehicles-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-    padding: 4px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0;
 
     .vehicle-card {
-      .vehicle-info {
-        padding: 12px;
+      padding: 12px;
 
+      .vehicle-image {
+        height: 160px;
+        margin-bottom: 10px;
+
+        img {
+          height: 160px;
+        }
+      }
+
+      .vehicle-info {
         h3 {
           font-size: 1rem;
           margin-bottom: 6px;
@@ -540,8 +581,8 @@ ion-content {
         }
 
         .price {
-          padding: 6px 10px;
-          gap: 3px;
+          padding: 10px;
+          gap: 4px;
 
           .price-row {
             font-size: 0.85rem;
@@ -549,7 +590,7 @@ ion-content {
 
             .label {
               font-size: 0.75rem;
-              min-width: 70px;
+              min-width: 80px;
             }
 
             .amount {
@@ -568,38 +609,87 @@ ion-content {
 
 @media (max-width: 480px) {
   .vehicles-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+    padding: 0;
 
     .vehicle-card {
+      padding: 8px;
+      border-radius: 14px;
+      border-width: 1.5px;
+
       .vehicle-image {
-        padding-top: 55%;
+        height: 90px;
+        margin-bottom: 6px;
+        border-radius: 10px 10px 0 0;
+
+        img {
+          height: 90px;
+        }
+
+        .status-badge {
+          top: 3px;
+          right: 3px;
+          font-size: 0.6rem;
+          padding: 2px 4px;
+        }
       }
 
       .vehicle-info {
-        padding: 10px;
-
         h3 {
-          font-size: 0.95rem;
+          font-size: 0.75rem;
+          margin-bottom: 4px;
+          line-height: 1.2;
+        }
+
+        .vehicle-meta {
+          margin-bottom: 6px;
+
+          .type {
+            padding: 2px 5px;
+            font-size: 0.65rem;
+            border-radius: 4px;
+          }
+
+          .rating {
+            gap: 2px;
+
+            ion-icon {
+              font-size: 12px;
+            }
+
+            span {
+              font-size: 0.7rem;
+            }
+          }
         }
 
         .price {
-          padding: 5px 8px;
+          padding: 6px;
+          border-radius: 8px;
+          gap: 3px;
+          border-width: 1.5px;
 
           .price-row {
-            font-size: 0.8rem;
+            font-size: 0.65rem;
+            gap: 2px;
 
             .label {
-              font-size: 0.7rem;
-              min-width: 60px;
+              font-size: 0.6rem;
+              min-width: 50px;
+              gap: 2px;
+
+              ion-icon {
+                font-size: 10px;
+              }
             }
 
             .amount {
-              font-size: 0.85rem;
+              font-size: 0.7rem;
             }
 
             .per-day {
-              font-size: 0.65rem;
+              font-size: 0.55rem;
             }
           }
         }

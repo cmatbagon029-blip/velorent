@@ -14,7 +14,13 @@ module.exports = {
   
   // Application Configuration
   APP_URL: process.env.APP_URL || 'http://localhost/VelorentAdmin',
+  IONIC_APP_URL: process.env.IONIC_APP_URL || 'http://localhost:8100',
   DEBUG_MODE: process.env.DEBUG_MODE === 'true',
+  
+  // PayMongo Configuration
+  PAYMONGO_SECRET_KEY: process.env.PAYMONGO_SECRET_KEY,
+  PAYMONGO_PUBLIC_KEY: process.env.PAYMONGO_PUBLIC_KEY,
+  PAYMONGO_WEBHOOK_SECRET: process.env.PAYMONGO_WEBHOOK_SECRET,
   
   // Helper function to convert local paths to S3 URLs
   getS3Url: (localPath) => {

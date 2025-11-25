@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BookingRequestService, CompanyPolicy } from '../../services/booking-request.service';
 
 @Component({
@@ -20,7 +21,7 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
               <ion-icon name="calendar-outline"></ion-icon>
               Reschedule Terms
             </h3>
-            <p>{{ policy.reschedule_terms }}</p>
+            <div [innerHTML]="sanitizedRescheduleTerms"></div>
             <div class="terms-highlight">
               <ion-icon name="information-circle-outline"></ion-icon>
               <span>Free reschedule if requested at least {{ policy.reschedule_free_days }} days before booking</span>
@@ -33,7 +34,7 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
               <ion-icon name="close-circle-outline"></ion-icon>
               Cancellation Terms
             </h3>
-            <p>{{ policy.cancellation_terms }}</p>
+            <div [innerHTML]="sanitizedCancellationTerms"></div>
             <div class="terms-highlight">
               <ion-icon name="information-circle-outline"></ion-icon>
               <span>Cancellation fee: {{ policy.cancellation_fee_percentage }}%</span>
@@ -46,7 +47,7 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
               <ion-icon name="cash-outline"></ion-icon>
               Refund Terms
             </h3>
-            <p>{{ policy.refund_terms }}</p>
+            <div [innerHTML]="sanitizedRefundTerms"></div>
             <div class="terms-highlight" *ngIf="!policy.deposit_refundable">
               <ion-icon name="warning-outline" color="warning"></ion-icon>
               <span>Deposits and reservation fees are non-refundable</span>
@@ -127,6 +128,36 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
       color: #fff;
     }
 
+    .terms-section div[innerHTML] {
+      margin-bottom: 12px;
+      line-height: 1.6;
+      color: #fff;
+    }
+
+    .terms-section div[innerHTML] p {
+      margin-bottom: 8px;
+      line-height: 1.6;
+      color: #fff;
+    }
+
+    .terms-section div[innerHTML] strong {
+      color: #ffd700;
+      font-weight: 600;
+    }
+
+    .terms-section div[innerHTML] ul,
+    .terms-section div[innerHTML] ol {
+      margin: 8px 0;
+      padding-left: 24px;
+      color: #fff;
+    }
+
+    .terms-section div[innerHTML] li {
+      margin-bottom: 4px;
+      line-height: 1.6;
+      color: #fff;
+    }
+
     .terms-highlight {
       display: flex;
       align-items: center;
@@ -196,8 +227,16 @@ export class CompanyTermsComponent implements OnInit {
   policy: CompanyPolicy | null = null;
   loading = false;
   error: string | null = null;
+  
+  // Cached sanitized HTML to prevent infinite change detection
+  sanitizedRescheduleTerms: SafeHtml = '';
+  sanitizedCancellationTerms: SafeHtml = '';
+  sanitizedRefundTerms: SafeHtml = '';
 
-  constructor(private bookingRequestService: BookingRequestService) {}
+  constructor(
+    private bookingRequestService: BookingRequestService,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit() {
     if (this.companyId) {
@@ -211,6 +250,10 @@ export class CompanyTermsComponent implements OnInit {
     this.bookingRequestService.getCompanyPolicies(this.companyId).subscribe({
       next: (policy) => {
         this.policy = policy;
+        // Cache sanitized HTML once when policy loads
+        this.sanitizedRescheduleTerms = this.sanitizeHtml(policy.reschedule_terms);
+        this.sanitizedCancellationTerms = this.sanitizeHtml(policy.cancellation_terms);
+        this.sanitizedRefundTerms = this.sanitizeHtml(policy.refund_terms);
         this.loading = false;
       },
       error: (err) => {
@@ -219,6 +262,11 @@ export class CompanyTermsComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  private sanitizeHtml(html: string): SafeHtml {
+    if (!html) return '';
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }
 

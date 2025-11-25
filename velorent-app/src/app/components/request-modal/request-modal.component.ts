@@ -61,12 +61,16 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
       </ion-card>
 
       <!-- Fee Information -->
-      <ion-card *ngIf="feeComputation">
+      <ion-card *ngIf="feeComputation || computingFee">
         <ion-card-header>
           <ion-card-title>Fee Information</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <div class="fee-display">
+          <div class="fee-display" *ngIf="computingFee">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Computing fee...</p>
+          </div>
+          <div class="fee-display" *ngIf="feeComputation && !computingFee">
             <h3>Computed Fee: {{ feeComputation.computed_fee }}%</h3>
             <p>{{ feeComputation.fee_details.reason }}</p>
           </div>
@@ -196,6 +200,10 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
       background: rgba(255, 215, 0, 0.15);
       border-radius: 8px;
       border: 1px solid rgba(255, 215, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
 
     .fee-display h3 {
@@ -207,6 +215,10 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
     .fee-display p {
       margin: 0;
       color: #fff;
+    }
+
+    .fee-display ion-spinner {
+      --color: #ffd700;
     }
 
     ion-button {
@@ -278,21 +290,46 @@ export class RequestModalComponent implements OnInit {
     private bookingRequestService: BookingRequestService
   ) {}
 
+  computingFee = false;
+  private feeComputeTimeout: any = null;
+
   ngOnInit() {
-    if (this.requestType === 'reschedule') {
+    // Don't compute fee on init for reschedule - wait for user to select a date
+    // Only compute for cancellation immediately
+    if (this.requestType === 'cancellation') {
       this.computeFee();
     }
   }
 
   onDateChange() {
     if (this.requestType === 'reschedule' && this.newStartDate) {
-      this.computeFee();
+      // Clear any existing timeout
+      if (this.feeComputeTimeout) {
+        clearTimeout(this.feeComputeTimeout);
+      }
+      // Add a small delay to debounce rapid date changes
+      this.feeComputeTimeout = setTimeout(() => {
+        if (this.newStartDate) {
+          this.computeFee();
+        }
+        this.feeComputeTimeout = null;
+      }, 300);
     }
   }
 
   computeFee() {
     if (!this.booking || !this.booking.id) return;
+    
+    // Prevent multiple simultaneous fee computations
+    if (this.computingFee) return;
+    
+    // For reschedule, require a date before computing
+    if (this.requestType === 'reschedule' && !this.newStartDate) {
+      this.feeComputation = null;
+      return;
+    }
 
+    this.computingFee = true;
     this.bookingRequestService.computeFee(
       this.booking.id,
       this.requestType,
@@ -300,9 +337,12 @@ export class RequestModalComponent implements OnInit {
     ).subscribe({
       next: (computation) => {
         this.feeComputation = computation;
+        this.computingFee = false;
       },
       error: (err) => {
         console.error('Error computing fee:', err);
+        this.computingFee = false;
+        // Don't show error to user, just log it
       }
     });
   }

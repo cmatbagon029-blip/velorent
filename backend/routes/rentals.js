@@ -221,7 +221,7 @@ router.post('/', auth.verifyToken, upload.fields([
     }
 
     // Insert into bookings table (now with user_id, start_date, end_date, company_id, company_name, payment info, and driver info)
-    await connection.execute(
+    const [result] = await connection.execute(
       `INSERT INTO bookings (
         user_id, user_name, mobile_number, vehicle_id, company_id, company_name, vehicle_name, service_type, start_date, end_date, rent_time, destination, occasion, message, valid_id_path, additional_id_path, booking_date, status, driver_id, driver_name, driver_phone, driver_experience
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` ,
@@ -251,7 +251,21 @@ router.post('/', auth.verifyToken, upload.fields([
       ]
     );
 
-    res.status(201).json({ message: 'Booking created' });
+    const bookingId = result.insertId;
+
+    console.log('=== BOOKING CREATED SUCCESSFULLY ===');
+    console.log('Booking ID (insertId):', bookingId);
+    console.log('Result object:', JSON.stringify(result, null, 2));
+
+    const response = { 
+      message: 'Booking created',
+      booking_id: bookingId,
+      id: bookingId
+    };
+
+    console.log('Sending response:', JSON.stringify(response, null, 2));
+
+    res.status(201).json(response);
   } catch (error) {
     console.error('=== BOOKING ERROR DEBUG ===');
     console.error('Error creating booking:', error);
