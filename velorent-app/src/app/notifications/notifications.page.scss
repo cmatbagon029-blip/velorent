@@ -1,16 +1,16 @@
 ion-header, ion-toolbar {
-  --background: #1A1A1A !important;
-  background: #1A1A1A !important;
+  --background: #0A0A0A !important;
+  background: #0A0A0A !important;
 }
 
 ion-title {
-  color: #FACC15 !important;
+  color: #D4AF37 !important;
   font-weight: 600;
 }
 
 // Chat Button Styling
 .chat-button {
-  --color: #FACC15 !important;
+  --color: #D4AF37 !important;
   --background: rgba(250, 204, 21, 0.1) !important;
   --border-radius: 50% !important;
   --padding-start: 12px !important;
@@ -27,13 +27,13 @@ ion-title {
 
   .chat-icon {
     font-size: 1.5rem !important;
-    color: #FACC15 !important;
+    color: #D4AF37 !important;
   }
 }
 
 ion-content {
-  --background: #1A1A1A;
-  background: #1A1A1A !important;
+  --background: #0A0A0A;
+  background: #0A0A0A !important;
   padding-bottom: 120px; /* Extra space for bottom navigation */
 }
 
@@ -90,7 +90,7 @@ ion-content {
 }
 
 .notification-item {
-  --background: #2D2D2D;
+  --background: #1B1B1B;
   --border-color: rgba(255, 255, 255, 0.1);
   margin-bottom: 12px;
   border-radius: 12px;
@@ -99,7 +99,7 @@ ion-content {
 
   &.unread {
     --background: #333333;
-    border-color: #FACC15;
+    border-color: #D4AF37;
     box-shadow: 0 2px 8px rgba(250, 204, 21, 0.1);
   }
 
@@ -124,7 +124,7 @@ ion-content {
   }
 
   .notification-title {
-    color: #FFFFFF;
+    color: #EDEDED;
     font-size: 1rem;
     font-weight: 600;
     margin: 0 0 4px 0;
@@ -164,7 +164,7 @@ ion-content {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(180deg, #1A1A1A, #0F0F0F);
+  background: linear-gradient(180deg, #0A0A0A, #0F0F0F);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 -4px 20px rgba(250, 204, 21, 0.2);
   backdrop-filter: blur(20px);
@@ -193,7 +193,7 @@ ion-content {
         font-size: 1.8rem;
         margin-bottom: 4px;
         transition: all 0.3s ease;
-        color: #FFFFFF !important;
+        color: #EDEDED !important;
         display: block;
       }
       
@@ -205,30 +205,30 @@ ion-content {
       }
       
       &.active {
-        color: #FACC15;
+        color: #D4AF37;
         background: rgba(250, 204, 21, 0.15);
         
         .nav-icon {
           transform: scale(1.1);
-          color: #FACC15;
+          color: #D4AF37;
         }
         
         .nav-label {
           font-weight: 600;
-          color: #FACC15;
+          color: #D4AF37;
         }
       }
       
       &:hover {
         background: rgba(250, 204, 21, 0.1);
-        color: #FACC15;
+        color: #D4AF37;
         
         .nav-icon {
-          color: #FACC15;
+          color: #D4AF37;
         }
         
         .nav-label {
-          color: #FACC15;
+          color: #D4AF37;
         }
       }
       
@@ -236,6 +236,31 @@ ion-content {
         transform: scale(0.95);
       }
     }
+  }
+}
+
+// Notification badge styling for bottom nav
+.notification-wrapper {
+  position: relative;
+  display: inline-block;
+  
+  .notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #EF4444;
+    color: #FFFFFF;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border: 2px solid var(--background-main);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
   }
 }
 

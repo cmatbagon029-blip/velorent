@@ -1,11 +1,11 @@
 ion-content {
-  --background: #121212 !important;
-  background: #121212 !important;
+  --background: #0A0A0A !important;
+  background: #0A0A0A !important;
 }
 
 .company-header, .company-description, .contact-info, .vehicles-section, .vehicle-card, .loading-container, .error-container, .no-vehicles {
-  background: #181818 !important;
-  color: #ffd700 !important;
+  background: #1B1B1B !important;
+  color: #D4AF37 !important;
   box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08) !important;
   border-radius: 16px;
 }
@@ -15,18 +15,18 @@ ion-content {
 .contact-info h2,
 .vehicles-section h2,
 .vehicles-header h2 {
-  color: #ffd700 !important;
+  color: #D4AF37 !important;
 }
 
 .company-header .company-logo {
-  border: 2px solid #ffd700;
-  background: #232323;
+  border: 2px solid #D4AF37;
+  background: #1B1B1B;
 }
 
 .company-header .company-details .location,
 .company-header .company-details .rating span,
 .company-header .company-details .rating {
-  color: #ffd700 !important;
+  color: #D4AF37 !important;
 }
 
 .company-description p,
@@ -38,12 +38,12 @@ ion-content {
 .vehicles-section .vehicle-info .price .price-row,
 .vehicles-section .vehicle-info .price .label,
 .vehicles-section .vehicle-info .price .per-day {
-  color: #fff !important;
+  color: #EDEDED !important;
 }
 
 .contact-info .contact-item {
-  background: #232323 !important;
-  border: 1px solid #ffd700;
+  background: #1B1B1B !important;
+  border: 1px solid #D4AF37;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -57,20 +57,20 @@ ion-content {
   }
 
   ion-icon {
-    color: #ffd700 !important;
+    color: #D4AF37 !important;
     font-size: 20px !important;
     min-width: 20px;
     display: block;
   }
 
   span, a {
-    color: #fff !important;
+    color: #EDEDED !important;
     font-size: 0.95rem;
     text-decoration: none;
   }
 
   a:hover {
-    color: #ffd700 !important;
+    color: #D4AF37 !important;
   }
 }
 
@@ -86,10 +86,10 @@ ion-content {
 
 .vehicles-section .vehicles-header .search-bar,
 .vehicles-section .vehicles-header .category-select {
-  --background: #232323 !important;
-  --color: #ffd700 !important;
-  --placeholder-color: #ffd700 !important;
-  color: #ffd700 !important;
+  --background: #1B1B1B !important;
+  --color: #D4AF37 !important;
+  --placeholder-color: #D4AF37 !important;
+  color: #D4AF37 !important;
   border: none !important;
   border-radius: 12px !important;
   box-shadow: 0 2px 8px rgba(255, 215, 0, 0.06);
@@ -98,53 +98,53 @@ ion-content {
 
 .vehicles-section .vehicles-header .search-bar:focus-within,
 .vehicles-section .vehicles-header .category-select:focus-within {
-  box-shadow: 0 0 0 2px #ffd70044;
+  box-shadow: 0 0 0 2px #D4AF3744;
 }
 
 .vehicles-section .vehicles-header h2 {
   margin-right: 24px;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffd700;
+  color: #D4AF37;
   letter-spacing: 0.5px;
 }
 
 .vehicles-grid .vehicle-card {
-  background: #232323 !important;
-  border: 1px solid #ffd700 !important;
+  background: #1B1B1B !important;
+  border: 1px solid #D4AF37 !important;
 }
 
 .vehicles-grid .vehicle-card .vehicle-info h3 {
-  color: #ffd700 !important;
+  color: #D4AF37 !important;
 }
 
 .vehicles-grid .vehicle-card .vehicle-info .vehicle-meta .type {
-  background: #181818 !important;
-  color: #ffd700 !important;
-  border: 1px solid #ffd700 !important;
+  background: #1B1B1B !important;
+  color: #D4AF37 !important;
+  border: 1px solid #D4AF37 !important;
 }
 
 .vehicles-grid .vehicle-card .vehicle-info .vehicle-meta .rating {
-  color: #ffd700 !important;
+  color: #D4AF37 !important;
 }
 
 .vehicles-grid .vehicle-card .vehicle-info .price {
-  background: #181818 !important;
-  color: #ffd700 !important;
-  border: 1px solid #ffd700 !important;
+  background: #1B1B1B !important;
+  color: #D4AF37 !important;
+  border: 1px solid #D4AF37 !important;
 }
 
 .vehicles-grid .vehicle-card .vehicle-info .price .amount {
-  color: #ffd700 !important;
+  color: #D4AF37 !important;
 }
 
 .loading-container, .error-container, .no-vehicles {
-  background: #181818 !important;
-  color: #ffd700 !important;
+  background: #1B1B1B !important;
+  color: #D4AF37 !important;
 }
 
 .loading-container ion-icon, .error-container ion-icon, .no-vehicles ion-icon {
-  color: #ffd700 !important;
+  color: #D4AF37 !important;
 }
 
 .company-header {
@@ -153,7 +153,7 @@ ion-content {
   gap: 40px;
   padding: 40px 32px 32px 32px;
   margin-bottom: 32px;
-  background: #181818 !important;
+  background: #1B1B1B !important;
   border-radius: 20px;
   box-shadow: 0 6px 32px rgba(255, 215, 0, 0.10) !important;
   min-height: 180px;
@@ -164,8 +164,8 @@ ion-content {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(255, 215, 0, 0.10);
-    border: 2px solid #ffd700;
-    background: #232323;
+    border: 2px solid #D4AF37;
+    background: #1B1B1B;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -180,7 +180,7 @@ ion-content {
   }
 
   .company-info h1 {
-    color: #ffd700 !important;
+    color: #D4AF37 !important;
     font-size: 2.2rem;
     font-weight: 700;
     margin: 0 0 8px 0;
@@ -199,19 +199,19 @@ ion-content {
       display: flex;
       align-items: center;
       gap: 8px;
-    color: #ffd700 !important;
+    color: #D4AF37 !important;
     font-size: 1.1rem;
         font-weight: 500;
       }
 
   .rating ion-icon, .location ion-icon {
-    color: #ffd700 !important;
+    color: #D4AF37 !important;
     font-size: 1.3rem;
   }
 }
 
 .company-description {
-  background: #ffffff;
+  background: #EDEDEDfff;
   padding: 24px;
   margin: 16px;
   border-radius: 16px;
@@ -232,14 +232,14 @@ ion-content {
 }
 
 .contact-info {
-  background: #181818 !important;
+  background: #1B1B1B !important;
   padding: 24px;
   margin: 16px;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);
 
   h2 {
-    color: #ffd700 !important;
+    color: #D4AF37 !important;
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 20px;
@@ -253,7 +253,7 @@ ion-content {
 }
 
 .vehicles-section {
-  background: #ffffff;
+  background: #EDEDEDfff;
   padding: 24px;
   margin: 16px;
   border-radius: 16px;
@@ -356,7 +356,7 @@ ion-content {
         width: 100%;
         height: 120px;
         object-fit: contain;
-        background: #232323;
+        background: #1B1B1B;
       }
 
       .status-badge {
@@ -386,7 +386,7 @@ ion-content {
       padding: 0;
 
       h3 {
-        color: #ffd700 !important;
+        color: #D4AF37 !important;
         font-size: 0.95rem;
         font-weight: 600;
         margin: 0 0 5px 0;
@@ -400,9 +400,9 @@ ion-content {
         margin-bottom: 8px;
 
         .type {
-          background: #181818 !important;
-          color: #ffd700 !important;
-          border: 1px solid #ffd700 !important;
+          background: #1B1B1B !important;
+          color: #D4AF37 !important;
+          border: 1px solid #D4AF37 !important;
           padding: 4px 8px;
           border-radius: 6px;
           font-size: 0.8rem;
@@ -413,22 +413,22 @@ ion-content {
           display: flex;
           align-items: center;
           gap: 4px;
-          color: #ffd700 !important;
+          color: #D4AF37 !important;
 
           ion-icon {
             font-size: 18px;
-            color: #ffd700 !important;
+            color: #D4AF37 !important;
           }
 
           span {
-            color: #ffd700 !important;
+            color: #D4AF37 !important;
             font-weight: 500;
           }
         }
       }
 
       .price {
-        background: #181818 !important;
+        background: #1B1B1B !important;
         border: 2px solid #ffd000;
         border-radius: 10px;
         padding: 8px;
@@ -443,11 +443,11 @@ ion-content {
           gap: 4px;
           font-size: 0.8rem;
           font-weight: 500;
-          color: #fff !important;
+          color: #EDEDED !important;
 
           .label {
             font-size: 0.7rem;
-            color: #fff !important;
+            color: #EDEDED !important;
             font-weight: 400;
             min-width: 80px;
             display: flex;
@@ -456,18 +456,18 @@ ion-content {
 
             ion-icon {
               font-size: 13px;
-              color: #ffd700 !important;
+              color: #D4AF37 !important;
             }
           }
 
           .amount {
-            color: #ffd700 !important;
+            color: #D4AF37 !important;
             font-size: 0.85rem;
             font-weight: 600;
           }
 
           .per-day {
-            color: #fff !important;
+            color: #EDEDED !important;
             font-size: 0.65rem;
             font-weight: 400;
           }
@@ -486,7 +486,7 @@ ion-content {
   justify-content: center;
   padding: 48px 24px;
   text-align: center;
-  background: #ffffff;
+  background: #EDEDEDfff;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin: 24px 16px;
@@ -701,15 +701,15 @@ ion-content {
 ion-header, ion-toolbar {
   --background: #000000 !important;
   background: #000000 !important;
-  --color: #ffd700 !important;
-  color: #ffd700 !important;
+  --color: #D4AF37 !important;
+  color: #D4AF37 !important;
 }
 
 ion-title, ion-toolbar ion-title {
-  color: #ffd700 !important;
+  color: #D4AF37 !important;
 }
 
 ion-back-button, ion-buttons, ion-toolbar ion-buttons, ion-toolbar ion-back-button {
-  color: #ffd700 !important;
-  --color: #ffd700 !important;
+  color: #D4AF37 !important;
+  --color: #D4AF37 !important;
 } 

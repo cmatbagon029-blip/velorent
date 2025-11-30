@@ -37,7 +37,7 @@ try {
     }
 
     $eventType = $event['data']['attributes']['type'] ?? '';
-    $eventData = $event['data']['attributes']['data'] ?? [];
+    $eventData = $event['data'] ?? [];
 
     // Connect to database
     $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
@@ -50,9 +50,10 @@ try {
     switch ($eventType) {
         case 'payment.paid':
             // Payment was successful
-            if (isset($eventData['attributes']['payment_intent_id'])) {
-                $paymentIntentId = $eventData['attributes']['payment_intent_id'];
-                $sourceId = $eventData['id'] ?? null;
+            $paymentIntentId = $eventData['attributes']['payment_intent_id'] ?? $eventData['attributes']['data']['attributes']['payment_intent_id'] ?? null;
+            $sourceId = $eventData['id'] ?? $eventData['attributes']['data']['id'] ?? null;
+            
+            if ($paymentIntentId) {
                 
                 // Update payment status to 'paid'
                 $stmt = $conn->prepare(
@@ -80,6 +81,103 @@ try {
                         $bookingId = $booking['booking_id'];
                         $userId = $booking['user_id'];
                         $vehicleName = $booking['vehicle_name'];
+                        
+                        // Get payment method from event data
+                        $paymentMethod = null;
+                        
+                        // Log event data for debugging
+                        error_log("Webhook event data: " . json_encode($eventData));
+                        
+                        // Try multiple paths to get payment method
+                        // Path 1: Check event data -> attributes -> data -> attributes -> source
+                        $sourceData = $eventData['attributes']['data']['attributes']['source'] ?? null;
+                        
+                        // Path 2: Check event data -> attributes -> source
+                        if (!$sourceData) {
+                            $sourceData = $eventData['attributes']['source'] ?? null;
+                        }
+                        
+                        // Path 3: Check event data -> data -> attributes -> source
+                        if (!$sourceData && isset($event['data']['attributes']['data']['attributes']['source'])) {
+                            $sourceData = $event['data']['attributes']['data']['attributes']['source'];
+                        }
+                        
+                        // Path 4: Check if event data itself is the source
+                        if (!$sourceData && isset($eventData['type'])) {
+                            $sourceData = $eventData;
+                        }
+                        
+                        if ($sourceData) {
+                            $sourceType = $sourceData['type'] ?? null;
+                            error_log("Found source type: " . $sourceType);
+                            if ($sourceType === 'gcash') {
+                                $paymentMethod = 'GCash';
+                            } else if ($sourceType === 'grab_pay') {
+                                $paymentMethod = 'GrabPay';
+                            } else if ($sourceType === 'paymaya') {
+                                $paymentMethod = 'PayMaya';
+                            } else if ($sourceType) {
+                                $paymentMethod = ucfirst(str_replace('_', ' ', $sourceType));
+                            }
+                        }
+                        
+                        // If still no method, try to query PayMongo API for the payment intent
+                        if (!$paymentMethod && $paymentIntentId) {
+                            // Use cURL to query PayMongo API
+                            $paymongoSecretKey = getenv('PAYMONGO_SECRET_KEY') ?: '';
+                            if ($paymongoSecretKey) {
+                                $ch = curl_init("https://api.paymongo.com/v1/payment_intents/{$paymentIntentId}");
+                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                                    'Authorization: Basic ' . base64_encode($paymongoSecretKey . ':'),
+                                    'Content-Type: application/json'
+                                ]);
+                                $response = curl_exec($ch);
+                                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                                curl_close($ch);
+                                
+                                if ($httpCode === 200 && $response) {
+                                    $paymongoData = json_decode($response, true);
+                                    $latestPayment = $paymongoData['data']['attributes']['latest_payment'] ?? null;
+                                    if ($latestPayment) {
+                                        $source = $latestPayment['attributes']['source'] ?? null;
+                                        if ($source) {
+                                            $sourceType = $source['type'] ?? null;
+                                            if ($sourceType === 'gcash') {
+                                                $paymentMethod = 'GCash';
+                                            } else if ($sourceType === 'grab_pay') {
+                                                $paymentMethod = 'GrabPay';
+                                            } else if ($sourceType === 'paymaya') {
+                                                $paymentMethod = 'PayMaya';
+                                            } else if ($sourceType) {
+                                                $paymentMethod = ucfirst(str_replace('_', ' ', $sourceType));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        error_log("Final payment method: " . ($paymentMethod ?? 'NULL'));
+                        
+                        // Generate transaction ID: TXN-{booking_id}-{date}
+                        $dateStr = date('Ymd');
+                        $transactionId = 'TXN-' . str_pad($bookingId, 8, '0', STR_PAD_LEFT) . '-' . $dateStr;
+                        
+                        // Update booking with payment information
+                        $updateStmt = $conn->prepare(
+                            "UPDATE bookings SET 
+                                payment_method = ?,
+                                payment_status = 'paid',
+                                transaction_id = ?,
+                                transaction_date = NOW(),
+                                reference_number = ?
+                             WHERE id = ?"
+                        );
+                        $referenceNumber = $paymentIntentId ?? $sourceId ?? null;
+                        $updateStmt->bind_param("ssssi", $paymentMethod, $transactionId, $referenceNumber, $bookingId);
+                        $updateStmt->execute();
+                        $updateStmt->close();
                         
                         // Check if notification already exists to prevent duplicates
                         $checkStmt = $conn->prepare(
@@ -120,8 +218,8 @@ try {
 
         case 'payment.failed':
             // Payment failed
-            if (isset($eventData['attributes']['payment_intent_id'])) {
-                $paymentIntentId = $eventData['attributes']['payment_intent_id'];
+            $paymentIntentId = $eventData['attributes']['payment_intent_id'] ?? $eventData['attributes']['data']['attributes']['payment_intent_id'] ?? null;
+            if ($paymentIntentId) {
                 
                 // Update payment status to 'failed'
                 $stmt = $conn->prepare(

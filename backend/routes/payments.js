@@ -235,7 +235,7 @@ router.get('/status/:booking_id', auth.verifyToken, async (req, res) => {
             [payment.id]
           );
           
-          // Get booking information for notification
+          // Get booking information for notification and update
           const [bookings] = await connection.execute(
             `SELECT id, user_id, vehicle_name, status FROM bookings WHERE id = ? AND status = 'Pending'`,
             [req.params.booking_id]
@@ -246,6 +246,104 @@ router.get('/status/:booking_id', auth.verifyToken, async (req, res) => {
             const bookingId = booking.id;
             const userId = booking.user_id;
             const vehicleName = booking.vehicle_name;
+            
+            // Get payment method from PayMongo
+            let paymentMethod = null;
+            
+            // Log the full response for debugging
+            console.log('=== PAYMONGO PAYMENT INTENT RESPONSE ===');
+            console.log('Full response:', JSON.stringify(paymongoResponse.data, null, 2));
+            
+            const paymentIntent = paymongoResponse.data?.data;
+            if (paymentIntent) {
+              // Try multiple paths to get the payment method
+              // Path 1: Check latest_payment -> source
+              const latestPaymentData = paymentIntent.attributes?.latest_payment;
+              if (latestPaymentData) {
+                const source = latestPaymentData.attributes?.source;
+                if (source) {
+                  const sourceType = source.type;
+                  console.log('Found source type from latest_payment:', sourceType);
+                  if (sourceType === 'gcash') {
+                    paymentMethod = 'GCash';
+                  } else if (sourceType === 'grab_pay') {
+                    paymentMethod = 'GrabPay';
+                  } else if (sourceType === 'paymaya') {
+                    paymentMethod = 'PayMaya';
+                  } else if (sourceType) {
+                    paymentMethod = sourceType.charAt(0).toUpperCase() + sourceType.slice(1).replace(/_/g, ' ');
+                  }
+                }
+              }
+              
+              // Path 2: Check payment_method_allowed (what was offered)
+              if (!paymentMethod && paymentIntent.attributes?.payment_method_allowed) {
+                const allowedMethods = paymentIntent.attributes.payment_method_allowed;
+                console.log('Found payment_method_allowed:', allowedMethods);
+                if (Array.isArray(allowedMethods) && allowedMethods.length > 0) {
+                  const firstMethod = allowedMethods[0];
+                  if (firstMethod === 'gcash') {
+                    paymentMethod = 'GCash';
+                  } else if (firstMethod === 'grab_pay') {
+                    paymentMethod = 'GrabPay';
+                  } else if (firstMethod === 'paymaya') {
+                    paymentMethod = 'PayMaya';
+                  }
+                }
+              }
+              
+              // Path 3: Query the payment source directly if we have a source_id
+              if (!paymentMethod && payment.source_id) {
+                try {
+                  const sourceResponse = await axios.get(
+                    `https://api.paymongo.com/v1/sources/${payment.source_id}`,
+                    {
+                      headers: {
+                        'Authorization': authHeader,
+                        'Content-Type': 'application/json'
+                      }
+                    }
+                  );
+                  const sourceType = sourceResponse.data?.data?.attributes?.type;
+                  console.log('Found source type from source API:', sourceType);
+                  if (sourceType === 'gcash') {
+                    paymentMethod = 'GCash';
+                  } else if (sourceType === 'grab_pay') {
+                    paymentMethod = 'GrabPay';
+                  } else if (sourceType === 'paymaya') {
+                    paymentMethod = 'PayMaya';
+                  } else if (sourceType) {
+                    paymentMethod = sourceType.charAt(0).toUpperCase() + sourceType.slice(1).replace(/_/g, ' ');
+                  }
+                } catch (sourceError) {
+                  console.error('Error fetching source from PayMongo:', sourceError.message);
+                }
+              }
+            }
+            
+            console.log('Final payment method determined:', paymentMethod);
+            
+            // Generate transaction ID: TXN-{booking_id}-{date}
+            const today = new Date();
+            const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
+            const transactionId = `TXN-${String(bookingId).padStart(8, '0')}-${dateStr}`;
+            
+            // Update booking with payment information
+            await connection.execute(
+              `UPDATE bookings SET 
+                payment_method = ?,
+                payment_status = 'paid',
+                transaction_id = ?,
+                transaction_date = NOW(),
+                reference_number = ?
+               WHERE id = ?`,
+              [
+                paymentMethod,
+                transactionId,
+                payment.payment_intent_id || payment.source_id || null,
+                bookingId
+              ]
+            );
             
             // Check if notification already exists to prevent duplicates
             const [existingNotifications] = await connection.execute(

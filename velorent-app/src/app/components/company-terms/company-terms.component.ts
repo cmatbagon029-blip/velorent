@@ -81,7 +81,7 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
       --background: #1e1e1e;
       background: #1e1e1e !important;
       border-radius: 16px;
-      box-shadow: 0 4px 16px 0 rgba(255, 215, 0, 0.12);
+      box-shadow: 0 4px 16px 0 rgba(212, 175, 55, 0.12);
     }
 
     ion-card-header {
@@ -89,19 +89,19 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
     }
 
     ion-card-title {
-      color: #ffd700 !important;
+      color: #D4AF37 !important;
       font-weight: 600;
       font-size: 1.2em;
     }
 
     ion-card-content {
-      color: #fff;
+      color: #EDEDED;
     }
 
     .terms-section {
       margin-bottom: 24px;
       padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
     }
 
     .terms-section:last-child {
@@ -115,33 +115,33 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
       font-size: 1.1em;
       font-weight: 600;
       margin-bottom: 12px;
-      color: #ffd700;
+      color: #D4AF37;
     }
 
     .terms-section h3 ion-icon {
-      color: #ffd700;
+      color: #D4AF37;
     }
 
     .terms-section p {
       margin-bottom: 12px;
       line-height: 1.6;
-      color: #fff;
+      color: #EDEDED;
     }
 
     .terms-section div[innerHTML] {
       margin-bottom: 12px;
       line-height: 1.6;
-      color: #fff;
+      color: #EDEDED;
     }
 
     .terms-section div[innerHTML] p {
       margin-bottom: 8px;
       line-height: 1.6;
-      color: #fff;
+      color: #EDEDED;
     }
 
     .terms-section div[innerHTML] strong {
-      color: #ffd700;
+      color: #D4AF37;
       font-weight: 600;
     }
 
@@ -149,13 +149,13 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
     .terms-section div[innerHTML] ol {
       margin: 8px 0;
       padding-left: 24px;
-      color: #fff;
+      color: #EDEDED;
     }
 
     .terms-section div[innerHTML] li {
       margin-bottom: 4px;
       line-height: 1.6;
-      color: #fff;
+      color: #EDEDED;
     }
 
     .terms-highlight {
@@ -163,24 +163,24 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
       align-items: center;
       gap: 8px;
       padding: 12px;
-      background: rgba(255, 215, 0, 0.1);
+      background: rgba(212, 175, 55, 0.1);
       border-radius: 8px;
       margin-top: 8px;
-      border: 1px solid rgba(255, 215, 0, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.3);
     }
 
     .terms-highlight ion-icon {
       font-size: 1.2em;
-      color: #ffd700;
+      color: #D4AF37;
     }
 
     .terms-highlight span {
-      color: #fff;
+      color: #EDEDED;
     }
 
     .terms-highlight[color="warning"] {
-      background: rgba(255, 215, 0, 0.15);
-      border-color: rgba(255, 215, 0, 0.4);
+      background: rgba(212, 175, 55, 0.15);
+      border-color: rgba(212, 175, 55, 0.4);
     }
 
     .terms-highlight[color="success"] {
@@ -203,22 +203,22 @@ import { BookingRequestService, CompanyPolicy } from '../../services/booking-req
     }
 
     .loading-container p {
-      color: #ffd700;
+      color: #D4AF37;
       margin-top: 16px;
     }
 
     ion-spinner {
-      --color: #ffd700;
+      --color: #D4AF37;
     }
 
     .error-container ion-icon {
       font-size: 3em;
       margin-bottom: 16px;
-      color: #ffd700;
+      color: #D4AF37;
     }
 
     .error-container p {
-      color: #ffd700;
+      color: #D4AF37;
     }
   `]
 })

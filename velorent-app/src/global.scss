@@ -182,11 +182,15 @@ ion-router-outlet[animated] * {
 ion-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(0);
+  background: var(--background-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
 }
 
 ion-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
 }
 
 /* Button animations */
@@ -376,9 +380,9 @@ ion-button, ion-card, ion-item {
   left: 0 !important;
   right: 0 !important;
   z-index: 1000 !important;
-  background: #000000 !important;
-  border-top: 2px solid #ffd700 !important;
-  box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3) !important;
+  background: var(--background-main) !important;
+  border-top: 1px solid var(--border-soft) !important;
+  box-shadow: 0 -4px 20px rgba(212, 175, 55, 0.2) !important;
   backdrop-filter: blur(20px) !important;
   
   .nav-container {
@@ -399,14 +403,14 @@ ion-button, ion-card, ion-item {
       border-radius: 12px !important;
       cursor: pointer !important;
       transition: all 0.3s ease !important;
-      color: #888888 !important;
+      color: var(--text-muted) !important;
       min-width: 60px !important;
       
       .nav-icon {
         font-size: 1.8rem !important;
         margin-bottom: 4px !important;
         transition: all 0.3s ease !important;
-        color: #ffffff !important;
+        color: var(--text-primary) !important;
         display: block !important;
       }
       
@@ -418,30 +422,31 @@ ion-button, ion-card, ion-item {
       }
       
       &.active {
-        color: #ffd700 !important;
-        background: rgba(255, 215, 0, 0.15) !important;
+        color: var(--primary-gold) !important;
+        background: rgba(212, 175, 55, 0.15) !important;
         
         .nav-icon {
           transform: scale(1.1) !important;
-          color: #ffd700 !important;
+          color: var(--primary-gold) !important;
+          filter: drop-shadow(0 6px 16px rgba(212, 175, 55, 0.28));
         }
         
         .nav-label {
           font-weight: 600 !important;
-          color: #ffd700 !important;
+          color: var(--primary-gold) !important;
         }
       }
       
       &:hover {
-        background: rgba(255, 215, 0, 0.1) !important;
-        color: #ffd700 !important;
+        background: rgba(212, 175, 55, 0.1) !important;
+        color: var(--primary-gold) !important;
         
         .nav-icon {
-          color: #ffd700 !important;
+          color: var(--primary-gold) !important;
         }
         
         .nav-label {
-          color: #ffd700 !important;
+          color: var(--primary-gold) !important;
         }
       }
       
@@ -465,12 +470,107 @@ ion-icon {
   font-size: 1.8rem !important;
   line-height: 1 !important;
   margin-bottom: 4px !important;
-  color: #ffffff !important;
+  color: var(--text-primary) !important;
 }
 
 /* Ensure all ion-icon elements are visible */
 ion-icon[name] {
   display: inline-block !important;
+}
+
+/* ============================================
+   GLOBAL PRIMARY BUTTON STYLES - Glossy Gold
+   Applies to all primary buttons
+   ============================================ */
+ion-button[color="primary"]:not(.btn-primary-modern):not(.btn-secondary-modern) {
+  /* Glossy Gold Gradient Background */
+  --background: linear-gradient(180deg, 
+    #FFE87C 0%, 
+    #F4D57B 15%, 
+    #D4AF37 50%, 
+    #C9A030 70%, 
+    #A87C1C 100%) !important;
+  --background-activated: linear-gradient(180deg, 
+    #C9A030 0%, 
+    #A87C1C 50%, 
+    #8B6915 100%) !important;
+  --background-hover: linear-gradient(180deg, 
+    #FFF4A3 0%, 
+    #FFE87C 20%, 
+    #F4D57B 50%, 
+    #D4AF37 80%, 
+    #C9A030 100%) !important;
+  --color: #000000 !important;
+  --border-radius: 12px !important;
+  --box-shadow: 
+    0 4px 15px rgba(212, 175, 55, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  
+  /* Glossy shine overlay */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, 
+      rgba(255, 255, 255, 0.35) 0%, 
+      rgba(255, 255, 255, 0.15) 50%, 
+      transparent 100%);
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Animated shine sweep */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      transparent 100%);
+    transition: left 0.6s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  &:hover:not([disabled]) {
+    --box-shadow: 
+      0 6px 25px rgba(212, 175, 55, 0.6),
+      0 0 40px rgba(212, 175, 55, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+    
+    &::after {
+      left: 100%;
+    }
+  }
+  
+  &:active:not([disabled]) {
+    --box-shadow: 
+      0 2px 12px rgba(212, 175, 55, 0.5),
+      0 0 20px rgba(212, 175, 55, 0.3),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    
+    &::before {
+      background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 100%);
+    }
+  }
 }
 
 /* ============================================
@@ -481,12 +581,30 @@ ion-icon[name] {
 .btn-primary-modern,
 ion-button.btn-primary-modern,
 .button-primary-modern {
-  --background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%) !important;
-  --background-activated: linear-gradient(135deg, #FFA500 0%, #FF8C00 50%, #FF7F00 100%) !important;
-  --background-hover: linear-gradient(135deg, #FFE44D 0%, #FFB84D 50%, #FF9F00 100%) !important;
+  /* Glossy Gold Gradient Background */
+  --background: linear-gradient(180deg, 
+    #FFE87C 0%, 
+    #F4D57B 15%, 
+    #D4AF37 50%, 
+    #C9A030 70%, 
+    #A87C1C 100%) !important;
+  --background-activated: linear-gradient(180deg, 
+    #C9A030 0%, 
+    #A87C1C 50%, 
+    #8B6915 100%) !important;
+  --background-hover: linear-gradient(180deg, 
+    #FFF4A3 0%, 
+    #FFE87C 20%, 
+    #F4D57B 50%, 
+    #D4AF37 80%, 
+    #C9A030 100%) !important;
   --color: #000000 !important;
-  --border-radius: 20px !important;
-  --box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2) !important;
+  --border-radius: 14px !important;
+  --box-shadow: 
+    0 4px 15px rgba(212, 175, 55, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
   
   width: 100% !important;
   max-width: 400px !important;
@@ -500,38 +618,81 @@ ion-button.btn-primary-modern,
   display: block !important;
   position: relative !important;
   overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   
-  /* Bold text with high contrast */
+  /* Bold text with high contrast and subtle shadow */
   color: #000000 !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4) !important;
   
-  /* Inner glow effect */
+  /* Glossy shine overlay - top highlight */
   &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, 
+      rgba(255, 255, 255, 0.35) 0%, 
+      rgba(255, 255, 255, 0.15) 50%, 
+      transparent 100%);
+    border-radius: 14px 14px 0 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Animated shine sweep effect */
+  &::after {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s ease;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      transparent 100%);
+    transition: left 0.6s ease;
+    pointer-events: none;
+    z-index: 2;
   }
   
-  /* Hover state - scale up and brighter glow */
+  /* Ensure button text is above overlays */
+  .button-native {
+    position: relative;
+    z-index: 3;
+  }
+  
+  /* Hover state - enhanced glow and shine */
   &:hover:not([disabled]) {
     transform: scale(1.02) translateY(-2px) !important;
-    --box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.3) !important;
+    --box-shadow: 
+      0 6px 25px rgba(212, 175, 55, 0.6),
+      0 0 40px rgba(212, 175, 55, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
     
-    &::before {
+    &::after {
       left: 100%;
     }
   }
   
-  /* Active state - scale down */
+  /* Active state - pressed effect */
   &:active:not([disabled]) {
     transform: scale(0.98) translateY(0) !important;
-    --box-shadow: 0 2px 15px rgba(255, 215, 0, 0.4), 0 0 25px rgba(255, 215, 0, 0.2) !important;
+    --box-shadow: 
+      0 2px 12px rgba(212, 175, 55, 0.5),
+      0 0 20px rgba(212, 175, 55, 0.3),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
     transition: all 0.1s ease !important;
+    
+    &::before {
+      background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 100%);
+    }
   }
   
   /* Disabled state */
@@ -545,6 +706,12 @@ ion-button.btn-primary-modern,
     cursor: not-allowed !important;
     transform: none !important;
     text-shadow: none !important;
+    border: none !important;
+    
+    &::before,
+    &::after {
+      display: none;
+    }
   }
   
   /* Spinner color when loading */
@@ -555,6 +722,7 @@ ion-button.btn-primary-modern,
   /* Icon styling */
   ion-icon {
     color: #000000 !important;
+    filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.3));
   }
 }
 
@@ -563,14 +731,14 @@ ion-button.btn-primary-modern,
 ion-button.btn-secondary-modern,
 .button-secondary-modern {
   --background: transparent !important;
-  --background-activated: rgba(255, 215, 0, 0.1) !important;
-  --background-hover: rgba(255, 215, 0, 0.15) !important;
-  --color: #FFD700 !important;
-  --border-color: #FFD700 !important;
+  --background-activated: rgba(212, 175, 55, 0.1) !important;
+  --background-hover: rgba(212, 175, 55, 0.15) !important;
+  --color: var(--primary-gold) !important;
+  --border-color: var(--primary-gold) !important;
   --border-width: 2px !important;
   --border-style: solid !important;
-  --border-radius: 20px !important;
-  --box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1) !important;
+  --border-radius: 14px !important;
+  --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
   
   width: 100% !important;
   max-width: 400px !important;
@@ -582,18 +750,18 @@ ion-button.btn-secondary-modern,
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: block !important;
   
-  color: #FFD700 !important;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
+  color: var(--primary-gold) !important;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5) !important;
   
   &:hover:not([disabled]) {
     transform: scale(1.02) translateY(-2px) !important;
-    --box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2) !important;
-    --background-hover: rgba(255, 215, 0, 0.2) !important;
+    --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+    --background-hover: rgba(212, 175, 55, 0.2) !important;
   }
   
   &:active:not([disabled]) {
     transform: scale(0.98) translateY(0) !important;
-    --box-shadow: 0 2px 12px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1) !important;
+    --box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45) !important;
     transition: all 0.1s ease !important;
   }
   
@@ -606,7 +774,7 @@ ion-button.btn-secondary-modern,
   }
   
   ion-icon {
-    color: #FFD700 !important;
+    color: var(--primary-gold) !important;
   }
 }
 
@@ -633,5 +801,158 @@ ion-button.btn-secondary-modern,
   ion-button.btn-secondary-modern,
   .button-secondary-modern {
     margin: 20px auto !important;
+  }
+}
+
+/* Logout Confirmation Alert Styling */
+.logout-confirmation-alert,
+.logout-success-alert {
+  --background: var(--background-card) !important;
+  --backdrop-opacity: 0.8;
+}
+
+/* Global Alert Styling - Dark Theme */
+ion-alert {
+  --background: #1B1B1B !important;
+  --backdrop-opacity: 0.8;
+  
+  .alert-wrapper {
+    background: var(--background-card) !important;
+    border-radius: 18px !important;
+    border: 1px solid var(--border-soft) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  .alert-head {
+    padding: 20px 20px 12px !important;
+    
+    .alert-title {
+      color: var(--text-primary) !important;
+      font-weight: 700 !important;
+      font-size: 1.2rem !important;
+    }
+  }
+  
+  .alert-message {
+    color: var(--text-primary) !important;
+    padding: 0 20px 20px !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  .alert-button-group {
+    padding: 0 20px 20px !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    
+    .alert-button {
+      border-radius: 12px !important;
+      font-weight: 600 !important;
+      margin: 0 !important;
+      min-height: 44px !important;
+      width: 100% !important;
+      
+      &.alert-button-cancel {
+        --color: var(--text-primary) !important;
+        --background: transparent !important;
+        --background-activated: rgba(158, 158, 158, 0.1) !important;
+        border: 1px solid var(--border-soft) !important;
+        color: var(--text-primary) !important;
+      }
+      
+      &.alert-button-confirm {
+        --color: #FFFFFF !important;
+        --background: #EF4444 !important;
+        --background-activated: #dc2626 !important;
+        --background-hover: #dc2626 !important;
+        color: #FFFFFF !important;
+      }
+    }
+  }
+}
+
+/* Success alert specific styling */
+.logout-success-alert {
+  .alert-button-group {
+    .alert-button {
+      --color: #FFFFFF !important;
+      --background: var(--primary-gold) !important;
+      --background-activated: var(--primary-gold-dark) !important;
+      --background-hover: var(--primary-gold-dark) !important;
+      color: #FFFFFF !important;
+    }
+  }
+}
+
+/* Override Ionic default alert colors */
+ion-alert.logout-confirmation-alert,
+ion-alert.logout-success-alert {
+  --color: #EDEDED !important;
+}
+
+/* Ensure text is visible in all alerts - using deep selectors */
+::ng-deep ion-alert {
+  .alert-wrapper {
+    background: var(--background-card) !important;
+    border-radius: 18px !important;
+    border: 1px solid var(--border-soft) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  .alert-head .alert-title {
+    color: var(--text-primary) !important;
+    font-weight: 700 !important;
+  }
+  
+  .alert-message {
+    color: var(--text-primary) !important;
+  }
+  
+  .alert-button {
+    color: var(--text-primary) !important;
+    
+    &.alert-button-confirm {
+      color: #FFFFFF !important;
+      --color: #FFFFFF !important;
+    }
+  }
+}
+
+/* Specific styling for logout alerts */
+::ng-deep .logout-confirmation-alert,
+::ng-deep .logout-success-alert {
+  .alert-wrapper {
+    background: var(--background-card) !important;
+  }
+  
+  .alert-head .alert-title {
+    color: var(--text-primary) !important;
+  }
+  
+  .alert-message {
+    color: var(--text-primary) !important;
+  }
+  
+  .alert-button-group {
+    .alert-button-cancel {
+      color: var(--text-primary) !important;
+      --color: var(--text-primary) !important;
+    }
+    
+    .alert-button-confirm {
+      color: #FFFFFF !important;
+      --color: #FFFFFF !important;
+      --background: #EF4444 !important;
+    }
+  }
+}
+
+::ng-deep .logout-success-alert {
+  .alert-button-group {
+    .alert-button {
+      color: #FFFFFF !important;
+      --color: #FFFFFF !important;
+      --background: var(--primary-gold) !important;
+    }
   }
 }

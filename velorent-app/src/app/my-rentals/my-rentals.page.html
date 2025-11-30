@@ -48,6 +48,28 @@
           <p *ngIf="booking.company_name"><strong>Company:</strong> {{ booking.company_name }}</p>
         </div>
 
+        <!-- Complete Payment Button (if payment is pending/failed) -->
+        <div class="payment-action" *ngIf="needsPayment(booking)">
+          <ion-button 
+            fill="outline"
+            size="small"
+            (click)="completePayment(booking)">
+            <ion-icon name="card-outline" slot="start"></ion-icon>
+            Complete Payment
+          </ion-button>
+        </div>
+
+        <!-- View Transaction Details Button -->
+        <div class="transaction-action">
+          <ion-button 
+            fill="outline" 
+            size="small"
+            (click)="viewTransactionDetails(booking.id)">
+            <ion-icon name="receipt-outline" slot="start"></ion-icon>
+            View Transaction Details
+          </ion-button>
+        </div>
+
         <!-- Request Actions -->
         <div class="request-actions" *ngIf="canRequestReschedule(booking) || canRequestCancellation(booking)">
           <ion-button 
@@ -124,7 +146,7 @@
           {{ unreadCount }}
         </div>
       </div>
-      <span class="nav-label">Notifications{{ unreadCount > 0 ? ' (' + unreadCount + ')' : '' }}</span>
+      <span class="nav-label">Notifications</span>
     </button>
     
     <button class="nav-button" (click)="navigateToProfile()">

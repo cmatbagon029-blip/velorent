@@ -1,15 +1,15 @@
 ion-header, ion-toolbar {
-  --background: #1A1A1A !important;
-  background: #1A1A1A !important;
+  --background: #0A0A0A !important;
+  background: #0A0A0A !important;
 }
 
 ion-title {
-  color: #FACC15 !important;
+  color: #D4AF37 !important;
   font-weight: 600;
 }
 
 ion-content {
-  --background: #1A1A1A;
+  --background: #0A0A0A;
   padding-bottom: 120px; /* Extra space for bottom navigation */
 }
 
@@ -18,12 +18,12 @@ ion-content {
   max-width: 100%;
   margin: 16px auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  background: #2D2D2D;
-  color: #FFFFFF;
+  background: #1B1B1B;
+  color: #EDEDED;
   border-radius: 16px;
 
   ion-card-title {
-    color: #FACC15;
+    color: var(--primary-gold);
     font-weight: 600;
     font-size: 1.3rem;
     margin-bottom: 4px;
@@ -48,7 +48,7 @@ ion-content {
       .profile-avatar {
         width: 80px;
         height: 80px;
-        background: linear-gradient(135deg, #FACC15, #FDE047);
+        background: linear-gradient(135deg, #D4AF37, #FDE047);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -73,7 +73,7 @@ ion-content {
         flex: 1;
 
         .user-name {
-          color: #FFFFFF;
+          color: var(--text-primary);
           font-size: 1.5rem;
           font-weight: 700;
           margin: 0 0 4px 0;
@@ -102,7 +102,7 @@ ion-content {
 
         .field-icon {
           font-size: 1.2rem;
-          color: #FACC15;
+          color: var(--primary-gold);
           min-width: 20px;
         }
 
@@ -121,7 +121,7 @@ ion-content {
           }
           
           .profile-value {
-            color: #FFFFFF;
+            color: var(--text-primary);
             font-weight: 600;
             font-size: 1rem;
           }
@@ -142,7 +142,7 @@ ion-content {
     }
 
     h3 {
-      color: #FFFFFF;
+      color: #EDEDED;
       font-size: 1.3rem;
       font-weight: 600;
       margin: 0 0 8px 0;
@@ -157,8 +157,8 @@ ion-content {
 
     ion-button {
       --background: transparent;
-      --color: #FACC15;
-      --border-color: #FACC15;
+      --color: #D4AF37;
+      --border-color: #D4AF37;
       --border-width: 2px;
       --border-radius: 12px;
       font-weight: 600;
@@ -173,12 +173,12 @@ ion-content {
   max-width: 100%;
   margin: 16px auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  background: #2D2D2D;
-  color: #FFFFFF;
+  background: #1B1B1B;
+  color: #EDEDED;
   border-radius: 16px;
 
   ion-card-title {
-    color: #FACC15;
+    color: var(--primary-gold);
     font-weight: 600;
     font-size: 1.2rem;
   }
@@ -188,7 +188,7 @@ ion-content {
     
     ion-item {
       --background: transparent;
-      --color: #FFFFFF;
+      --color: #EDEDED;
       --border-color: rgba(250, 204, 21, 0.2);
       --padding-start: 16px;
       --padding-end: 16px;
@@ -199,7 +199,7 @@ ion-content {
       }
       
       ion-icon {
-        color: #FACC15;
+        color: var(--primary-gold);
         margin-right: 12px;
       }
       
@@ -213,7 +213,7 @@ ion-content {
 
       ion-toggle {
         --background: rgba(255, 255, 255, 0.1);
-        --background-checked: #FACC15;
+        --background-checked: #D4AF37;
         --handle-background: #fff;
         --handle-background-checked: #000;
       }
@@ -226,12 +226,12 @@ ion-content {
   max-width: 100%;
   margin: 16px auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  background: #2D2D2D;
-  color: #FFFFFF;
+  background: #1B1B1B;
+  color: #EDEDED;
   border-radius: 16px;
 
   ion-card-title {
-    color: #FACC15;
+    color: var(--primary-gold);
     font-weight: 600;
     font-size: 1.2rem;
   }
@@ -241,7 +241,7 @@ ion-content {
     
     ion-item {
       --background: transparent;
-      --color: #FFFFFF;
+      --color: #EDEDED;
       --border-color: rgba(250, 204, 21, 0.2);
       --padding-start: 16px;
       --padding-end: 16px;
@@ -252,7 +252,7 @@ ion-content {
       }
       
       ion-icon {
-        color: #FACC15;
+        color: var(--primary-gold);
         margin-right: 12px;
       }
       
@@ -268,12 +268,12 @@ ion-content {
   max-width: 100%;
   margin: 16px auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  background: #2D2D2D;
-  color: #FFFFFF;
+  background: #1B1B1B;
+  color: #EDEDED;
   border-radius: 16px;
 
   ion-card-title {
-    color: #FACC15;
+    color: var(--primary-gold);
     font-weight: 600;
     font-size: 1.2rem;
   }
@@ -283,7 +283,7 @@ ion-content {
     
     ion-item {
       --background: transparent;
-      --color: #FFFFFF;
+      --color: #EDEDED;
       --border-color: rgba(250, 204, 21, 0.2);
       --padding-start: 16px;
       --padding-end: 16px;
@@ -294,7 +294,7 @@ ion-content {
       }
       
       ion-icon {
-        color: #FACC15;
+        color: var(--primary-gold);
         margin-right: 12px;
       }
       
@@ -310,8 +310,8 @@ ion-content {
   max-width: 100%;
   margin: 16px auto 40px auto; /* Extra bottom margin for bottom nav */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  background: #2D2D2D;
-  color: #FFFFFF;
+  background: #1B1B1B;
+  color: #EDEDED;
   border-radius: 16px;
 
   .app-info {
@@ -320,19 +320,19 @@ ion-content {
 
     .app-icon {
       font-size: 3rem;
-      color: #FACC15;
+      color: var(--primary-gold);
       margin-bottom: 16px;
     }
 
     h3 {
-      color: #FACC15;
+      color: var(--primary-gold);
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 8px;
     }
 
     p {
-      color: #FFFFFF;
+      color: #EDEDED;
       margin: 4px 0;
       font-size: 0.9rem;
     }
@@ -349,12 +349,18 @@ ion-content {
 .logout-btn {
   max-width: 100%;
   margin: 20px auto;
-  --background: #dc3545;
-  --background-hover: #c82333;
-  --color: white;
-  --border-radius: 12px;
+  --background: #EF4444;
+  --background-hover: #dc2626;
+  --background-activated: #b91c1c;
+  --color: #FFFFFF;
+  --border-radius: 18px;
   font-weight: 600;
   height: 50px;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  
+  ion-icon {
+    color: #FFFFFF;
+  }
 }
 
 // Bottom Navigation - BLACK & GOLD THEME
@@ -364,7 +370,7 @@ ion-content {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(180deg, #1A1A1A, #0F0F0F);
+  background: linear-gradient(180deg, #0A0A0A, #0F0F0F);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 -4px 20px rgba(250, 204, 21, 0.2);
   backdrop-filter: blur(20px);
@@ -393,7 +399,7 @@ ion-content {
         font-size: 1.8rem;
         margin-bottom: 4px;
         transition: all 0.3s ease;
-        color: #FFFFFF !important;
+        color: #EDEDED !important;
         display: block;
       }
       
@@ -405,30 +411,30 @@ ion-content {
       }
       
       &.active {
-        color: #FACC15;
+        color: var(--primary-gold);
         background: rgba(250, 204, 21, 0.15);
         
         .nav-icon {
           transform: scale(1.1);
-          color: #FACC15;
+          color: var(--primary-gold);
         }
         
         .nav-label {
           font-weight: 600;
-          color: #FACC15;
+          color: var(--primary-gold);
         }
       }
       
       &:hover {
         background: rgba(250, 204, 21, 0.1);
-        color: #FACC15;
+        color: var(--primary-gold);
         
         .nav-icon {
-          color: #FACC15;
+          color: var(--primary-gold);
         }
         
         .nav-label {
-          color: #FACC15;
+          color: var(--primary-gold);
         }
       }
       
@@ -443,20 +449,21 @@ ion-content {
       
       .notification-badge {
         position: absolute;
-        top: -10px;
-        right: -10px;
-        font-size: 0.9rem;
-        min-width: 24px;
-        height: 24px;
-        border-radius: 12px;
+        top: -4px;
+        right: -4px;
+        background: #EF4444;
+        color: #FFFFFF;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 0.7rem;
         font-weight: 700;
-        z-index: 9999;
-        background: #ff0000;
-        color: white;
-        border: 3px solid #fff;
+        border: 2px solid var(--background-main);
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
         box-shadow: 0 3px 8px rgba(0,0,0,0.7);
         font-family: Arial, sans-serif;
         animation: pulse 1s infinite;

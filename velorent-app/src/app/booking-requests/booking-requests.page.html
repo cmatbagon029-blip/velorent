@@ -192,12 +192,22 @@
     </button>
     
     <button class="nav-button active" (click)="navigateToRequests()">
-      <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
-      <span class="nav-label">Requests</span>
+      <div class="notification-wrapper">
+        <ion-icon name="document-text-outline" class="nav-icon"></ion-icon>
+        <div *ngIf="requestUnreadCount > 0" class="notification-badge">
+          {{ requestUnreadCount }}
+        </div>
+      </div>
+      <span class="nav-label">Requests{{ requestUnreadCount > 0 ? ' (' + requestUnreadCount + ')' : '' }}</span>
     </button>
     
     <button class="nav-button" (click)="navigateToNotifications()">
-      <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+      <div class="notification-wrapper">
+        <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+        <div *ngIf="unreadCount > 0" class="notification-badge">
+          {{ unreadCount }}
+        </div>
+      </div>
       <span class="nav-label">Notifications</span>
     </button>
     

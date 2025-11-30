@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../services/notification.service';
+import { RequestNotificationService } from '../services/request-notification.service';
 import { TermsModalComponent } from '../settings/settings.page';
 import { PrivacyModalComponent } from '../settings/settings.page';
 import { addIcons } from 'ionicons';
@@ -192,6 +193,7 @@ export class AboutModalComponent {
 export class ProfilePage implements OnInit {
   user: any = null;
   unreadCount: number = 0;
+  requestUnreadCount: number = 0;
   
   // App Settings (Available to all users)
   notifications: boolean = true;
@@ -202,7 +204,8 @@ export class ProfilePage implements OnInit {
     private router: Router,
     private modalController: ModalController,
     private alertController: AlertController,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private requestNotificationService: RequestNotificationService
   ) {}
 
   ngOnInit() {
@@ -364,12 +367,54 @@ export class ProfilePage implements OnInit {
   }
 
   // Authentication Methods
-  logout() {
-    if (this.user) {
-      this.authService.logout();
-      this.user = null;
-      this.showAlert('Logged Out', 'You have been successfully logged out.');
+  async logout() {
+    if (!this.user) {
+      return;
     }
+
+    // Show confirmation dialog
+    const alert = await this.alertController.create({
+      header: 'Confirm Logout',
+      message: 'Are you sure you want to log out?',
+      cssClass: 'logout-confirmation-alert',
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'alert-button-cancel',
+          handler: () => {
+            // Do nothing, just close
+          }
+        },
+        {
+          text: 'Logout',
+          role: 'destructive',
+          cssClass: 'alert-button-confirm',
+          handler: async () => {
+            this.authService.logout();
+            this.user = null;
+            
+            // Show success message after logout
+            const successAlert = await this.alertController.create({
+              header: 'Logged Out',
+              message: 'You have been successfully logged out.',
+              cssClass: 'logout-success-alert',
+              backdropDismiss: false,
+              buttons: [
+                {
+                  text: 'OK',
+                  cssClass: 'alert-button-confirm'
+                }
+              ]
+            });
+            await successAlert.present();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   goToLogin() {
@@ -412,15 +457,28 @@ export class ProfilePage implements OnInit {
     const alert = await this.alertController.create({
       header,
       message,
-      buttons: ['OK']
+      cssClass: 'logout-success-alert',
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'OK',
+          cssClass: 'alert-button-confirm'
+        }
+      ]
     });
     await alert.present();
   }
 
   updateNotificationCount() {
     this.notificationService.updateUnreadCount();
+    this.requestNotificationService.updateUnreadCount();
+    
     this.notificationService.unreadCount$.subscribe(count => {
       this.unreadCount = count;
+    });
+    
+    this.requestNotificationService.unreadCount$.subscribe(count => {
+      this.requestUnreadCount = count;
     });
   }
 }

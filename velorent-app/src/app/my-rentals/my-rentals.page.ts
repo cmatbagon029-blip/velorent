@@ -20,7 +20,9 @@ import {
   closeCircleOutline,
   documentTextOutline,
   refreshOutline,
-  trashOutline
+  trashOutline,
+  receiptOutline,
+  cardOutline
 } from 'ionicons/icons';
 
 // Register icons
@@ -34,7 +36,9 @@ addIcons({
   'close-circle-outline': closeCircleOutline,
   'document-text-outline': documentTextOutline,
   'refresh-outline': refreshOutline,
-  'trash-outline': trashOutline
+  'trash-outline': trashOutline,
+  'receipt-outline': receiptOutline,
+  'card-outline': cardOutline
 });
 
 @Component({
@@ -248,6 +252,223 @@ export class MyRentalsPage implements OnInit {
 
   navigateToProfile() {
     this.router.navigate(['/profile']);
+  }
+
+  viewTransactionDetails(bookingId: number) {
+    this.router.navigate(['/transaction-details', bookingId]);
+  }
+
+  // Check if booking needs payment completion
+  needsPayment(booking: any): boolean {
+    // First check if booking status allows payment (should be Pending or Approved)
+    if (booking.status !== 'Pending' && booking.status !== 'Approved') {
+      return false;
+    }
+
+    // Check payment status from booking table - this is the most reliable source
+    const paymentStatus = booking.payment_status;
+    
+    // If already fully paid, no payment needed
+    if (paymentStatus === 'paid') {
+      return false;
+    }
+    
+    // Check payments array to calculate actual payment status
+    if (booking.payments && Array.isArray(booking.payments) && booking.payments.length > 0) {
+      // Calculate total paid amount
+      const totalPaid = booking.payments
+        .filter((p: any) => p.status === 'paid')
+        .reduce((sum: number, p: any) => sum + parseFloat(p.amount || 0), 0);
+      
+      // Check if there are any pending or failed payments
+      const hasPendingOrFailed = booking.payments.some((p: any) => 
+        p.status === 'pending' || p.status === 'failed'
+      );
+      
+      // If all payments are paid and we have at least one paid payment, no payment needed
+      const allPaid = booking.payments.every((p: any) => p.status === 'paid');
+      if (allPaid && totalPaid > 0) {
+        // Double-check: if payment_status is also paid, definitely no payment needed
+        if (paymentStatus === 'paid') {
+          return false;
+        }
+        // If all payments are paid but status is not 'paid', might be a sync issue
+        // Still show button to allow user to check/complete if needed
+      }
+      
+      // Show payment button if:
+      // 1. Payment status is explicitly pending/failed/partially_paid, OR
+      // 2. There are pending/failed payment records, OR
+      // 3. No paid payments exist yet
+      if (paymentStatus === 'pending' || paymentStatus === 'failed' || paymentStatus === 'partially_paid') {
+        return true;
+      }
+      
+      if (hasPendingOrFailed) {
+        return true;
+      }
+      
+      // If no paid payments exist, allow payment
+      if (totalPaid === 0) {
+        return true;
+      }
+    } else {
+      // No payments array exists - check payment_status
+      // Only show if status is explicitly pending/failed/null (not paid)
+      if (paymentStatus === 'paid') {
+        return false;
+      }
+      
+      // If payment_status is null/undefined/pending/failed, allow payment
+      if (!paymentStatus || paymentStatus === 'pending' || paymentStatus === 'failed') {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  // Calculate payment amount needed (helper method - not used in current flow)
+  getPaymentAmount(booking: any): number {
+    // This is a helper method if needed in the future
+    // Currently, we fetch the amount from transaction details API
+    return 0;
+  }
+
+  // Complete payment for a booking
+  async completePayment(booking: any) {
+    // First, get the transaction details to calculate the correct amount
+    this.apiService.getTransactionDetails(booking.id).subscribe({
+      next: (transactionDetails) => {
+        console.log('Transaction details:', transactionDetails);
+        
+        // Get remaining amount from payment_summary (most reliable source)
+        let remainingAmount = 0;
+        if (transactionDetails.payment_summary) {
+          remainingAmount = parseFloat(transactionDetails.payment_summary.remaining_amount) || 0;
+        }
+        
+        // Fallback: calculate from payment_summary if remaining_amount is missing
+        if (remainingAmount <= 0 && transactionDetails.payment_summary) {
+          const totalCost = parseFloat(transactionDetails.payment_summary.total_cost) || 0;
+          const totalPaid = parseFloat(transactionDetails.payment_summary.total_paid) || 0;
+          remainingAmount = totalCost - totalPaid;
+        }
+        
+        // Final fallback: use direct fields or calculate from payments array
+        if (remainingAmount <= 0) {
+          const totalCost = parseFloat(transactionDetails.total_price) || 0;
+          if (transactionDetails.payments && Array.isArray(transactionDetails.payments)) {
+            const totalPaid = transactionDetails.payments
+              .filter((p: any) => p.status === 'paid')
+              .reduce((sum: number, p: any) => sum + parseFloat(p.amount || 0), 0);
+            remainingAmount = totalCost - totalPaid;
+          } else if (totalCost > 0) {
+            // If no payments exist, remaining amount is the full cost
+            remainingAmount = totalCost;
+          }
+        }
+        
+        console.log('Calculated remaining amount:', remainingAmount);
+        console.log('Payment status:', transactionDetails.payment_status);
+        
+        // Check payment status - only show "Payment Not Needed" if status is 'paid' AND remaining is 0
+        const paymentStatus = transactionDetails.payment_status || booking.payment_status;
+        
+        // If payment status is paid and remaining amount is 0 or less, don't allow payment
+        if (paymentStatus === 'paid' && remainingAmount <= 0) {
+          this.alertCtrl.create({
+            header: 'Payment Not Needed',
+            message: 'This booking is already fully paid.',
+            buttons: ['OK']
+          }).then(alert => alert.present());
+          return;
+        }
+        
+        // If remaining amount is 0 or negative but status is not paid, there might be a data issue
+        // But still allow payment attempt if status indicates payment is needed
+        if (remainingAmount <= 0 && paymentStatus !== 'paid') {
+          // This shouldn't happen, but if it does, show a helpful message
+          console.warn('Remaining amount is 0 but payment status is not paid. Status:', paymentStatus);
+          this.alertCtrl.create({
+            header: 'Payment Information',
+            message: 'Unable to determine payment amount. Please view transaction details or contact support.',
+            buttons: ['OK']
+          }).then(alert => alert.present());
+          return;
+        }
+
+        // Show confirmation with the calculated amount
+        this.alertCtrl.create({
+          header: 'Complete Payment',
+          message: `Complete payment of ₱${remainingAmount.toFixed(2)} for Booking #${booking.id}?`,
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel'
+            },
+            {
+              text: 'Proceed to Payment',
+              handler: () => {
+                this.initiatePayment(booking.id, remainingAmount);
+              }
+            }
+          ]
+        }).then(alert => alert.present());
+      },
+      error: (error) => {
+        console.error('Error fetching transaction details:', error);
+        this.alertCtrl.create({
+          header: 'Error',
+          message: 'Unable to fetch payment details. Please try again later.',
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      }
+    });
+  }
+
+  // Initiate payment process
+  initiatePayment(bookingId: number, amount: number) {
+    // Show loading
+    const loadingAlert = this.alertCtrl.create({
+      header: 'Processing Payment',
+      message: 'Please wait while we prepare your payment...',
+      buttons: []
+    });
+    
+    loadingAlert.then(alert => alert.present());
+
+    // Create payment checkout session
+    this.apiService.createPayment(amount, bookingId).subscribe({
+      next: (paymentResponse: any) => {
+        loadingAlert.then(alert => alert.dismiss());
+        
+        if (paymentResponse.checkout_url) {
+          // Store booking ID for tracking
+          sessionStorage.setItem('pendingPaymentBookingId', bookingId.toString());
+          
+          // Redirect to payment URL
+          window.location.href = paymentResponse.checkout_url;
+        } else {
+          this.alertCtrl.create({
+            header: 'Error',
+            message: 'Payment URL not received. Please try again.',
+            buttons: ['OK']
+          }).then(alert => alert.present());
+        }
+      },
+      error: (error: any) => {
+        loadingAlert.then(alert => alert.dismiss());
+        console.error('Error creating payment:', error);
+        
+        const errorMessage = error.error?.error || error.error?.message || 'Failed to create payment. Please try again.';
+        this.alertCtrl.create({
+          header: 'Payment Error',
+          message: errorMessage,
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      }
+    });
   }
 
   updateNotificationCount() {

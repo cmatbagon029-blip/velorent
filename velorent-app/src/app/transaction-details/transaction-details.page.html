@@ -1,0 +1,221 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Transaction Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="transaction-content">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent" color="warning"></ion-spinner>
+    <p>Loading transaction details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <ion-icon name="alert-circle-outline" color="danger" size="large"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button fill="outline" (click)="loadTransactionDetails()">Try Again</ion-button>
+  </div>
+
+  <!-- Transaction Details -->
+  <div *ngIf="!loading && !error && transaction" class="transaction-wrapper">
+    
+    <!-- Status + Booking ID Card -->
+    <div class="status-card">
+      <div class="status-header">
+        <ion-badge [color]="getBookingStatusColor(transaction.booking_status)" class="status-badge">
+          {{ transaction.booking_status }}
+        </ion-badge>
+        <div class="booking-id-section">
+          <ion-icon name="calendar-outline" class="calendar-icon"></ion-icon>
+          <span class="booking-id">Booking #{{ transaction.booking_id }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle Booked Section -->
+    <div class="vehicle-card">
+      <div class="vehicle-image-container">
+        <img [src]="getVehicleImageUrl(transaction)" [alt]="transaction.vehicle_booked" 
+             (error)="handleImageError($event)">
+      </div>
+      <div class="vehicle-info">
+        <h2 class="vehicle-name">{{ transaction.vehicle_booked }}</h2>
+        <div class="company-label" *ngIf="transaction.company_name">
+          <span class="company-tag">{{ transaction.company_name }}</span>
+        </div>
+        <div class="service-type">
+          <ion-icon name="car-outline"></ion-icon>
+          <span>{{ transaction.service_type === 'with_driver' ? 'With Driver' : 'Without Driver' }}</span>
+        </div>
+        <div class="divider"></div>
+        <div class="price-per-day" *ngIf="transaction.breakdown && transaction.breakdown.length > 0">
+          <span class="price-label">Price per day:</span>
+          <span class="price-value">{{ formatCurrency(getPricePerDay(transaction.breakdown)) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pickup & Return Dates Section -->
+    <div class="dates-card">
+      <div class="dates-grid">
+        <div class="date-section">
+          <div class="date-label">Pickup Date</div>
+          <div class="date-value">{{ formatDate(transaction.pickup_date) }}</div>
+          <div class="time-value" *ngIf="transaction.pickup_time">
+            <ion-icon name="time-outline"></ion-icon>
+            {{ formatTime(transaction.pickup_time) }}
+          </div>
+        </div>
+        <div class="date-divider"></div>
+        <div class="date-section">
+          <div class="date-label">Return Date</div>
+          <div class="date-value">{{ formatDate(transaction.return_date) }}</div>
+        </div>
+      </div>
+      
+      <div class="destination-section" *ngIf="transaction.destination">
+        <ion-icon name="location-outline" class="location-icon"></ion-icon>
+        <span class="destination-text">{{ transaction.destination }}</span>
+      </div>
+      
+      <div class="booking-date-section" *ngIf="transaction.booking_date">
+        <div class="date-label">Booking Date</div>
+        <div class="date-value-small">{{ formatDate(transaction.booking_date) }}</div>
+      </div>
+    </div>
+
+    <!-- Payment Details Section -->
+    <div class="payment-card">
+      <h3 class="card-title">Payment Details</h3>
+      <div class="payment-rows">
+        <div class="payment-row" *ngIf="transaction.payment_method">
+          <span class="payment-label">Payment Method</span>
+          <span class="payment-value">{{ transaction.payment_method }}</span>
+        </div>
+        <div class="payment-row" *ngIf="transaction.breakdown && transaction.breakdown.length > 0">
+          <span class="payment-label">Amount per Day</span>
+          <span class="payment-value">{{ formatCurrency(getPricePerDay(transaction.breakdown)) }}</span>
+        </div>
+        <div class="payment-row" *ngIf="getNumberOfDays(transaction)">
+          <span class="payment-label">Total Days</span>
+          <span class="payment-value">{{ getNumberOfDays(transaction) }}</span>
+        </div>
+        <div class="payment-row total-row">
+          <span class="payment-label">Total Amount</span>
+          <span class="payment-value total-amount">{{ formatCurrency(transaction.total_price) }}</span>
+        </div>
+        <div class="payment-row">
+          <span class="payment-label">Payment Status</span>
+          <ion-badge [color]="getPaymentStatusColor(transaction.payment_status)" class="payment-status-badge">
+            {{ getPaymentStatusText(transaction.payment_status) }}
+          </ion-badge>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Summary (if available) -->
+    <div class="payment-summary-card" *ngIf="transaction.payment_summary">
+      <h3 class="card-title">Payment Summary</h3>
+      <div class="summary-rows">
+        <div class="summary-row">
+          <span class="summary-label">Total Cost</span>
+          <span class="summary-value">{{ formatCurrency(transaction.payment_summary.total_cost) }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Total Paid</span>
+          <span class="summary-value paid">{{ formatCurrency(transaction.payment_summary.total_paid) }}</span>
+        </div>
+        <div class="summary-row" *ngIf="transaction.payment_summary.total_pending > 0">
+          <span class="summary-label">Pending</span>
+          <span class="summary-value pending">{{ formatCurrency(transaction.payment_summary.total_pending) }}</span>
+        </div>
+        <div class="summary-row" *ngIf="transaction.payment_summary.remaining_amount > 0">
+          <span class="summary-label">Remaining Amount</span>
+          <span class="summary-value remaining">{{ formatCurrency(transaction.payment_summary.remaining_amount) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price Breakdown -->
+    <div class="breakdown-card" *ngIf="transaction.breakdown && transaction.breakdown.length > 0">
+      <h3 class="card-title">Price Breakdown</h3>
+      <div class="breakdown-list">
+        <div class="breakdown-item" *ngFor="let item of transaction.breakdown">
+          <div class="breakdown-header">
+            <span class="breakdown-name">{{ item.item }}</span>
+            <span class="breakdown-amount">{{ formatCurrency(item.amount) }}</span>
+          </div>
+          <div class="breakdown-description" *ngIf="item.description">
+            {{ item.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="payment-history-card" *ngIf="transaction.payments && transaction.payments.length > 0">
+      <h3 class="card-title">
+        <ion-icon name="document-text-outline"></ion-icon>
+        Payment History
+      </h3>
+      <div class="payment-history-list">
+        <div class="payment-history-item" *ngFor="let payment of transaction.payments">
+          <div class="payment-history-header">
+            <div class="payment-history-info">
+              <strong>Payment #{{ payment.id }}</strong>
+              <ion-badge [color]="getPaymentStatusColor(payment.status)" class="payment-badge-small">
+                {{ payment.status }}
+              </ion-badge>
+            </div>
+            <span class="payment-history-amount">{{ formatCurrency(payment.amount) }}</span>
+          </div>
+          <div class="payment-history-details">
+            <div class="payment-history-detail">
+              <span class="detail-label">Date:</span>
+              <span class="detail-value">{{ formatDate(payment.created_at) }}</span>
+            </div>
+            <div class="payment-history-detail" *ngIf="payment.updated_at && payment.updated_at !== payment.created_at">
+              <span class="detail-label">Updated:</span>
+              <span class="detail-value">{{ formatDate(payment.updated_at) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="additional-info-card" *ngIf="transaction.occasion || transaction.message">
+      <h3 class="card-title">Additional Information</h3>
+      <div class="additional-info-content">
+        <div class="info-item" *ngIf="transaction.occasion">
+          <span class="info-label">Occasion:</span>
+          <span class="info-value">{{ transaction.occasion }}</span>
+        </div>
+        <div class="info-item" *ngIf="transaction.message">
+          <span class="info-label">Message:</span>
+          <span class="info-value">{{ transaction.message }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Card -->
+    <div class="actions-card">
+      <ion-button expand="block" class="receipt-button" (click)="downloadReceipt()">
+        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        Download Receipt
+      </ion-button>
+      <ion-button expand="block" fill="outline" class="contact-button" *ngIf="transaction.company_name">
+        <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+        Message Rental Company
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>

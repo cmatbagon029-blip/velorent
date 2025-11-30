@@ -274,6 +274,13 @@ export class ApiService {
     );
   }
 
+  // Get transaction details for a specific booking
+  getTransactionDetails(bookingId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/rentals/transaction/${bookingId}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('API Error:', error);
     let errorMessage = 'An error occurred';

@@ -52,7 +52,7 @@ import { ApiService } from '../api.service';
     }
     
     h1 {
-      color: #ffd700;
+      color: #D4AF37;
       margin-bottom: 1rem;
     }
     
@@ -62,7 +62,7 @@ import { ApiService } from '../api.service';
     }
     
     ion-spinner {
-      --color: #ffd700;
+      --color: #D4AF37;
     }
     
     .booking-info {

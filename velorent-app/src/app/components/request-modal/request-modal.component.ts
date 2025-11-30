@@ -111,36 +111,37 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
     </ion-footer>
   `,
   styles: [`
-    // Black and Gold Theme
+    // Premium Gold & Black Theme
     :host {
-      --background: #121212;
+      --background: #0A0A0A;
     }
 
     ion-header {
-      --background: #000;
-      background: #000 !important;
+      --background: #0A0A0A;
+      background: #0A0A0A !important;
     }
 
     ion-toolbar {
-      --background: #000;
-      background: #000 !important;
+      --background: #0A0A0A;
+      background: #0A0A0A !important;
     }
 
     ion-title {
-      color: #ffd700 !important;
+      color: #D4AF37 !important;
       font-weight: 600;
     }
 
     ion-content {
-      --background: #121212;
-      background: #121212 !important;
+      --background: #0A0A0A;
+      background: #0A0A0A !important;
     }
 
     ion-card {
-      --background: #1e1e1e;
-      background: #1e1e1e !important;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px 0 rgba(255, 215, 0, 0.12);
+      --background: #1B1B1B;
+      background: #1B1B1B !important;
+      border-radius: 18px;
+      border: 1px solid #2A2A2A;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       margin-bottom: 16px;
     }
 
@@ -149,44 +150,44 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
     }
 
     ion-card-title {
-      color: #ffd700 !important;
+      color: #D4AF37 !important;
       font-weight: 600;
       font-size: 1.2em;
     }
 
     ion-card-content {
-      color: #fff;
+      color: #EDEDED;
     }
 
     ion-card-content p {
-      color: #fff;
+      color: #EDEDED;
       margin: 8px 0;
     }
 
     ion-card-content p strong {
-      color: #ffd700;
+      color: #D4AF37;
       font-weight: 500;
     }
 
     ion-item {
-      --background: #1e1e1e;
-      --color: #fff;
-      --border-color: rgba(255, 215, 0, 0.2);
+      --background: #1B1B1B;
+      --color: #EDEDED;
+      --border-color: rgba(212, 175, 55, 0.2);
       margin-bottom: 12px;
-      border-radius: 8px;
+      border-radius: 12px;
     }
 
     ion-label {
-      color: #ffd700 !important;
+      color: #D4AF37 !important;
       font-weight: 500;
     }
 
     ion-input,
     ion-textarea {
-      --color: #fff;
-      --placeholder-color: #888;
-      --background: #1a1a1a;
-      border-radius: 8px;
+      --color: #EDEDED;
+      --placeholder-color: #9E9E9E;
+      --background: #0A0A0A;
+      border-radius: 12px;
       padding: 8px;
     }
 
@@ -197,9 +198,9 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
 
     .fee-display {
       padding: 16px;
-      background: rgba(255, 215, 0, 0.15);
-      border-radius: 8px;
-      border: 1px solid rgba(255, 215, 0, 0.4);
+      background: rgba(212, 175, 55, 0.15);
+      border-radius: 12px;
+      border: 1px solid rgba(212, 175, 55, 0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -208,49 +209,49 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
 
     .fee-display h3 {
       margin: 0 0 8px 0;
-      color: #ffd700;
+      color: #D4AF37;
       font-weight: 600;
     }
 
     .fee-display p {
       margin: 0;
-      color: #fff;
+      color: #EDEDED;
     }
 
     .fee-display ion-spinner {
-      --color: #ffd700;
+      --color: #D4AF37;
     }
 
     ion-button {
-      --background: #ffd700;
-      --color: #121212;
+      --background: linear-gradient(180deg, #F4D57B 0%, #D4AF37 50%, #A87C1C 100%);
+      --color: #000000;
       font-weight: 600;
-      border-radius: 8px;
+      border-radius: 18px;
       margin-top: 10px;
     }
 
     ion-button[disabled] {
       --background: #444;
-      --color: #888;
+      --color: #9E9E9E;
       opacity: 0.6;
     }
 
     ion-footer {
-      --background: #000;
-      background: #000 !important;
-      border-top: 2px solid #ffd700;
+      --background: #0A0A0A;
+      background: #0A0A0A !important;
+      border-top: 1px solid #2A2A2A;
     }
 
     ion-footer ion-toolbar {
-      --background: #000;
-      background: #000 !important;
+      --background: #0A0A0A;
+      background: #0A0A0A !important;
     }
 
     // Error message styling
     ion-item[color="danger"] {
       --background: rgba(239, 68, 68, 0.15);
       --border-color: rgba(239, 68, 68, 0.3);
-      border-radius: 8px;
+      border-radius: 12px;
     }
 
     ion-item[color="danger"] ion-label h3 {
@@ -258,17 +259,17 @@ import { CompanyTermsComponent } from '../company-terms/company-terms.component'
     }
 
     ion-item[color="danger"] ion-label p {
-      color: #fff;
+      color: #EDEDED;
     }
 
     // Close button
     ion-button[slot="end"] {
-      --color: #ffd700;
+      --color: #D4AF37;
     }
 
     // Spinner
     ion-spinner {
-      --color: #ffd700;
+      --color: #D4AF37;
     }
   `]
 })

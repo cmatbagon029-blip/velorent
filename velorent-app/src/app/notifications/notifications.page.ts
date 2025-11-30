@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../api.service';
 import { NotificationService } from '../services/notification.service';
+import { RequestNotificationService } from '../services/request-notification.service';
 import { addIcons } from 'ionicons';
 import { 
   home, 
@@ -55,17 +56,33 @@ interface Notification {
 export class NotificationsPage implements OnInit {
   notifications: Notification[] = [];
   loading = true;
+  unreadCount: number = 0;
+  requestUnreadCount: number = 0;
 
   constructor(
     private router: Router,
     private alertCtrl: AlertController,
     private modalCtrl: ModalController,
     private apiService: ApiService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private requestNotificationService: RequestNotificationService
   ) {}
 
   ngOnInit() {
     this.loadNotifications();
+    
+    // Update the global notification counts
+    this.notificationService.updateUnreadCount();
+    this.requestNotificationService.updateUnreadCount();
+    
+    // Subscribe to notification counts
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+    
+    this.requestNotificationService.unreadCount$.subscribe(count => {
+      this.requestUnreadCount = count;
+    });
   }
 
   loadNotifications() {

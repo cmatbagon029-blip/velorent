@@ -1,2 +1,131 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+
+// Premium Gold & Black Theme Variables
+:root {
+  // Standard CSS Variables (for easy use across the project)
+  --primary-gold: #D4AF37;
+  --primary-gold-light: #F4D57B;
+  --primary-gold-dark: #A87C1C;
+  
+  --background-main: #0A0A0A;
+  --background-card: #1B1B1B;
+  --border-soft: #2A2A2A;
+  
+  --text-primary: #EDEDED;
+  --text-muted: #9E9E9E;
+  
+  --gold-gradient: linear-gradient(180deg, #F4D57B 0%, #D4AF37 50%, #A87C1C 100%);
+
+  // Ionic-specific variables (for Ionic components)
+  // Primary Gold Colors
+  --ion-color-primary: #D4AF37;
+  --ion-color-primary-rgb: 212, 175, 55;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #bb9a30;
+  --ion-color-primary-tint: #d8b74b;
+
+  // Primary Gold Light
+  --ion-color-primary-light: #F4D57B;
+  --ion-color-primary-light-rgb: 244, 213, 123;
+
+  // Primary Gold Dark
+  --ion-color-primary-dark: #A87C1C;
+  --ion-color-primary-dark-rgb: 168, 124, 28;
+
+  // Background Colors
+  --ion-background-color: #0A0A0A;
+  --ion-background-color-rgb: 10, 10, 10;
+  --ion-background-color-card: #1B1B1B;
+  --ion-background-color-card-rgb: 27, 27, 27;
+  --ion-border-soft: #2A2A2A;
+
+  // Text Colors
+  --ion-text-color: #EDEDED;
+  --ion-text-color-rgb: 237, 237, 237;
+  --ion-text-color-secondary: #9E9E9E;
+  --ion-text-color-secondary-rgb: 158, 158, 158;
+
+  // Gold Gradient
+  --ion-gradient-gold: linear-gradient(180deg, #F4D57B 0%, #D4AF37 50%, #A87C1C 100%);
+
+  // Secondary (Success) - Keep green for success states
+  --ion-color-secondary: #22C55E;
+  --ion-color-secondary-rgb: 34, 197, 94;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #1ead53;
+  --ion-color-secondary-tint: #38cb6e;
+
+  // Tertiary (Warning) - Use gold light
+  --ion-color-tertiary: #F4D57B;
+  --ion-color-tertiary-rgb: 244, 213, 123;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+  --ion-color-tertiary-shade: #d7bc6c;
+  --ion-color-tertiary-tint: #f5d988;
+
+  // Success - Keep green
+  --ion-color-success: #22C55E;
+  --ion-color-success-rgb: 34, 197, 94;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #1ead53;
+  --ion-color-success-tint: #38cb6e;
+
+  // Warning - Use gold
+  --ion-color-warning: #D4AF37;
+  --ion-color-warning-rgb: 212, 175, 55;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #bb9a30;
+  --ion-color-warning-tint: #d8b74b;
+
+  // Danger - Keep red
+  --ion-color-danger: #EF4444;
+  --ion-color-danger-rgb: 239, 68, 68;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #d23c3c;
+  --ion-color-danger-tint: #f15757;
+
+  // Dark - Use background card
+  --ion-color-dark: #1B1B1B;
+  --ion-color-dark-rgb: 27, 27, 27;
+  --ion-color-dark-contrast: #EDEDED;
+  --ion-color-dark-contrast-rgb: 237, 237, 237;
+  --ion-color-dark-shade: #181818;
+  --ion-color-dark-tint: #323232;
+
+  // Medium - Use text secondary
+  --ion-color-medium: #9E9E9E;
+  --ion-color-medium-rgb: 158, 158, 158;
+  --ion-color-medium-contrast: #000000;
+  --ion-color-medium-contrast-rgb: 0, 0, 0;
+  --ion-color-medium-shade: #8b8b8b;
+  --ion-color-medium-tint: #a8a8a8;
+
+  // Light - Use background card
+  --ion-color-light: #1B1B1B;
+  --ion-color-light-rgb: 27, 27, 27;
+  --ion-color-light-contrast: #EDEDED;
+  --ion-color-light-contrast-rgb: 237, 237, 237;
+  --ion-color-light-shade: #181818;
+  --ion-color-light-tint: #323232;
+
+  // Toolbar
+  --ion-toolbar-background: #0A0A0A;
+  --ion-toolbar-color: #EDEDED;
+  --ion-toolbar-border-color: #2A2A2A;
+
+  // Card
+  --ion-card-background: #1B1B1B;
+  --ion-card-color: #EDEDED;
+  --ion-card-border-color: #2A2A2A;
+
+  // Item
+  --ion-item-background: #1B1B1B;
+  --ion-item-color: #EDEDED;
+  --ion-item-border-color: #2A2A2A;
+}

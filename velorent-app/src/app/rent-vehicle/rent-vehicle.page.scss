@@ -2,14 +2,17 @@
 // RENT VEHICLE PAGE - Homepage Theme Match
 // ============================================
 
-// Color Palette
-$bg-primary: #0D0D0D;
-$card-bg: #1A1A1A;
-$accent-gold: #FACC15;
-$available-green: #2ECC71;
-$button-blue: #3A82F7;
-$text-primary: #FFFFFF;
-$text-secondary: #B3B3B3;
+// Color Palette - Hex values for SCSS functions, CSS variables for direct use
+// Note: SCSS functions (darken, lighten, rgba) require actual color values, not CSS variables
+$bg-primary: #0A0A0A; // var(--background-main)
+$card-bg: #1B1B1B; // var(--background-card)
+$accent-gold: #D4AF37; // var(--primary-gold)
+$accent-gold-light: #F4D57B; // var(--primary-gold-light)
+$accent-gold-dark: #A87C1C; // var(--primary-gold-dark)
+$available-green: #22C55E; // Keep green for semantic meaning (available status)
+$button-blue: #3A82F7; // Keep blue for non-primary actions if needed
+$text-primary: #EDEDED; // var(--text-primary)
+$text-secondary: #9E9E9E; // var(--text-muted)
 
 // ============================================
 // ION CONTENT & LAYOUT

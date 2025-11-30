@@ -130,7 +130,7 @@
             <ion-card-subtitle>{{ vehicle.type }}</ion-card-subtitle>
             <ion-card-title>{{ vehicle.name }}</ion-card-title>
             <div class="vehicle-company" *ngIf="vehicle.company_id">
-              <small style="color: #ffd700; font-weight: 500;">
+              <small style="color: #D4AF37; font-weight: 500;">
                 {{ getCompanyName(vehicle.company_id) }}
               </small>
             </div>
@@ -250,7 +250,7 @@
           {{ unreadCount }}
         </div>
       </div>
-      <span class="nav-label">Notifications{{ unreadCount > 0 ? ' (' + unreadCount + ')' : '' }}</span>
+      <span class="nav-label">Notifications</span>
     </button>
     
     <button class="nav-button" (click)="navigateToProfile()">

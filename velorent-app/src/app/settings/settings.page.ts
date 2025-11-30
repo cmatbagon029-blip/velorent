@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -209,7 +209,8 @@ export class TermsModalComponent {
 export class SettingsPage {
   constructor(
     private router: Router,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private alertController: AlertController
   ) {}
 
   async openTermsOfService() {
@@ -226,8 +227,35 @@ export class SettingsPage {
     return await modal.present();
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    this.router.navigateByUrl('/login');
+  async logout() {
+    // Show confirmation dialog
+    const alert = await this.alertController.create({
+      header: 'Confirm Logout',
+      message: 'Are you sure you want to log out?',
+      cssClass: 'logout-confirmation-alert',
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'alert-button-cancel',
+          handler: () => {
+            // Do nothing, just close
+          }
+        },
+        {
+          text: 'Logout',
+          role: 'destructive',
+          cssClass: 'alert-button-confirm',
+          handler: () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.router.navigateByUrl('/login');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 } 

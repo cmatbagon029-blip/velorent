@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { BookingRequestService, BookingRequest } from '../services/booking-request.service';
 import { RequestNotificationService } from '../services/request-notification.service';
+import { NotificationService } from '../services/notification.service';
 import { addIcons } from 'ionicons';
 import { 
   home,
@@ -57,11 +58,14 @@ export class BookingRequestsPage implements OnInit {
   filterStatus: 'all' | 'pending' | 'approved' | 'rejected' = 'all';
   notifications: RequestNotification[] = [];
   previousRequestStatuses: Map<number, string> = new Map();
+  unreadCount: number = 0;
+  requestUnreadCount: number = 0;
 
   constructor(
     private router: Router,
     private bookingRequestService: BookingRequestService,
     private requestNotificationService: RequestNotificationService,
+    private notificationService: NotificationService,
     private alertCtrl: AlertController
   ) {}
 
@@ -70,12 +74,23 @@ export class BookingRequestsPage implements OnInit {
     this.loadRequests();
     // Update the global notification count
     this.requestNotificationService.updateUnreadCount();
+    this.notificationService.updateUnreadCount();
+    
+    // Subscribe to notification counts
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+    
+    this.requestNotificationService.unreadCount$.subscribe(count => {
+      this.requestUnreadCount = count;
+    });
   }
 
   ionViewWillEnter() {
     this.loadRequests(); // Reload requests when page is entered
     // Update the global notification count
     this.requestNotificationService.updateUnreadCount();
+    this.notificationService.updateUnreadCount();
   }
 
   loadPreviousStatuses() {

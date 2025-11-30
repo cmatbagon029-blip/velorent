@@ -6,7 +6,7 @@ ion-content {
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #ffd700;
+  color: #D4AF37;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -31,7 +31,7 @@ ion-content {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(255, 215, 0, 0.3);
+  background: rgba(212, 175, 55, 0.3);
   border-radius: 50%;
   animation: float 6s infinite linear;
 }
@@ -66,14 +66,14 @@ ion-content {
 .register-card {
   background: rgba(24, 24, 24, 0.95);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 25px;
   padding: 2.5rem;
   width: 100%;
   max-width: 480px;
   box-shadow: 
     0 25px 50px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 215, 0, 0.1),
+    0 0 0 1px rgba(212, 175, 55, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   animation: slideInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
@@ -87,7 +87,7 @@ ion-content {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
   animation: shimmer 3s infinite;
 }
 
@@ -120,8 +120,8 @@ ion-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffd700;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+  background-color: #D4AF37;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 
 .logo img {
@@ -132,21 +132,21 @@ ion-content {
 }
 
 .register-title {
-  color: #ffd700;
+  color: #D4AF37;
   font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
   animation: glow 2s ease-in-out infinite alternate;
 }
 
 @keyframes glow {
-  from { text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-  to { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.3); }
+  from { text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
+  to { text-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.3); }
 }
 
 .register-subtitle {
-  color: rgba(255, 215, 0, 0.7);
+  color: rgba(212, 175, 55, 0.7);
   font-size: 0.95rem;
   font-weight: 300;
 }
@@ -158,9 +158,9 @@ ion-content {
 
 .form-control {
   background: rgba(35, 35, 35, 0.8);
-  border: 2px solid rgba(255, 215, 0, 0.3);
+  border: 2px solid rgba(212, 175, 55, 0.3);
   border-radius: 15px;
-  color: #ffd700;
+  color: #D4AF37;
   font-size: 1rem;
   padding: 1rem 1.2rem;
   width: 100%;
@@ -171,15 +171,15 @@ ion-content {
 
 .form-control:focus {
   outline: none;
-  border-color: #ffd700;
+  border-color: #D4AF37;
   box-shadow: 
-    0 0 0 4px rgba(255, 215, 0, 0.1),
-    0 0 20px rgba(255, 215, 0, 0.2);
+    0 0 0 4px rgba(212, 175, 55, 0.1),
+    0 0 20px rgba(212, 175, 55, 0.2);
   transform: translateY(-2px);
 }
 
 .form-control::placeholder {
-  color: rgba(255, 215, 0, 0.5);
+  color: rgba(212, 175, 55, 0.5);
 }
 
 .form-control:disabled {
@@ -191,7 +191,7 @@ ion-content {
   position: absolute;
   left: 1.2rem;
   top: 1rem;
-  color: rgba(255, 215, 0, 0.7);
+  color: rgba(212, 175, 55, 0.7);
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -205,7 +205,7 @@ ion-content {
   top: -0.5rem;
   left: 1rem;
   font-size: 0.8rem;
-  color: #ffd700;
+  color: #D4AF37;
   transform: scale(0.9);
 }
 
@@ -214,14 +214,14 @@ ion-content {
   right: 1.2rem;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 215, 0, 0.5);
+  color: rgba(212, 175, 55, 0.5);
   transition: all 0.3s ease;
   cursor: pointer;
   font-size: 18px;
 }
 
 .form-control:focus ~ .input-icon {
-  color: #ffd700;
+  color: #D4AF37;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -271,40 +271,40 @@ ion-content {
   gap: 12px;
   margin: 1.5rem 0;
   padding: 12px;
-  background: rgba(255, 215, 0, 0.05);
+  background: rgba(212, 175, 55, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.2);
 
   ion-checkbox {
     --background: rgba(35, 35, 35, 0.8);
-    --background-checked: #ffd700;
-    --border-color: rgba(255, 215, 0, 0.3);
-    --border-color-checked: #ffd700;
+    --background-checked: #D4AF37;
+    --border-color: rgba(212, 175, 55, 0.3);
+    --border-color-checked: #D4AF37;
     --checkmark-color: #000;
   }
 
   label {
-    color: rgba(255, 215, 0, 0.8);
+    color: rgba(212, 175, 55, 0.8);
     font-size: 0.9rem;
     line-height: 1.4;
     cursor: pointer;
 
     a {
-      color: #ffd700;
+      color: #D4AF37;
       text-decoration: underline;
       font-weight: 500;
       cursor: pointer;
       transition: color 0.2s;
 
       &:hover {
-        color: #ffed4e;
+        color: #F4D57B;
       }
     }
   }
 }
 
 .btn-register {
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  background: linear-gradient(135deg, #D4AF37, #F4D57B);
   color: #000;
   font-weight: 600;
   font-size: 1.1rem;
@@ -316,7 +316,7 @@ ion-content {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
   cursor: pointer;
 }
 
@@ -337,7 +337,7 @@ ion-content {
 
 .btn-register:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
 }
 
 .btn-register:active:not(:disabled) {
@@ -376,17 +376,17 @@ ion-content {
   text-align: center;
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 215, 0, 0.1);
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .form-footer p {
-  color: rgba(255, 215, 0, 0.7);
+  color: rgba(212, 175, 55, 0.7);
   font-size: 0.9rem;
   margin: 0;
 }
 
 .form-footer a {
-  color: #ffd700;
+  color: #D4AF37;
   text-decoration: underline;
   font-weight: 500;
   cursor: pointer;
@@ -394,20 +394,20 @@ ion-content {
 }
 
 .form-footer a:hover {
-  color: #ffed4e;
+  color: #F4D57B;
   text-decoration: underline;
 }
 
 ion-toolbar {
   --background: transparent;
-  --color: #ffd700;
+  --color: #D4AF37;
 }
 
 ion-title {
   text-align: center;
   font-weight: 700;
   font-size: 18px;
-  color: #ffd700;
+  color: #D4AF37;
 }
 
 @media (max-width: 480px) {

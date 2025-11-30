@@ -55,6 +55,11 @@ export const routes: Routes = [
     canActivate: [authGuard], // Require authentication to access my-rentals
   },
   {
+    path: 'transaction-details/:id',
+    loadComponent: () => import('./transaction-details/transaction-details.page').then(m => m.TransactionDetailsPage),
+    canActivate: [authGuard], // Require authentication to access transaction details
+  },
+  {
     path: 'booking-requests',
     loadComponent: () => import('./booking-requests/booking-requests.page').then(m => m.BookingRequestsPage),
     canActivate: [authGuard], // Require authentication to access booking requests

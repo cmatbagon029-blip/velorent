@@ -554,11 +554,94 @@ ion-card-content, ion-card-content p, ion-card-content span, ion-card-content di
 }
 
 ion-button[color="primary"] {
-  --background: #ffd700;
-  --background-activated: #b8860b;
-  color: #232323;
-  font-weight: 600;
-  border-radius: 12px;
+  /* Glossy Gold Gradient Background */
+  --background: linear-gradient(180deg, 
+    #FFE87C 0%, 
+    #F4D57B 15%, 
+    #D4AF37 50%, 
+    #C9A030 70%, 
+    #A87C1C 100%) !important;
+  --background-activated: linear-gradient(180deg, 
+    #C9A030 0%, 
+    #A87C1C 50%, 
+    #8B6915 100%) !important;
+  --background-hover: linear-gradient(180deg, 
+    #FFF4A3 0%, 
+    #FFE87C 20%, 
+    #F4D57B 50%, 
+    #D4AF37 80%, 
+    #C9A030 100%) !important;
+  --color: #000000 !important;
+  --border-radius: 12px !important;
+  --box-shadow: 
+    0 4px 15px rgba(212, 175, 55, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  
+  /* Glossy shine overlay */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, 
+      rgba(255, 255, 255, 0.35) 0%, 
+      rgba(255, 255, 255, 0.15) 50%, 
+      transparent 100%);
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Animated shine sweep */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      transparent 100%);
+    transition: left 0.6s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  &:hover:not([disabled]) {
+    --box-shadow: 
+      0 6px 25px rgba(212, 175, 55, 0.6),
+      0 0 40px rgba(212, 175, 55, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+    
+    &::after {
+      left: 100%;
+    }
+  }
+  
+  &:active:not([disabled]) {
+    --box-shadow: 
+      0 2px 12px rgba(212, 175, 55, 0.5),
+      0 0 20px rgba(212, 175, 55, 0.3),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    
+    &::before {
+      background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 100%);
+    }
+  }
 }
 
 .vehicle-info h1, .vehicle-info h2, .vehicle-info h3 {
