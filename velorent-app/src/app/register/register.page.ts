@@ -279,7 +279,7 @@ export class RegisterPage {
       this.isLoading = true;
       try {
         console.log('Sending registration request...');
-        const apiUrl = environment?.apiUrl || 'https://velorent-backend-clean.onrender.com/api';
+        const apiUrl = environment?.apiUrl || 'http://localhost:3000/api';
         const response = await axios.post(`${apiUrl}/auth/register`, {
           email: this.registerForm.value.email,
           password: this.registerForm.value.password,

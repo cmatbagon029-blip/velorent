@@ -22,8 +22,8 @@ export class ApiService {
       // Fallback to window global if available
       this.apiUrl = (window as any).__ENV__.apiUrl;
     } else {
-      // Final fallback to production URL
-      this.apiUrl = 'https://velorent-backend-clean.onrender.com/api';
+      // Final fallback to local app.js backend
+      this.apiUrl = 'http://localhost:3000/api';
     }
     
     // Debug logging for environment
@@ -287,7 +287,7 @@ export class ApiService {
     let errorMessage = 'An error occurred';
     
     // Store apiUrl in a variable to avoid 'this' context issues
-    const apiUrl = this.apiUrl || 'https://velorent-backend-clean.onrender.com/api';
+    const apiUrl = this.apiUrl || 'http://localhost:3000/api';
     
     if (error.error instanceof ErrorEvent) {
       // Client-side error

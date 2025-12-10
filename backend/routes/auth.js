@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const config = require('../config');
 const router = express.Router();
 
 // Regular login endpoint
@@ -18,10 +19,10 @@ router.post('/login', async (req, res) => {
     }
 
     connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'velorent'
+      host: config.DB_HOST,
+      user: config.DB_USER,
+      password: config.DB_PASS,
+      database: config.DB_NAME
     });
 
     // Find user by email
@@ -112,10 +113,10 @@ router.post('/social-login', async (req, res) => {
     }
 
     connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'velorent'
+      host: config.DB_HOST,
+      user: config.DB_USER,
+      password: config.DB_PASS,
+      database: config.DB_NAME
     });
 
     // Check if user exists with this social ID

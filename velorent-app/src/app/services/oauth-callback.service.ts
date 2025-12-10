@@ -16,7 +16,7 @@ export interface SocialUser {
   providedIn: 'root'
 })
 export class OAuthCallbackService {
-  private apiUrl = environment?.apiUrl || 'https://velorent-backend-clean.onrender.com/api';
+  private apiUrl = environment?.apiUrl || 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) { }
 
