@@ -8,10 +8,11 @@ workflows:
       xcode: latest
       java: 17
       android_signing:
-        - keystore: $CM_KEYSTORE          # uploaded in Code Signing
-          keystore_password: $CM_KEYSTORE_PASSWORD
-          alias: $CM_KEY_ALIAS
-          key_password: $CM_KEY_PASSWORD
+        - key:
+            file: $CM_KEYSTORE          # uploaded in Code Signing
+            password: $CM_KEYSTORE_PASSWORD
+            alias: $CM_KEY_ALIAS
+            key_password: $CM_KEY_PASSWORD
 
     scripts:
       - name: Install dependencies
@@ -40,7 +41,7 @@ workflows:
           cd velorent-app/android
           ./gradlew assembleRelease -PcdvEnableUniversalApk=true
 
-      - name: Sign the APK
+      - name: Sign the APK (manual signing)
         script: |
           APK_PATH=velorent-app/android/app/build/outputs/apk/release/app-release-universal.apk
           echo "Signing APK at: $APK_PATH"
