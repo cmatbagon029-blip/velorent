@@ -8,11 +8,10 @@ workflows:
       xcode: latest
       java: 17
       android_signing:
-        - key:
-            file: $CM_KEYSTORE          # uploaded in Code Signing
-            password: $CM_KEYSTORE_PASSWORD
-            alias: $CM_KEY_ALIAS
-            key_password: $CM_KEY_PASSWORD
+        - keystore: $CM_KEYSTORE          # uploaded in Code Signing
+          keystore_password: $CM_KEYSTORE_PASSWORD
+          key_alias: $CM_KEY_ALIAS
+          key_password: $CM_KEY_PASSWORD
 
     scripts:
       - name: Install dependencies
