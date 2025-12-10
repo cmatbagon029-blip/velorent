@@ -8,10 +8,10 @@ workflows:
       xcode: latest
       java: 17
       android_signing:
-  - keystore: "C:\Users\adria\velorent.keystore.jks"
-    keystore_password: delsocorro04
-    key_alias: velorentkey
-    key_password: delsocorro04
+      keystore: "C:\Users\adria\velorent.keystore.jks"
+      keystore_password: delsocorro04
+      key_alias: velorentkey
+      key_password: delsocorro04
 
     scripts:
       - name: Install dependencies
