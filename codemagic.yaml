@@ -2,8 +2,8 @@ workflows:
   build-android:
     name: Build Ionic Capacitor Android
     environment:
+      java: "17"
       node: latest
-      java: latest
 
     scripts:
       - name: Install dependencies
