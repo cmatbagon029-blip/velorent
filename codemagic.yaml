@@ -30,7 +30,8 @@ workflows:
       - name: Build Android release APK
         script: |
           cd velorent-app/android
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease -PcdvEnableUniversalApk=true
+
 
     artifacts:
       - velorent-app/android/app/build/outputs/apk/release/*.apk
