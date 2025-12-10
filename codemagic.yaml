@@ -1,0 +1,22 @@
+workflows:
+  ionic-capacitor-android:
+    name: Build Ionic Capacitor Android
+    environment:
+      node: latest
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install
+          npm install -g @ionic/cli
+      - name: Build Ionic app
+        script: |
+          ionic build
+      - name: Sync Capacitor
+        script: |
+          npx cap sync android
+      - name: Build Android release
+        script: |
+          cd android
+          ./gradlew assembleRelease
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk
