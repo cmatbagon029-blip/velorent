@@ -8,7 +8,7 @@ workflows:
       xcode: latest
       java: 17
       android_signing:
-        codemagic: potito-123456  
+        codemagic: potito  
 
     scripts:
       - name: Install dependencies
