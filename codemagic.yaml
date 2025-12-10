@@ -4,6 +4,7 @@ workflows:
     environment:
       node: latest
       java: latest
+
     scripts:
       - name: Install dependencies
         script: |
@@ -20,6 +21,11 @@ workflows:
         script: |
           cd velorent-app
           npx cap sync android
+
+      - name: Give gradlew permission
+        script: |
+          cd velorent-app/android
+          chmod +x gradlew
 
       - name: Build Android release APK
         script: |
