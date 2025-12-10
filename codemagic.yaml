@@ -8,10 +8,7 @@ workflows:
       xcode: latest
       java: 17
       android_signing:
-        - name: potito  # the name of the uploaded signing config in Codemagic
-          type: keystore
-          group: main
-          source: codemagic
+        codemagic: potito-123456  
 
     scripts:
       - name: Install dependencies
