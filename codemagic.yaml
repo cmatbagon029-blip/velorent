@@ -1,22 +1,30 @@
 workflows:
-  ionic-capacitor-android:
+  build-android:
     name: Build Ionic Capacitor Android
     environment:
       node: latest
+      java: latest
     scripts:
       - name: Install dependencies
         script: |
+          cd velorent-app
           npm install
           npm install -g @ionic/cli
+
       - name: Build Ionic app
         script: |
+          cd velorent-app
           ionic build
-      - name: Sync Capacitor
+
+      - name: Capacitor sync
         script: |
+          cd velorent-app
           npx cap sync android
-      - name: Build Android release
+
+      - name: Build Android release APK
         script: |
-          cd android
+          cd velorent-app/android
           ./gradlew assembleRelease
+
     artifacts:
-      - android/app/build/outputs/apk/release/*.apk
+      - velorent-app/android/app/build/outputs/apk/release/*.apk

@@ -23,7 +23,7 @@ export class ApiService {
       this.apiUrl = (window as any).__ENV__.apiUrl;
     } else {
       // Final fallback to production URL
-      this.apiUrl = 'http://192.168.1.21:3000/api';
+      this.apiUrl = 'https://velorent-backend-clean.onrender.com/api';
     }
     
     // Debug logging for environment
@@ -281,16 +281,20 @@ export class ApiService {
     );
   }
 
-  private handleError(error: HttpErrorResponse) {
+  // Use arrow function to preserve 'this' context
+  private handleError = (error: HttpErrorResponse) => {
     console.error('API Error:', error);
     let errorMessage = 'An error occurred';
+    
+    // Store apiUrl in a variable to avoid 'this' context issues
+    const apiUrl = this.apiUrl || 'https://velorent-backend-clean.onrender.com/api';
     
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = error.error.message;
     } else if (error.status === 0) {
       // Network error - connection failed
-      errorMessage = `Network Error: Unable to connect to server. Please check:\n1. Backend server is running on ${this.apiUrl}\n2. Device and server are on the same network\n3. Firewall allows connections on port 3000`;
+      errorMessage = `Network Error: Unable to connect to server. Please check:\n1. Backend server is running on ${apiUrl}\n2. Device and server are on the same network\n3. Firewall allows connections on port 3000\n4. Backend server is accessible at ${apiUrl}`;
     } else {
       // Server-side error - try to extract the actual error message
       const errorData = error.error;

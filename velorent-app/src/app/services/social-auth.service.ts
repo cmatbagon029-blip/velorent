@@ -16,7 +16,7 @@ export interface SocialUser {
   providedIn: 'root'
 })
 export class SocialAuthService {
-  private readonly API_URL = environment?.apiUrl || 'http://192.168.1.21:3000/api';
+  private readonly API_URL = environment?.apiUrl || 'https://velorent-backend-clean.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

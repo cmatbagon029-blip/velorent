@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import axios from 'axios';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { addIcons } from 'ionicons';
 import { checkmarkCircleOutline, closeCircleOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 
@@ -278,7 +279,8 @@ export class RegisterPage {
       this.isLoading = true;
       try {
         console.log('Sending registration request...');
-        const response = await axios.post('http://localhost:3000/api/auth/register', {
+        const apiUrl = environment?.apiUrl || 'https://velorent-backend-clean.onrender.com/api';
+        const response = await axios.post(`${apiUrl}/auth/register`, {
           email: this.registerForm.value.email,
           password: this.registerForm.value.password,
           name: this.registerForm.value.firstName + ' ' + this.registerForm.value.lastName
