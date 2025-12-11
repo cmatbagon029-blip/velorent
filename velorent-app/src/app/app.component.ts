@@ -29,19 +29,40 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
+    console.log('AppComponent ngOnInit - starting initialization');
+    
+    // Ensure router navigates to initial route
+    this.router.events.subscribe(event => {
+      console.log('Router event:', event.constructor.name);
+    });
+    
     // Hide splash screen with fade animation when app is ready
     if (Capacitor.isNativePlatform()) {
       try {
+        console.log('Native platform detected, initializing splash screen');
         // Wait for platform to be ready
         await this.platform.ready();
+        console.log('Platform ready');
+        
+        // Ensure initial navigation happens
+        if (!this.router.url || this.router.url === '/') {
+          console.log('Navigating to dashboard...');
+          this.router.navigate(['/dashboard']).then(() => {
+            console.log('Navigation to dashboard completed');
+          }).catch(err => {
+            console.error('Navigation error:', err);
+          });
+        }
         
         // Wait for router to be ready and initial navigation to complete
         // This ensures the app content is fully loaded before hiding splash
         setTimeout(async () => {
           try {
+            console.log('Waiting for content to render...');
             // Wait a bit more to ensure WebView content is rendered
             await new Promise(resolve => setTimeout(resolve, 500));
             
+            console.log('Hiding splash screen...');
             // Hide splash screen with smooth fade animation
             await SplashScreen.hide({
               fadeOutDuration: 500 // 500ms fade-out animation for smoother transition
@@ -56,10 +77,12 @@ export class AppComponent implements OnInit {
               console.error('Error force hiding splash:', e);
             }
           }
-        }, 3000); // Show splash for 3 seconds total
+        }, 2000); // Reduced to 2 seconds for faster startup
       } catch (error) {
         console.error('Error initializing splash screen:', error);
       }
+    } else {
+      console.log('Web platform - splash screen handling skipped');
     }
   }
 }

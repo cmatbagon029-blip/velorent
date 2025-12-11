@@ -23,6 +23,8 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
 
   // Step 1 fields
   fullName: string = '';
+  firstName: string = '';
+  lastName: string = '';
   mobileNumber: string = '';
   serviceType: string = '';
   serviceOptions = ['Self Drive', 'Pick-up/Drop-off'];
@@ -99,6 +101,7 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.prefillUserInfo();
     this.route.queryParams.subscribe(params => {
       this.vehicleId = params['vehicleId'] ? +params['vehicleId'] : null;
       if (!this.vehicleId || isNaN(this.vehicleId)) {
@@ -130,7 +133,10 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   }
 
   nextStep() {
-    if (!this.fullName || !this.mobileNumber || !this.serviceType) {
+    // Build full name from first/last for validation and submission
+    this.fullName = [this.firstName, this.lastName].filter(Boolean).join(' ').trim();
+
+    if (!this.firstName || !this.lastName || !this.mobileNumber || !this.serviceType) {
       this.showToast('Please fill in all required fields.');
       return;
     }
@@ -1035,6 +1041,9 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
 
   // Step 1: Create booking and proceed to payment
   proceedToPayment() {
+    // Ensure fullName is synced from first/last name before submission
+    this.fullName = [this.firstName, this.lastName].filter(Boolean).join(' ').trim();
+
     // Check if user is logged in
     const user = localStorage.getItem('user');
     const token = localStorage.getItem('token');
@@ -1309,5 +1318,24 @@ export class RentVehiclePage implements OnInit, AfterViewInit {
   // Legacy method - now redirects to proceedToPayment
   submitBooking() {
     this.proceedToPayment();
+  }
+
+  private prefillUserInfo() {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (!userStr) {
+        return;
+      }
+      const user = JSON.parse(userStr);
+      const name: string = user?.name || '';
+      if (name) {
+        const parts = name.trim().split(/\s+/);
+        this.firstName = parts.shift() || '';
+        this.lastName = parts.join(' ');
+        this.fullName = [this.firstName, this.lastName].filter(Boolean).join(' ').trim();
+      }
+    } catch (err) {
+      console.warn('Could not prefill user info', err);
+    }
   }
 }

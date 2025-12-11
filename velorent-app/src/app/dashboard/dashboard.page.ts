@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
@@ -74,10 +74,17 @@ export class DashboardPage implements OnInit {
   showFilters: boolean = false;
 
   get displayedVehicles(): Vehicle[] {
+    if (!this.filteredVehicles || this.filteredVehicles.length === 0) {
+      return [];
+    }
     if (this.showAllVehicles || this.filteredVehicles.length <= this.INITIAL_VEHICLE_COUNT) {
       return this.filteredVehicles;
     }
     return this.filteredVehicles.slice(0, this.INITIAL_VEHICLE_COUNT);
+  }
+
+  trackByVehicleId(index: number, vehicle: Vehicle): number {
+    return vehicle.id;
   }
 
   onBrowseAllVehicles() {
@@ -128,7 +135,8 @@ export class DashboardPage implements OnInit {
     private apiService: ApiService,
     private navCtrl: NavController,
     private notificationService: NotificationService,
-    private requestNotificationService: RequestNotificationService
+    private requestNotificationService: RequestNotificationService,
+    private cdr: ChangeDetectorRef
   ) {
     console.log('Dashboard component constructed');
   }
@@ -194,12 +202,24 @@ export class DashboardPage implements OnInit {
           this.vehicles = vehicles;
           this.filteredVehicles = [...vehicles];
           console.log('Vehicles count:', vehicles.length);
+          console.log('Filtered vehicles count:', this.filteredVehicles.length);
+          console.log('Displayed vehicles count:', this.displayedVehicles.length);
+          console.log('First vehicle sample:', vehicles[0] ? JSON.stringify(vehicles[0], null, 2) : 'No vehicles');
+          console.log('Loading flag:', this.loading);
         } else {
           console.warn('Vehicles response is not an array:', vehicles);
           this.vehicles = [];
           this.filteredVehicles = [];
         }
         this.loading = false;
+        this.cdr.detectChanges(); // Force change detection
+        console.log('Loading set to false. Final state:', {
+          vehiclesCount: this.vehicles.length,
+          filteredCount: this.filteredVehicles.length,
+          displayedCount: this.displayedVehicles.length,
+          loading: this.loading,
+          error: this.error
+        });
       },
       error: (error) => {
         console.error('Error loading vehicles:', error);

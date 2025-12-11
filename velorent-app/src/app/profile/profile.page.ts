@@ -223,18 +223,80 @@ export class ProfilePage implements OnInit {
   loadUserData() {
     const userStr = localStorage.getItem('user');
     const token = localStorage.getItem('token');
+
+    const decoded = token ? this.decodeJwt(token) : null;
     
     if (userStr) {
       try {
         this.user = JSON.parse(userStr);
-        console.log('User data loaded:', this.user.name, this.user.email);
+        // Merge/override with decoded claims if they look more complete
+        if (decoded) {
+          const merged: any = { ...this.user };
+          const isPlaceholderEmail = (email?: string) => !email || email === 'user@gmail.com';
+          const isPlaceholderName = (name?: string) => !name || name === 'Google User' || name === 'Facebook User';
+
+          if (!merged.email || isPlaceholderEmail(merged.email)) merged.email = decoded.email || merged.email;
+          if (!merged.name || isPlaceholderName(merged.name)) merged.name = decoded.name || decoded.email || merged.name;
+          if (!merged.provider) merged.provider = decoded.provider || decoded.auth_provider || merged.provider;
+          if (!merged.role) merged.role = decoded.role || 'User';
+          if (!merged.id) merged.id = decoded.userId || decoded.id || merged.id;
+          this.user = merged;
+        }
       } catch (error) {
         console.error('Error parsing user data:', error);
         this.user = null;
       }
+    } else if (decoded) {
+      this.user = {
+        name: decoded.name || decoded.email || 'User',
+        email: decoded.email || '',
+        provider: decoded.provider || decoded.auth_provider || '',
+        role: decoded.role || 'User',
+        id: decoded.userId || decoded.id || ''
+      };
     } else {
       this.user = null;
     }
+  }
+
+  private decodeJwt(token: string): any | null {
+    try {
+      const payload = token.split('.')[1];
+      if (!payload) return null;
+      const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decoded);
+    } catch (err) {
+      console.warn('Failed to decode JWT', err);
+      return null;
+    }
+  }
+
+  get displayName(): string {
+    if (!this.user) return 'User';
+    return this.user.name || this.user.fullName || this.user.email || 'User';
+  }
+
+  get displayEmail(): string {
+    if (!this.user) return '';
+    return this.user.email || '';
+  }
+
+  get displayProvider(): string {
+    if (!this.user) return '';
+    return this.user.provider ? this.user.provider : '';
+  }
+
+  get displayRole(): string {
+    if (!this.user) return '';
+    return this.user.role ? this.user.role : 'User';
+  }
+
+  get avatarInitials(): string {
+    const name = this.displayName || '';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 0) return 'U';
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   }
 
   loadSettings() {

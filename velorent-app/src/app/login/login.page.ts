@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IonicModule, ModalController, NavController } from '@ionic/angular';
+import { IonicModule, ModalController, NavController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -37,7 +37,8 @@ export class LoginPage implements OnInit {
     private authService: AuthService,
     private socialAuthService: SocialAuthService,
     private modalCtrl: ModalController,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private toastController: ToastController
   ) {
     // Don't clear auth data when landing on login page
     // User might be checking login status
@@ -117,6 +118,7 @@ export class LoginPage implements OnInit {
         if (response.success) {
           console.log('Login successful, navigating to dashboard...');
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          await this.showSuccessToast('Login successful!');
           this.navCtrl.navigateRoot(returnUrl || '/dashboard');
         } else {
           await this.showAlert('Login Failed', response.message);
@@ -134,6 +136,16 @@ export class LoginPage implements OnInit {
         this.isLoading = false;
       }
     }
+  }
+
+  private async showSuccessToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color: 'success',
+      position: 'bottom'
+    });
+    await toast.present();
   }
 
   async loginWithGoogle() {

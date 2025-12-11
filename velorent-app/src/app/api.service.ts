@@ -23,7 +23,7 @@ export class ApiService {
       this.apiUrl = (window as any).__ENV__.apiUrl;
     } else {
       // Final fallback to local app.js backend
-      this.apiUrl = 'http://localhost:3000/api';
+      this.apiUrl = 'https://velorent-backend.onrender.com/api';
     }
     
     // Debug logging for environment
@@ -287,7 +287,7 @@ export class ApiService {
     let errorMessage = 'An error occurred';
     
     // Store apiUrl in a variable to avoid 'this' context issues
-    const apiUrl = this.apiUrl || 'http://localhost:3000/api';
+    const apiUrl = this.apiUrl || 'https://velorent-backend.onrender.com/api';
     
     if (error.error instanceof ErrorEvent) {
       // Client-side error

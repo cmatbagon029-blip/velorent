@@ -1,13 +1,4 @@
 import { Routes } from '@angular/router';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { TermsOfServicePage } from './terms-of-service/terms-of-service.page';
-import { LoginPage } from './login/login.page';
-import { RegisterPage } from './register/register.page';
-import { DashboardPage } from './dashboard/dashboard.page';
-import { CompanyDetailsPage } from './company-details/company-details.page';
-import { VehicleDetailsPage } from './vehicle-details/vehicle-details.page';
-import { MyRentalsPage } from './my-rentals/my-rentals.page';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -47,7 +38,7 @@ export const routes: Routes = [
   },
   {
     path: 'terms-of-service',
-    component: TermsOfServicePage
+    loadComponent: () => import('./terms-of-service/terms-of-service.page').then(m => m.TermsOfServicePage),
   },
   {
     path: 'my-rentals',

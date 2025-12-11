@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
@@ -25,7 +25,8 @@ export class VehicleDetailsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -94,10 +95,41 @@ export class VehicleDetailsPage implements OnInit {
     event.target.complete();
   }
 
-  goToRentVehicle() {
-    if (this.vehicle && this.isVehicleAvailable()) {
+  async goToRentVehicle() {
+    if (!this.vehicle || !this.isVehicleAvailable()) {
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      await this.showLoginRequiredModal();
+      return;
+    }
+
       this.router.navigate(['/rent-vehicle'], { queryParams: { vehicleId: this.vehicle.id } });
     }
+
+  private async showLoginRequiredModal() {
+    const alert = await this.alertController.create({
+      header: 'Login Required',
+      message: 'Please log in first to book this vehicle.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Go to Login',
+          handler: () => {
+            this.router.navigate(['/login'], {
+              queryParams: { returnUrl: `/rent-vehicle?vehicleId=${this.vehicle?.id}` }
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   // Vehicle status helper functions

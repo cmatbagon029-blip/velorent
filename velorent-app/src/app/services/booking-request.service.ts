@@ -55,7 +55,7 @@ export interface FeeComputation {
   providedIn: 'root'
 })
 export class BookingRequestService {
-  private apiUrl = environment?.apiUrl || 'http://localhost:3000/api';
+  private apiUrl = environment?.apiUrl || 'https://velorent-backend.onrender.com/api';
 
   constructor(private http: HttpClient) { }
 

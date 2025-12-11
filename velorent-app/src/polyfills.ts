@@ -19,6 +19,47 @@
  */
 
 /**
+ * CRITICAL: These polyfills MUST be defined before Zone.js loads
+ * Android WebView (especially older versions) doesn't support these modern APIs
+ */
+
+// globalThis polyfill
+(function() {
+  try {
+    if (typeof (globalThis as any) === 'undefined') {
+      if (typeof window !== 'undefined') {
+        (window as any).globalThis = window;
+      } else if (typeof self !== 'undefined') {
+        (self as any).globalThis = self;
+      }
+    }
+  } catch (e) {
+    // Silently fail if polyfill can't be applied
+  }
+})();
+
+// queueMicrotask polyfill - MUST be before Zone.js
+(function() {
+  try {
+    if (typeof queueMicrotask === 'undefined') {
+      const globalObj: any = typeof window !== 'undefined' ? window : (typeof self !== 'undefined' ? self : {});
+      globalObj.queueMicrotask = function(callback: () => void) {
+        if (typeof Promise !== 'undefined' && Promise.resolve) {
+          Promise.resolve().then(callback).catch(function(error: any) {
+            setTimeout(function() { throw error; }, 0);
+          });
+        } else {
+          // Fallback if Promise is not available (very old browsers)
+          setTimeout(callback, 0);
+        }
+      };
+    }
+  } catch (e) {
+    // Silently fail if polyfill can't be applied
+  }
+})();
+
+/**
  * By default, zone.js will patch all possible macroTask and DomEvents
  * user can disable parts of macroTask/DomEvents patch by setting following flags
  * because those flags need to be set before `zone.js` being loaded, and webpack

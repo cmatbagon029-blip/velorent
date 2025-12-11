@@ -63,7 +63,7 @@ export class AuthService {
     }
 
     try {
-      const apiUrl = environment?.apiUrl || 'http://localhost:3000/api';
+      const apiUrl = environment?.apiUrl || 'https://velorent-backend.onrender.com/api';
       console.log('Sending login request to:', `${apiUrl}/auth/login`);
       const response = await axios.post(`${apiUrl}/auth/login`, {
         email,

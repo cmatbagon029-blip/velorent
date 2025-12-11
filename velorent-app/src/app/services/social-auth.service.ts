@@ -10,13 +10,14 @@ export interface SocialUser {
   name: string;
   picture?: string;
   provider: 'google' | 'facebook';
+  created_at?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocialAuthService {
-  private readonly API_URL = environment?.apiUrl || 'http://localhost:3000/api';
+  private readonly API_URL = environment?.apiUrl || 'https://velorent-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
@@ -30,16 +31,20 @@ export class SocialAuthService {
       const clientId = '666180269700-a5o32j97ludkq8km718vdh5io5su5idf.apps.googleusercontent.com';
       const redirectUri = window.location.origin + '/auth/google/callback';
       const scope = 'openid email profile';
+      const nonce = this.generateNonce();
+      sessionStorage.setItem('google_oauth_nonce', nonce);
       
       // Create Google OAuth URL
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${clientId}&` +
         `redirect_uri=${encodeURIComponent(redirectUri)}&` +
         `scope=${encodeURIComponent(scope)}&` +
-        `response_type=code&` +
+        `response_type=code id_token&` +
         `access_type=offline&` +
         `prompt=select_account&` +
-        `state=google_auth`;
+        `include_granted_scopes=true&` +
+        `state=google_auth&` +
+        `nonce=${nonce}`;
 
       // Store the resolve/reject functions for later use
       (window as any).googleAuthResolve = resolve;
@@ -48,6 +53,10 @@ export class SocialAuthService {
       // Redirect the main window to Google OAuth
       window.location.href = authUrl;
     });
+  }
+
+  private generateNonce(): string {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
   }
 
   /**

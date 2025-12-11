@@ -17,6 +17,45 @@
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <!-- Polyfills for Android WebView compatibility - MUST run before any other scripts -->
+  <script>
+    // globalThis polyfill
+    (function() {
+      if (typeof globalThis === 'undefined') {
+        if (typeof window !== 'undefined') {
+          window.globalThis = window;
+        } else if (typeof self !== 'undefined') {
+          self.globalThis = self;
+        }
+      }
+    })();
+    
+    // queueMicrotask polyfill - CRITICAL: Must be defined before Zone.js
+    (function() {
+      if (typeof queueMicrotask === 'undefined') {
+        var globalObj = typeof window !== 'undefined' ? window : (typeof self !== 'undefined' ? self : {});
+        var queueMicrotaskImpl = function(callback) {
+          if (typeof Promise !== 'undefined' && Promise.resolve) {
+            Promise.resolve().then(callback).catch(function(error) {
+              setTimeout(function() { throw error; }, 0);
+            });
+          } else {
+            // Fallback if Promise is not available
+            setTimeout(callback, 0);
+          }
+        };
+        // Define on both window/self and global scope
+        globalObj.queueMicrotask = queueMicrotaskImpl;
+        // Also try to define on global scope if it exists
+        try {
+          if (typeof global !== 'undefined') {
+            global.queueMicrotask = queueMicrotaskImpl;
+          }
+        } catch(e) {}
+      }
+    })();
+  </script>
 </head>
 
 <body>

@@ -18,12 +18,12 @@
       <div *ngIf="user" class="user-profile">
         <div class="profile-header">
           <ion-avatar class="profile-avatar">
-            <img *ngIf="user.picture" [src]="user.picture" [alt]="user.name" class="profile-image">
-            <ion-icon *ngIf="!user.picture" name="person-circle" class="avatar-icon"></ion-icon>
+            <img *ngIf="user?.picture" [src]="user.picture" [alt]="displayName" class="profile-image">
+            <div *ngIf="!user?.picture" class="avatar-fallback">{{ avatarInitials }}</div>
           </ion-avatar>
           <div class="profile-info">
-            <h2 class="user-name">{{ user.name }}</h2>
-            <p class="user-role">{{ user.role | titlecase }}</p>
+            <h2 class="user-name">{{ displayName }}</h2>
+            <p class="user-role">{{ displayRole | titlecase }}</p>
           </div>
         </div>
         
@@ -32,16 +32,16 @@
             <ion-icon name="mail-outline" class="field-icon"></ion-icon>
             <div class="field-content">
               <span class="profile-label">Email Address</span>
-              <span class="profile-value">{{ user.email }}</span>
+              <span class="profile-value">{{ displayEmail || 'Not available' }}</span>
             </div>
           </div>
           
-          <div class="profile-field" *ngIf="user.provider">
-            <ion-icon name="logo-google" *ngIf="user.provider === 'google'" class="field-icon"></ion-icon>
-            <ion-icon name="logo-facebook" *ngIf="user.provider === 'facebook'" class="field-icon"></ion-icon>
+          <div class="profile-field" *ngIf="displayProvider">
+            <ion-icon name="logo-google" *ngIf="displayProvider === 'google'" class="field-icon"></ion-icon>
+            <ion-icon name="logo-facebook" *ngIf="displayProvider === 'facebook'" class="field-icon"></ion-icon>
             <div class="field-content">
               <span class="profile-label">Login Provider</span>
-              <span class="profile-value">{{ user.provider | titlecase }}</span>
+              <span class="profile-value">{{ displayProvider | titlecase }}</span>
             </div>
           </div>
           

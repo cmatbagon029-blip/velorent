@@ -20,12 +20,18 @@
           <p class="section-subtitle">Please enter your personal details to begin.</p>
         </ion-card-header>
         <ion-card-content>
-          <ion-item class="form-field-item">
-            <ion-label position="stacked">Full Name <span class="required">*</span></ion-label>
-            <ion-input type="text" [(ngModel)]="fullName" name="fullName" required></ion-input>
+          <div class="name-row">
+            <ion-item class="form-field-item first-name-field">
+              <ion-label position="stacked">First Name <span class="required">*</span></ion-label>
+              <ion-input type="text" [(ngModel)]="firstName" name="firstName" required></ion-input>
+            </ion-item>
+            <ion-item class="form-field-item last-name-field">
+              <ion-label position="stacked">Last Name <span class="required">*</span></ion-label>
+              <ion-input type="text" [(ngModel)]="lastName" name="lastName" required></ion-input>
           </ion-item>
+          </div>
           
-          <ion-item class="form-field-item">
+          <ion-item class="form-field-item mobile-field">
             <ion-label position="stacked">Mobile Number <span class="required">*</span></ion-label>
             <ion-input type="tel" [(ngModel)]="mobileNumber" name="mobileNumber" required maxlength="15"></ion-input>
           </ion-item>
@@ -44,7 +50,7 @@
         </ion-card-content>
       </ion-card>
       
-      <ion-button expand="block" class="btn-primary-modern" (click)="nextStep()" [disabled]="!fullName || !mobileNumber || !serviceType">
+      <ion-button expand="block" class="btn-primary-modern" (click)="nextStep()" [disabled]="!firstName || !lastName || !mobileNumber || !serviceType">
         Next
       </ion-button>
     </div>
@@ -439,50 +445,43 @@
 </ion-content>
 
 <!-- Service Type Selection Modal -->
-<ion-modal [isOpen]="showServiceTypeModal" [backdropDismiss]="false">
+<ion-modal [isOpen]="showServiceTypeModal" [backdropDismiss]="false" class="service-type-modal">
   <ng-template>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Select Service Type</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="closeServiceTypeModal()">
-            <ion-icon name="close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="service-modal-content">
-      <!-- Debug: Show current selection -->
-      <div *ngIf="serviceType" class="service-selection-info">
-        Current Selection: {{ serviceType }}
+    <div class="service-modal-shell">
+      <div class="service-modal-card">
+        <div class="service-modal-header">
+          <h3>Select Service Type</h3>
       </div>
-      <div class="service-options">
+
+        <div class="service-modal-divider"></div>
+
+        <div class="service-modal-body">
         <div 
-          class="service-option" 
+            class="service-radio"
           *ngFor="let option of serviceOptions" 
           [class.selected]="serviceType === option"
           (click)="selectServiceType(option)">
-          <div class="service-icon">
-            <ion-icon [name]="option === 'Self Drive' ? 'car-outline' : 'location-outline'"></ion-icon>
+            <div class="radio-indicator"></div>
+            <div class="radio-label">
+              <div class="radio-title">{{ option === 'Pick-up/Drop-off' ? 'With Driver' : option }}</div>
+              <div class="radio-sub" *ngIf="option === 'Self Drive'">Drive the vehicle yourself</div>
+              <div class="radio-sub" *ngIf="option === 'Pick-up/Drop-off'">We provide a driver for you</div>
           </div>
-          <div class="service-info">
-            <h3>{{ option }}</h3>
-            <p *ngIf="option === 'Self Drive'">Drive the vehicle yourself</p>
-            <p *ngIf="option === 'Pick-up/Drop-off'">We'll pick you up and drop you off</p>
-          </div>
-          <div class="service-check" *ngIf="serviceType === option">
-            <ion-icon name="checkmark-circle"></ion-icon>
           </div>
         </div>
+
+        <div class="service-modal-divider"></div>
+
+        <div class="service-modal-footer">
+          <ion-button fill="outline" color="medium" (click)="closeServiceTypeModal()" class="btn-cancel">
+            Cancel
+          </ion-button>
+          <ion-button color="warning" (click)="confirmServiceType()" [disabled]="!serviceType" class="btn-ok">
+            OK
+          </ion-button>
+        </div>
       </div>
-    </ion-content>
-    <ion-footer>
-      <ion-toolbar>
-        <ion-button expand="block" class="btn-primary-modern" (click)="confirmServiceType()" [disabled]="!serviceType">
-          Confirm Selection
-        </ion-button>
-      </ion-toolbar>
-    </ion-footer>
+    </div>
   </ng-template>
 </ion-modal>
 

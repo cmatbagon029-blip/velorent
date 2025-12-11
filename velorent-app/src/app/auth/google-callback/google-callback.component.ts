@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { OAuthCallbackService } from '../../services/oauth-callback.service';
+import { SocialUser } from '../../services/social-auth.service';
 
 @Component({
   selector: 'app-google-callback',
@@ -44,9 +45,12 @@ export class GoogleCallbackComponent implements OnInit {
   ngOnInit() {
     // Get the authorization code from URL parameters
     this.route.queryParams.subscribe(params => {
-      const code = params['code'];
-      const error = params['error'];
-      const state = params['state'];
+      // Some providers return params in the hash fragment; merge both.
+      const fragmentParams = this.parseHashParams(window.location.hash);
+      const code = params['code'] || fragmentParams['code'];
+      const idToken = params['id_token'] || fragmentParams['id_token'];
+      const error = params['error'] || fragmentParams['error'];
+      const state = params['state'] || fragmentParams['state'];
       
       console.log('Google callback params:', params);
       
@@ -55,8 +59,8 @@ export class GoogleCallbackComponent implements OnInit {
         this.sendMessageToParent('GOOGLE_AUTH_ERROR', { error });
       } else if (code && state === 'google_auth') {
         console.log('Google OAuth code received:', code);
-        // Exchange code for user info
-        this.exchangeCodeForUserInfo(code);
+        // Exchange code/id token for user info
+        this.exchangeCodeForUserInfo(code, idToken);
       } else {
         console.log('No code or invalid state received');
         this.sendMessageToParent('GOOGLE_AUTH_ERROR', { error: 'No authorization code received' });
@@ -64,13 +68,21 @@ export class GoogleCallbackComponent implements OnInit {
     });
   }
 
-  private async exchangeCodeForUserInfo(code: string) {
+  private parseHashParams(hash: string): Record<string, string> {
+    if (!hash || hash.length <= 1) return {};
+    const query = hash.startsWith('#') ? hash.substring(1) : hash;
+    return query.split('&').reduce((acc: any, part) => {
+      const [k, v] = part.split('=');
+      if (k) acc[decodeURIComponent(k)] = v ? decodeURIComponent(v) : '';
+      return acc;
+    }, {});
+  }
+
+  private async exchangeCodeForUserInfo(code: string, idToken?: string) {
     try {
       console.log('Exchanging Google OAuth code for user info:', code);
       
-      // In a real implementation, you would send this code to your backend
-      // to exchange it for user information
-      const userInfo = await this.getUserInfoFromCode(code);
+      const userInfo = this.buildUserFromIdToken(idToken) || await this.getUserInfoFromCode(code);
       console.log('User info retrieved:', userInfo);
       
       // Authenticate with backend
@@ -91,7 +103,9 @@ export class GoogleCallbackComponent implements OnInit {
       this.sendMessageToParent('GOOGLE_AUTH_ERROR', { error: errorMessage });
       
       // Redirect to login page on error
-      window.location.href = '/login?error=' + encodeURIComponent(errorMessage);
+      setTimeout(() => {
+        window.location.href = '/login?error=' + encodeURIComponent(errorMessage);
+      }, 300);
     }
   }
 
@@ -147,14 +161,36 @@ export class GoogleCallbackComponent implements OnInit {
     }, 1000);
   }
 
+  private buildUserFromIdToken(idToken?: string): SocialUser | null {
+    if (!idToken) return null;
+    try {
+      const payload = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      const nonceFromStorage = sessionStorage.getItem('google_oauth_nonce');
+      if (payload.nonce && nonceFromStorage && payload.nonce !== nonceFromStorage) {
+        console.warn('Nonce mismatch; ignoring id_token');
+        return null;
+      }
+      return {
+        id: payload.sub || ('google_user_' + Date.now()),
+        email: payload.email || '',
+        name: payload.name || payload.email || 'Google User',
+        picture: payload.picture || '',
+        provider: 'google',
+        created_at: new Date().toISOString()
+      };
+    } catch (err) {
+      console.error('Failed to parse id_token', err);
+      return null;
+    }
+  }
+
   private async getUserInfoFromCode(code: string) {
-    // In a real implementation, you would exchange this code for user information
-    // For now, return a basic user structure that will be handled by the backend
+    // Fallback: minimal payload; backend should exchange the code for real profile data
     return {
       id: 'google_user_' + Date.now(),
-      email: 'user@gmail.com',
+      email: '',
       name: 'Google User',
-      picture: 'https://via.placeholder.com/150',
+      picture: '',
       provider: 'google' as 'google',
       created_at: new Date().toISOString()
     };
@@ -177,7 +213,8 @@ export class GoogleCallbackComponent implements OnInit {
       window.opener.postMessage({ type, ...data }, window.location.origin);
       console.log('Message sent to parent window');
     } else {
-      console.error('No parent window found and no stored auth functions');
+      // In same-window flow, there may be no parent/opener. Just no-op.
+      console.log('No parent window or stored auth functions; continuing without postMessage');
     }
   }
 }

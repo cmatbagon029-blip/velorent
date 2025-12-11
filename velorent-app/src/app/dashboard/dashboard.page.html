@@ -114,9 +114,9 @@
   </div>
 
   <!-- Vehicles Grid -->
-  <ion-grid class="vehicles-grid">
+  <ion-grid class="vehicles-grid" *ngIf="!loading && !error && filteredVehicles && filteredVehicles.length > 0">
     <ion-row>
-      <ion-col size="6" size-md="4" size-lg="3" *ngFor="let vehicle of displayedVehicles">
+      <ion-col size="6" size-md="4" size-lg="3" *ngFor="let vehicle of displayedVehicles; trackBy: trackByVehicleId">
         <ion-card class="vehicle-card" [class.unavailable]="!isVehicleAvailable(vehicle)" (click)="viewVehicleDetails(vehicle.id)">
           <div class="image-container">
             <img [src]="vehicle.imageUrl || 'assets/images/vehicle-placeholder.svg'" 
@@ -137,7 +137,7 @@
           </ion-card-header>
           <ion-card-content>
             <div class="price-container">
-              <span class="price">₱{{ vehicle.price_without_driver | number:'1.2-2' }}</span>
+              <span class="price">₱{{ (vehicle.price_without_driver || vehicle.price_with_driver || vehicle.price || 0) | number:'1.2-2' }}</span>
               <span class="per-day">/day without driver</span>
             </div>
             <ion-button 
@@ -180,7 +180,7 @@
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!loading && !error && vehicles.length === 0" class="empty-container">
+  <div *ngIf="!loading && !error && displayedVehicles.length === 0 && vehicles.length === 0" class="empty-container">
     <ion-icon name="car-outline" style="font-size: 64px; color: #999;"></ion-icon>
     <h2>No Vehicles Available</h2>
     <p>There are no vehicles available at the moment. Please check back later.</p>
