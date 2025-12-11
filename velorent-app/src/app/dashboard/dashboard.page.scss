@@ -3,11 +3,14 @@ ion-content {
   background: #0A0A0A !important;
   --padding-bottom: 140px; /* allow scrolling past bottom nav */
   position: relative;
-  height: 100%;
+  min-height: 100vh !important; /* Use min-height instead of height for Android */
+  height: auto !important; /* Allow content to expand */
   padding-bottom: 120px; /* Extra space for bottom navigation */
   overflow-y: auto !important;
   pointer-events: auto !important;
   z-index: 1 !important;
+  display: block !important; /* Ensure it's displayed */
+  visibility: visible !important; /* Ensure it's visible */
 }
 
 ion-card {

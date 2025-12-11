@@ -59,8 +59,8 @@ export class AppComponent implements OnInit {
         setTimeout(async () => {
           try {
             console.log('Waiting for content to render...');
-            // Wait a bit more to ensure WebView content is rendered
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Wait longer for Android to ensure content is fully rendered
+            await new Promise(resolve => setTimeout(resolve, 1500));
             
             console.log('Hiding splash screen...');
             // Hide splash screen with smooth fade animation
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
               console.error('Error force hiding splash:', e);
             }
           }
-        }, 2000); // Reduced to 2 seconds for faster startup
+        }, 3500); // Increased to 3.5 seconds for Android to ensure content renders
       } catch (error) {
         console.error('Error initializing splash screen:', error);
       }
