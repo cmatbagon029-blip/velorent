@@ -127,6 +127,8 @@ try {
                                 $paymentMethod = 'GrabPay';
                             } else if ($sourceType === 'paymaya') {
                                 $paymentMethod = 'PayMaya';
+                            } else if ($sourceType === 'qrph') {
+                                $paymentMethod = 'QR Ph';
                             } else if ($sourceType) {
                                 $paymentMethod = ucfirst(str_replace('_', ' ', $sourceType));
                             }
@@ -160,6 +162,8 @@ try {
                                                 $paymentMethod = 'GrabPay';
                                             } else if ($sourceType === 'paymaya') {
                                                 $paymentMethod = 'PayMaya';
+                                            } else if ($sourceType === 'qrph') {
+                                                $paymentMethod = 'QR Ph';
                                             } else if ($sourceType) {
                                                 $paymentMethod = ucfirst(str_replace('_', ' ', $sourceType));
                                             }

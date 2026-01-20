@@ -19,6 +19,192 @@ async function getConnection() {
   });
 }
 
+// Create QR Ph (Online QR) payment intent and return QR image URL
+router.post('/qrph', auth.verifyToken, async (req, res) => {
+  let connection;
+  try {
+    const { amount, booking_id } = req.body;
+
+    // Validate required fields
+    if (!amount || amount <= 0) {
+      return res.status(400).json({
+        error: 'Amount is required and must be greater than 0'
+      });
+    }
+
+    if (!booking_id) {
+      return res.status(400).json({
+        error: 'booking_id is required'
+      });
+    }
+
+    // Validate PayMongo secret key is configured
+    if (!config.PAYMONGO_SECRET_KEY) {
+      console.error('PayMongo secret key is not configured in config.env');
+      return res.status(500).json({
+        error: 'PayMongo secret key is not configured',
+        hint: 'Please check your config.env file and ensure PAYMONGO_SECRET_KEY is set'
+      });
+    }
+
+    // Convert amount to centavos (PayMongo uses smallest currency unit)
+    const amountInCentavos = Math.round(amount * 100);
+
+    console.log('=== CREATING PAYMONGO QRPH PAYMENT INTENT ===');
+    console.log('Amount (PHP):', amount);
+    console.log('Amount (centavos):', amountInCentavos);
+    console.log('Booking ID:', booking_id);
+
+    const authHeader = `Basic ${Buffer.from(config.PAYMONGO_SECRET_KEY + ':').toString('base64')}`;
+
+    // STEP 1: Create Payment Intent that allows QR Ph
+    const intentBody = {
+      data: {
+        attributes: {
+          amount: amountInCentavos,
+          currency: 'PHP',
+          payment_method_allowed: ['qrph'],
+          payment_method_options: {
+            qrph: {
+              // Let PayMongo handle default expiry (usually 30 minutes)
+            }
+          },
+          description: `Vehicle Rental QR Ph Payment - Booking #${booking_id}`,
+          metadata: {
+            booking_id: booking_id.toString(),
+            channel: 'velorent_app',
+            payment_type: 'qrph_online'
+          }
+        }
+      }
+    };
+
+    const intentResponse = await axios.post(
+      `${PAYMONGO_API_URL}/payment_intents`,
+      intentBody,
+      {
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (!intentResponse.data || !intentResponse.data.data) {
+      throw new Error('Invalid response from PayMongo when creating payment intent');
+    }
+
+    const intentData = intentResponse.data.data;
+    const intentId = intentData.id;
+
+    console.log('Created QRPH payment intent:', intentId);
+
+    // STEP 2: Create QR Ph payment method
+    const paymentMethodBody = {
+      data: {
+        attributes: {
+          type: 'qrph'
+          // Optional: you can add billing details here if needed
+        }
+      }
+    };
+
+    const methodResponse = await axios.post(
+      `${PAYMONGO_API_URL}/payment_methods`,
+      paymentMethodBody,
+      {
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (!methodResponse.data || !methodResponse.data.data) {
+      throw new Error('Invalid response from PayMongo when creating payment method');
+    }
+
+    const paymentMethodId = methodResponse.data.data.id;
+    console.log('Created QRPH payment method:', paymentMethodId);
+
+    // STEP 3: Attach payment method to intent to generate the QR
+    const attachBody = {
+      data: {
+        attributes: {
+          payment_method: paymentMethodId
+        }
+      }
+    };
+
+    const attachResponse = await axios.post(
+      `${PAYMONGO_API_URL}/payment_intents/${intentId}/attach`,
+      attachBody,
+      {
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (!attachResponse.data || !attachResponse.data.data) {
+      throw new Error('Invalid response from PayMongo when attaching payment method');
+    }
+
+    const attachedIntent = attachResponse.data.data;
+    const nextAction = attachedIntent.attributes?.next_action || {};
+
+    // PayMongo QR Ph docs use next_action.code.image_url for the QR image
+    const qrImageUrl =
+      nextAction.code?.image_url ||
+      nextAction.qr_image_url ||
+      nextAction.qr_code?.image ||
+      null;
+
+    if (!qrImageUrl) {
+      console.error('Attach response next_action:', JSON.stringify(nextAction, null, 2));
+      throw new Error('QR image URL not found in PayMongo response');
+    }
+
+    console.log('QRPH image URL received from PayMongo');
+
+    // Save payment record to database (no checkout_url for QRPH, but keep intent for tracking)
+    connection = await getConnection();
+
+    await connection.execute(
+      `INSERT INTO payments (booking_id, amount, status, checkout_url, payment_intent_id, source_id) 
+       VALUES (?, ?, 'pending', ?, ?, ?)`,
+      [booking_id, amount, null, intentId, null]
+    );
+
+    res.json({
+      qr_image_url: qrImageUrl,
+      payment_intent_id: intentId
+    });
+  } catch (error) {
+    console.error('=== QRPH PAYMENT CREATION ERROR ===');
+    console.error('Error message:', error.message);
+    console.error('Error response status:', error.response?.status);
+    console.error('Error response data:', JSON.stringify(error.response?.data, null, 2));
+
+    let errorDetails = error.message;
+    if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+      errorDetails = error.response.data.errors.map(e => e.detail || e.message || JSON.stringify(e)).join('; ');
+    } else if (error.response?.data?.message) {
+      errorDetails = error.response.data.message;
+    }
+
+    res.status(500).json({
+      error: 'Failed to create QRPH payment',
+      details: errorDetails
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+
 // Create payment checkout link
 router.post('/create-payment', auth.verifyToken, async (req, res) => {
   let connection;
@@ -288,6 +474,8 @@ router.get('/status/:booking_id', auth.verifyToken, async (req, res) => {
                     paymentMethod = 'GrabPay';
                   } else if (firstMethod === 'paymaya') {
                     paymentMethod = 'PayMaya';
+                  } else if (firstMethod === 'qrph') {
+                    paymentMethod = 'QR Ph';
                   }
                 }
               }
