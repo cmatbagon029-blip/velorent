@@ -5,6 +5,8 @@ const vehiclesRouter = require('./routes/vehicles');
 const companiesRouter = require('./routes/companies');
 const authRouter = require('./routes/auth');
 const rentalsRouter = require('./routes/rentals');
+const reviewsRouter = require('./routes/reviews');
+const { startReminderService } = require('./utils/reminders');
 
 const app = express();
 
@@ -24,6 +26,10 @@ app.use('/api/auth', authRouter);
 app.use('/api/vehicles', vehiclesRouter);
 app.use('/api/companies', companiesRouter);
 app.use('/api/rentals', rentalsRouter);
+app.use('/api/reviews', reviewsRouter);
+
+const migrateRouter = require('./routes/migrate');
+app.use('/api/migrate', migrateRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -39,4 +45,7 @@ const HOST = process.env.HOST || '0.0.0.0'; // Listen on all network interfaces
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
   console.log(`Server accessible at http://localhost:${PORT} and http://192.168.1.21:${PORT}`);
+  
+  // Start the background proactive reminder service
+  startReminderService();
 });
